@@ -134,8 +134,8 @@ body {
   left: 50%;
   transform: translate(-50%, 0);
   z-index: 3;
-  width: 95vw;
-  max-width: 1550px;
+  width: 90vw;
+  max-width: 1450px;
   display: flex;
   justify-content: center;
   pointer-events: none;
@@ -207,8 +207,8 @@ body {
   bottom: 5%;
   left: 50%;
   transform: translateX(-50%);
-  width: 95vw;
-  max-width: 1550px;
+  width: 90vw;
+  max-width: 1450px;
   display: flex;
   justify-content: space-between;
   padding: 0;
@@ -741,6 +741,7 @@ section {
   }
 
   .portrait-img {
+    left: 52%;
     bottom: -18vh;
   }
 }

@@ -264,9 +264,10 @@ function initDynamicScribbles() {
     const rotation = -15 + Math.random() * 30; // -15deg to 15deg
     const font = fonts[Math.floor(Math.random() * fonts.length)];
     
-    let baseFontSize = 'clamp(1.5rem, 3vw, 3rem)';
+    const isMobile = window.innerWidth < 768;
+    let baseFontSize = isMobile ? 'clamp(2.0rem, 5.5vw, 3.8rem)' : 'clamp(1.5rem, 3vw, 3rem)';
     if (font === 'Reenie Beanie') {
-      baseFontSize = 'clamp(2.2rem, 4.5vw, 5.5rem)';
+      baseFontSize = isMobile ? 'clamp(3.2rem, 7.5vw, 7.0rem)' : 'clamp(2.2rem, 4.5vw, 5.5rem)';
     }
     
     scribble.style.position = 'absolute';
