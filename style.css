@@ -207,7 +207,6 @@ body {
   color: var(--text-color);
   line-height: 0.8;
   letter-spacing: -0.045em;
-  word-spacing: -3.5vw;
   text-transform: uppercase;
   display: block;
   transform: scaleY(1.05);
