@@ -115,6 +115,7 @@ body {
   height: 100%;
   pointer-events: none;
   z-index: 1;
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .scribble {
@@ -133,11 +134,12 @@ body {
   left: 50%;
   transform: translate(-50%, 0);
   z-index: 3;
-  width: 90vw;
-  max-width: 1400px;
+  width: 95vw;
+  max-width: 1550px;
   display: flex;
   justify-content: center;
   pointer-events: none;
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .hero-title-wrapper {
@@ -186,7 +188,7 @@ body {
   pointer-events: none;
   z-index: 5;
   overflow: hidden;
-  transition: transform 0.1s ease-out;
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .portrait-img {
@@ -206,8 +208,8 @@ body {
   bottom: 5%;
   left: 50%;
   transform: translateX(-50%);
-  width: 90vw;
-  max-width: 1400px;
+  width: 95vw;
+  max-width: 1550px;
   display: flex;
   justify-content: space-between;
   padding: 0;
