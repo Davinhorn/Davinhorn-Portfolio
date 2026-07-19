@@ -739,4 +739,8 @@ section {
   .contact-btn {
     min-width: 100%;
   }
+
+  .portrait-img {
+    bottom: -18vh;
+  }
 }
