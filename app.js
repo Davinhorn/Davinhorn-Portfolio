@@ -434,8 +434,12 @@ function initSingleScribbleInteractivity(scribble) {
 function scaleTitleToFit() {
   const title = document.querySelector('.hero-title');
   const container = document.querySelector('.hero-title-container');
+  const stamp = document.querySelector('.portfolio-stamp');
+  const rnLetters = document.querySelector('.rn-letters');
+  
   if (!title || !container) return;
   
+  // 1. Scale main title to container width
   title.style.fontSize = '100px';
   const textWidth = title.offsetWidth;
   const containerWidth = container.offsetWidth;
@@ -443,6 +447,20 @@ function scaleTitleToFit() {
   
   const targetFontSize = (containerWidth / textWidth) * 100;
   title.style.fontSize = `${targetFontSize}px`;
+  
+  // 2. Scale PORTFOLIO stamp to match the exact layout width of "RN"
+  if (stamp && rnLetters) {
+    const rnWidth = rnLetters.offsetWidth;
+    
+    // Measure stamp base width at 100px font size
+    stamp.style.fontSize = '100px';
+    const stampWidth = stamp.offsetWidth;
+    
+    if (stampWidth > 0 && rnWidth > 0) {
+      const targetStampFontSize = (rnWidth / stampWidth) * 100;
+      stamp.style.fontSize = `${targetStampFontSize}px`;
+    }
+  }
 }
 
 

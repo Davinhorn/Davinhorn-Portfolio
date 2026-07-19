@@ -130,7 +130,7 @@ body {
 /* Parallax Layer 2: Main Title */
 .hero-title-container {
   position: absolute;
-  top: 6%;
+  top: 5%;
   left: 50%;
   transform: translate(-50%, 0);
   z-index: 3;
@@ -703,10 +703,6 @@ section {
   .navbar {
     padding: 1.5rem 5%;
   }
-  
-  .hero-title-container {
-    top: 10%;
-  }
 
   .portfolio-stamp {
     font-size: clamp(1.8rem, 5.5vw, 4rem);
@@ -742,9 +738,5 @@ section {
   
   .contact-btn {
     min-width: 100%;
-  }
-  
-  .hero-footer {
-    bottom: 3.5%;
   }
 }
