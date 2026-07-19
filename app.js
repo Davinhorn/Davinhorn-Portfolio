@@ -59,45 +59,100 @@ function initCustomCursor() {
 /* ==========================================================================
    2. HERO 3D PARALLAX EFFECT
    ========================================================================== */
-function initHeroParallax() {
-  const hero = document.getElementById('hero');
+function applyParallax(xOffset, yOffset) {
   const scribblesLayer = document.getElementById('scribbles-layer');
   const titleLayer = document.getElementById('title-layer');
   const portraitLayer = document.getElementById('portrait-layer');
-  const portraitImg = document.getElementById('hero-portrait');
+  
+  // Layer 1: Background Scribbles (moderate motion)
+  if (scribblesLayer) {
+    scribblesLayer.style.transform = `translate(${xOffset * 30}px, ${yOffset * 30}px)`;
+  }
 
+  // Layer 2: Main Bold Title (moves opposite, tilts slightly)
+  if (titleLayer) {
+    const rotX = -yOffset * 6;
+    const rotY = xOffset * 6;
+    titleLayer.style.transform = `translate(calc(-50% + ${xOffset * -20}px), ${yOffset * -20}px) rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+  }
+
+  // Layer 3: Portrait Cutout (slight scaling shift)
+  if (portraitLayer) {
+    portraitLayer.style.transform = `translate(calc(-50% + ${xOffset * 15}px), ${yOffset * 10}px) scale(1.02)`;
+  }
+}
+
+function initHeroParallax() {
+  const hero = document.getElementById('hero');
   if (!hero) return;
 
+  // Mouse movement tracking on desktop
   hero.addEventListener('mousemove', (e) => {
-    // Calculate normalized offset from screen center (-1 to 1)
     const xOffset = (e.clientX - window.innerWidth / 2) / (window.innerWidth / 2);
     const yOffset = (e.clientY - window.innerHeight / 2) / (window.innerHeight / 2);
-
-    // Layer 1: Background Scribbles (moves with mouse, moderate movement)
-    if (scribblesLayer) {
-      scribblesLayer.style.transform = `translate(${xOffset * 30}px, ${yOffset * 30}px)`;
-    }
-
-    // Layer 2: Main Bold Title (moves opposite to mouse, tilts slightly)
-    if (titleLayer) {
-      const rotX = -yOffset * 6;
-      const rotY = xOffset * 6;
-      titleLayer.style.transform = `translate(calc(-50% + ${xOffset * -20}px), ${yOffset * -20}px) rotateX(${rotX}deg) rotateY(${rotY}deg)`;
-    }
-
-    // Layer 3: Portrait Cutout (moves with mouse, slight scale depth)
-    if (portraitLayer) {
-      // Must maintain the horizontal centering (-50% transform)
-      portraitLayer.style.transform = `translate(calc(-50% + ${xOffset * 15}px), ${yOffset * 10}px) scale(1.02)`;
-    }
+    applyParallax(xOffset, yOffset);
   });
 
   // Reset layers on mouse leave
   hero.addEventListener('mouseleave', () => {
+    const scribblesLayer = document.getElementById('scribbles-layer');
+    const titleLayer = document.getElementById('title-layer');
+    const portraitLayer = document.getElementById('portrait-layer');
     if (scribblesLayer) scribblesLayer.style.transform = 'translate(0px, 0px)';
     if (titleLayer) titleLayer.style.transform = 'translate(-50%, 0px) rotateX(0deg) rotateY(0deg)';
     if (portraitLayer) portraitLayer.style.transform = 'translate(-50%, 0px) scale(1)';
   });
+
+  // Gyroscope / Tilt tracking on mobile devices
+  if (window.DeviceOrientationEvent) {
+    let baselineBeta = null;
+    let baselineGamma = null;
+
+    function handleOrientation(e) {
+      const beta = e.beta; // Tilt front-to-back: -180 to 180
+      const gamma = e.gamma; // Tilt left-to-right: -90 to 90
+      
+      if (beta === null || gamma === null) return;
+      
+      // Capture initial hold orientation as baseline
+      if (baselineBeta === null) {
+        baselineBeta = beta;
+        baselineGamma = gamma;
+        return;
+      }
+      
+      // Calculate shifts relative to initial baseline
+      let deltaBeta = beta - baselineBeta;
+      let deltaGamma = gamma - baselineGamma;
+      
+      // Clamp to ±15 degrees limit
+      deltaBeta = Math.max(-15, Math.min(15, deltaBeta));
+      deltaGamma = Math.max(-15, Math.min(15, deltaGamma));
+      
+      // Map to scale (-1 to 1)
+      const xOffset = deltaGamma / 15;
+      const yOffset = deltaBeta / 15;
+      
+      applyParallax(xOffset, yOffset);
+    }
+
+    if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+      // Gated request for iOS 13+ devices
+      document.addEventListener('click', function requestGyro() {
+        DeviceOrientationEvent.requestPermission()
+          .then(response => {
+            if (response === 'granted') {
+              window.addEventListener('deviceorientation', handleOrientation);
+            }
+          })
+          .catch(console.error);
+        document.removeEventListener('click', requestGyro);
+      }, { once: true });
+    } else {
+      // Android / Other mobile browsers
+      window.addEventListener('deviceorientation', handleOrientation);
+    }
+  }
 }
 
 /* ==========================================================================
@@ -221,9 +276,11 @@ function initDynamicScribbles() {
   const fonts = ['Reenie Beanie', 'Caveat', 'Nothing You Could Do'];
   const activePhrases = new Set();
   
-  // Grid layout parameters (5 columns, 4 rows)
-  const gridCols = 5;
-  const gridRows = 4;
+  // Responsive grid layout settings to ensure even distribution and prevent overlaps
+  const isMobile = window.innerWidth < 768;
+  const gridCols = isMobile ? 2 : 5;
+  const gridRows = isMobile ? 4 : 4;
+  const activeScribblesPerCol = 3;
   
   // Track occupied rows for each column: Map<colIndex, Set<rowIndex>>
   const occupiedByColumn = new Map();
@@ -248,8 +305,8 @@ function initDynamicScribbles() {
     scribble.className = 'scribble';
     
     // Calculate cell layout positions
-    const cellWidth = 84 / gridCols; // 16.8%
-    const cellHeight = 74 / gridRows; // 18.5%
+    const cellWidth = 84 / gridCols;
+    const cellHeight = 74 / gridRows;
     
     const colLeft = 6 + (col * cellWidth);
     const rowTop = 8 + (row * cellHeight);
@@ -264,7 +321,6 @@ function initDynamicScribbles() {
     const rotation = -15 + Math.random() * 30; // -15deg to 15deg
     const font = fonts[Math.floor(Math.random() * fonts.length)];
     
-    const isMobile = window.innerWidth < 768;
     let baseFontSize = isMobile ? 'clamp(2.0rem, 5.5vw, 3.8rem)' : 'clamp(1.5rem, 3vw, 3rem)';
     if (font === 'Reenie Beanie') {
       baseFontSize = isMobile ? 'clamp(3.2rem, 7.5vw, 7.0rem)' : 'clamp(2.2rem, 4.5vw, 5.5rem)';
@@ -350,10 +406,10 @@ function initDynamicScribbles() {
   // Build initial cell list: exactly 3 rows per column
   const initialCells = [];
   for (let c = 0; c < gridCols; c++) {
-    // Pick 3 random rows out of {0, 1, 2, 3}
-    const rows = [0, 1, 2, 3];
+    const rows = [];
+    for (let r = 0; r < gridRows; r++) rows.push(r);
     rows.sort(() => Math.random() - 0.5);
-    const chosenRows = rows.slice(0, 3);
+    const chosenRows = rows.slice(0, activeScribblesPerCol);
     chosenRows.forEach(r => {
       initialCells.push({ col: c, row: r });
     });
@@ -366,8 +422,7 @@ function initDynamicScribbles() {
     setTimeout(() => {
       spawnScribble(cell.col, cell.row);
     }, index * 200); // Stagger initial text typing sequence
-  }
-  );
+  });
 }
 
 function initSingleScribbleInteractivity(scribble) {
