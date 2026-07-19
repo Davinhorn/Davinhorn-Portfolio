@@ -214,18 +214,24 @@ function initDynamicScribbles() {
   ];
   
   const fonts = ['Reenie Beanie', 'Caveat', 'Nothing You Could Do'];
-  let activeScribbles = [];
+  const activePhrases = new Set();
   
-  function createScribbleElement(phrase) {
+  function spawnScribble() {
+    // Pick unique phrase to avoid duplicates on screen
+    let available = phrases.filter(p => !activePhrases.has(p));
+    if (available.length === 0) {
+      activePhrases.clear();
+      available = phrases;
+    }
+    const phrase = available[Math.floor(Math.random() * available.length)];
+    activePhrases.add(phrase);
+    
     const scribble = document.createElement('div');
     scribble.className = 'scribble';
     
-    // Position outside center zone (where title & portrait sit)
-    const isLeft = Math.random() > 0.5;
-    const leftPercent = isLeft 
-      ? (4 + Math.random() * 20)
-      : (72 + Math.random() * 20);
-    const topPercent = 8 + Math.random() * 76;
+    // Spread evenly across the entire background canvas (including the center)
+    const leftPercent = 5 + Math.random() * 80; // 5% to 85%
+    const topPercent = 8 + Math.random() * 76;  // 8% to 84%
     const rotation = -15 + Math.random() * 30;
     const font = fonts[Math.floor(Math.random() * fonts.length)];
     
@@ -244,7 +250,7 @@ function initDynamicScribbles() {
     scribble.style.cursor = 'pointer';
     scribble.style.transition = 'color 0.2s, opacity 0.5s, transform 0.5s';
     
-    // Split into character spans for letter-by-letter writing animation
+    // Clear and build character spans for letter-by-letter writing animation
     const chars = phrase.split('');
     chars.forEach((char) => {
       const span = document.createElement('span');
@@ -260,7 +266,7 @@ function initDynamicScribbles() {
     initSingleScribbleInteractivity(scribble);
     
     // Character typing reveal
-    const charInterval = 40 + Math.random() * 20;
+    const charInterval = 40 + Math.random() * 20; // 40ms to 60ms
     const spans = scribble.querySelectorAll('span');
     spans.forEach((span, index) => {
       setTimeout(() => {
@@ -269,56 +275,39 @@ function initDynamicScribbles() {
       }, index * charInterval);
     });
     
-    return scribble;
+    const typingDuration = spans.length * charInterval;
+    // Set a randomized visible duration so scribbles expire asynchronously
+    const visibleDuration = 6000 + Math.random() * 7000; // 6s to 13s
+    
+    // Schedule character-by-character un-writing (erasing) and replacement spawn
+    setTimeout(() => {
+      const eraseInterval = 30; // 30ms per character for erasing
+      
+      // Erase spans one by one in reverse (right to left)
+      for (let i = spans.length - 1; i >= 0; i--) {
+        const revIndex = spans.length - 1 - i;
+        setTimeout(() => {
+          spans[i].style.opacity = '0';
+          spans[i].style.transform = 'scale(0.85) translateY(4px)';
+        }, revIndex * eraseInterval);
+      }
+      
+      const eraseDuration = spans.length * eraseInterval;
+      setTimeout(() => {
+        scribble.remove();
+        activePhrases.delete(phrase);
+        // Spawns replacement immediately, carrying on the loop independently
+        spawnScribble();
+      }, eraseDuration + 100);
+      
+    }, typingDuration + visibleDuration);
   }
   
-  // Spawn all 17 initial phrases (leaving 1 out of play for the cycle pool)
-  const initialPhrases = [...phrases];
-  initialPhrases.sort(() => Math.random() - 0.5);
-  
-  initialPhrases.forEach((phrase, index) => {
-    setTimeout(() => {
-      const scribbleEl = createScribbleElement(phrase);
-      activeScribbles.push({ element: scribbleEl, phrase: phrase });
-    }, index * 180); // Stagger initial writing across the canvas
-  });
-  
-  // Start the cyclical fade-out / fade-in spawner once initial spawn completes
-  const loopStartDelay = (initialPhrases.length * 180) + 3000;
-  
-  setTimeout(() => {
-    setInterval(() => {
-      if (activeScribbles.length === 0) return;
-      
-      // Select random active scribble to remove
-      const removeIndex = Math.floor(Math.random() * activeScribbles.length);
-      const removed = activeScribbles.splice(removeIndex, 1)[0];
-      
-      const scribbleEl = removed.element;
-      const rotationMatch = scribbleEl.style.transform.match(/rotate\(([^)]+)\)/);
-      const rot = rotationMatch ? rotationMatch[0] : '';
-      
-      // Fade out
-      scribbleEl.style.opacity = '0';
-      scribbleEl.style.transform = `${rot} scale(0.92)`;
-      
-      setTimeout(() => {
-        scribbleEl.remove();
-      }, 500);
-      
-      // Pick a phrase that is NOT currently visible on screen
-      const currentVisiblePhrases = activeScribbles.map(s => s.phrase);
-      const available = phrases.filter(p => !currentVisiblePhrases.includes(p));
-      const newPhrase = available[Math.floor(Math.random() * available.length)];
-      
-      // Spawn new scribble in a new random coordinate after fade-out completes
-      setTimeout(() => {
-        const newScribbleEl = createScribbleElement(newPhrase);
-        activeScribbles.push({ element: newScribbleEl, phrase: newPhrase });
-      }, 600);
-      
-    }, 3200); // Cycle one phrase every 3.2 seconds
-  }, loopStartDelay);
+  // Stagger spawner for 15 initial phrases to populate screen on page load
+  const maxInitialScribbles = 15;
+  for (let i = 0; i < maxInitialScribbles; i++) {
+    setTimeout(spawnScribble, i * 200); // Stagger initial text typing sequence
+  }
 }
 
 function initSingleScribbleInteractivity(scribble) {
