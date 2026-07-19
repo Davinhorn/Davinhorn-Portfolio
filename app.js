@@ -18,13 +18,19 @@ document.addEventListener('DOMContentLoaded', () => {
   scaleTitleToFit();
   
   // Resize and layout change listeners
+  let prevWidth = window.innerWidth;
   window.addEventListener('resize', () => {
-    scaleTitleToFit();
-    setMobileViewportHeight();
+    // Only recalculate sizes if screen width changes (ignores vertical browser bar collapses)
+    if (window.innerWidth !== prevWidth) {
+      prevWidth = window.innerWidth;
+      scaleTitleToFit();
+      setMobileViewportHeight();
+    }
   });
   window.addEventListener('orientationchange', () => {
     // Wait briefly for rotation layouts to settle before scaling
     setTimeout(() => {
+      prevWidth = window.innerWidth;
       scaleTitleToFit();
       setMobileViewportHeight();
     }, 150);
