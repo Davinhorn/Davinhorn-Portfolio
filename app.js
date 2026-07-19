@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initDraggableCollage();
   initProjectTilt();
   initInteractiveScribbles();
-  initActiveLinksOnScroll();
 });
 
 /* ==========================================================================
@@ -257,32 +256,4 @@ function initInteractiveScribbles() {
   });
 }
 
-/* ==========================================================================
-   6. SCROLL SPY - ACTIVE LINKS HIGHLIGHT
-   ========================================================================== */
-function initActiveLinksOnScroll() {
-  const sections = document.querySelectorAll('section');
-  const navItems = document.querySelectorAll('.nav-item');
 
-  window.addEventListener('scroll', () => {
-    let current = '';
-    
-    sections.forEach(section => {
-      const sectionTop = section.offsetTop;
-      const sectionHeight = section.clientHeight;
-      if (pageYOffset >= (sectionTop - 250)) {
-        current = section.getAttribute('id');
-      }
-    });
-
-    navItems.forEach(item => {
-      item.classList.remove('active-nav');
-      // Highlight matching item
-      if (item.getAttribute('href') === `#${current}`) {
-        item.style.color = '#4f46e5'; // Indigo color highlight
-      } else {
-        item.style.color = '';
-      }
-    });
-  });
-}
