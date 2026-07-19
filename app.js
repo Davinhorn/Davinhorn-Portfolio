@@ -216,23 +216,61 @@ function initDynamicScribbles() {
   const fonts = ['Reenie Beanie', 'Caveat', 'Nothing You Could Do'];
   const activePhrases = new Set();
   
+  // Grid settings to ensure even distribution and prevent overlaps
+  const gridCols = 5;
+  const gridRows = 4;
+  const totalCells = gridCols * gridRows; // 20 grid slots
+  const occupiedCells = new Set();
+  
   function spawnScribble() {
-    // Pick unique phrase to avoid duplicates on screen
-    let available = phrases.filter(p => !activePhrases.has(p));
-    if (available.length === 0) {
-      activePhrases.clear();
-      available = phrases;
+    // Find empty grid cells
+    const availableCells = [];
+    for (let i = 0; i < totalCells; i++) {
+      if (!occupiedCells.has(i)) {
+        availableCells.push(i);
+      }
     }
-    const phrase = available[Math.floor(Math.random() * available.length)];
+    
+    // Safety check (should not be needed since max active scribbles is 15 of 20 cells)
+    if (availableCells.length === 0) {
+      occupiedCells.clear();
+      for (let i = 0; i < totalCells; i++) availableCells.push(i);
+    }
+    
+    // Choose random available grid slot
+    const cellIndex = availableCells[Math.floor(Math.random() * availableCells.length)];
+    occupiedCells.add(cellIndex);
+    
+    // Pick unique phrase
+    let availablePhrases = phrases.filter(p => !activePhrases.has(p));
+    if (availablePhrases.length === 0) {
+      activePhrases.clear();
+      availablePhrases = phrases;
+    }
+    const phrase = availablePhrases[Math.floor(Math.random() * availablePhrases.length)];
     activePhrases.add(phrase);
     
     const scribble = document.createElement('div');
     scribble.className = 'scribble';
     
-    // Spread evenly across the entire background canvas (including the center)
-    const leftPercent = 5 + Math.random() * 80; // 5% to 85%
-    const topPercent = 8 + Math.random() * 76;  // 8% to 84%
-    const rotation = -15 + Math.random() * 30;
+    // Calculate cell layout positions
+    const col = cellIndex % gridCols;
+    const row = Math.floor(cellIndex / gridCols);
+    
+    const cellWidth = 84 / gridCols; // Distribute across 84% width
+    const cellHeight = 74 / gridRows; // Distribute across 74% height
+    
+    const colLeft = 6 + (col * cellWidth);
+    const rowTop = 8 + (row * cellHeight);
+    
+    // Add organic wiggling within the cell bounds to prevent looking like a rigid table
+    const wiggleX = (Math.random() * 0.4 - 0.2) * cellWidth; // ±20% wiggle
+    const wiggleY = (Math.random() * 0.4 - 0.2) * cellHeight;
+    
+    const leftPercent = colLeft + (cellWidth / 2) + wiggleX;
+    const topPercent = rowTop + (cellHeight / 2) + wiggleY;
+    
+    const rotation = -15 + Math.random() * 30; // -15deg to 15deg
     const font = fonts[Math.floor(Math.random() * fonts.length)];
     
     let baseFontSize = 'clamp(1.5rem, 3vw, 3rem)';
@@ -250,7 +288,7 @@ function initDynamicScribbles() {
     scribble.style.cursor = 'pointer';
     scribble.style.transition = 'color 0.2s, opacity 0.5s, transform 0.5s';
     
-    // Clear and build character spans for letter-by-letter writing animation
+    // Build character spans for letter-by-letter writing animation
     const chars = phrase.split('');
     chars.forEach((char) => {
       const span = document.createElement('span');
@@ -266,7 +304,7 @@ function initDynamicScribbles() {
     initSingleScribbleInteractivity(scribble);
     
     // Character typing reveal
-    const charInterval = 40 + Math.random() * 20; // 40ms to 60ms
+    const charInterval = 40 + Math.random() * 20; // 40ms to 60ms per character
     const spans = scribble.querySelectorAll('span');
     spans.forEach((span, index) => {
       setTimeout(() => {
@@ -276,8 +314,7 @@ function initDynamicScribbles() {
     });
     
     const typingDuration = spans.length * charInterval;
-    // Set a randomized visible duration so scribbles expire asynchronously
-    const visibleDuration = 6000 + Math.random() * 7000; // 6s to 13s
+    const visibleDuration = 6000 + Math.random() * 7000; // Visible for 6-13s
     
     // Schedule character-by-character un-writing (erasing) and replacement spawn
     setTimeout(() => {
@@ -295,8 +332,9 @@ function initDynamicScribbles() {
       const eraseDuration = spans.length * eraseInterval;
       setTimeout(() => {
         scribble.remove();
+        occupiedCells.delete(cellIndex);
         activePhrases.delete(phrase);
-        // Spawns replacement immediately, carrying on the loop independently
+        // Spawn replacement
         spawnScribble();
       }, eraseDuration + 100);
       
