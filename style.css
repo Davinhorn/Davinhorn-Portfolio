@@ -142,13 +142,16 @@ body {
 
 .hero-title-wrapper {
   position: relative;
-  width: 100%;
+  display: inline-block;
+  width: max-content;
+  max-width: 100%;
+  margin: 0 auto;
   text-align: center;
 }
 
 .hero-title {
   font-family: var(--font-title);
-  font-size: clamp(6rem, 21.4vw, 20.8rem);
+  font-size: clamp(4rem, 20vw, 22.5rem);
   font-weight: 900;
   color: var(--text-color);
   line-height: 0.8;

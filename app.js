@@ -8,6 +8,14 @@ document.addEventListener('DOMContentLoaded', () => {
   initDraggableCollage();
   initProjectTilt();
   initInteractiveScribbles();
+  
+  // Dynamic typography scale
+  scaleTitleToFit();
+  window.addEventListener('resize', scaleTitleToFit);
+  window.addEventListener('load', scaleTitleToFit);
+  if (document.fonts) {
+    document.fonts.ready.then(scaleTitleToFit);
+  }
 });
 
 /* ==========================================================================
@@ -254,6 +262,29 @@ function initInteractiveScribbles() {
       }, 1500);
     });
   });
+}
+
+/* ==========================================================================
+   6. DYNAMIC FONT SCALING (FIT TITLE TO BOX)
+   ========================================================================== */
+function scaleTitleToFit() {
+  const title = document.querySelector('.hero-title');
+  const container = document.querySelector('.hero-title-container');
+  if (!title || !container) return;
+  
+  // Temporarily set base font size to measure container vs text proportions
+  title.style.fontSize = '100px';
+  
+  const textWidth = title.offsetWidth;
+  const containerWidth = container.offsetWidth;
+  
+  if (textWidth === 0 || containerWidth === 0) return;
+  
+  // Calculate dynamic font size to occupy 100% of container width
+  const targetFontSize = (containerWidth / textWidth) * 100;
+  
+  // Apply calculated font size directly
+  title.style.fontSize = `${targetFontSize}px`;
 }
 
 
