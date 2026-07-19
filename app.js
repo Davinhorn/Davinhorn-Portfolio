@@ -1,6 +1,8 @@
-/* ==========================================================================
-   APP INTERACTIVITY - DAVIN HORN PORTFOLIO
-   ========================================================================== */
+// Helper to compute dynamic viewport heights for mobile devices, bypassing browser UI bar clips
+function setMobileViewportHeight() {
+  const vh = window.innerHeight * 0.01;
+  document.documentElement.style.setProperty('--vh', `${vh}px`);
+}
 
 document.addEventListener('DOMContentLoaded', () => {
   initCustomCursor();
@@ -9,10 +11,29 @@ document.addEventListener('DOMContentLoaded', () => {
   initProjectTilt();
   initDynamicScribbles();
   
+  // Set initial dynamic viewport height
+  setMobileViewportHeight();
+  
   // Dynamic typography scale
   scaleTitleToFit();
-  window.addEventListener('resize', scaleTitleToFit);
-  window.addEventListener('load', scaleTitleToFit);
+  
+  // Resize and layout change listeners
+  window.addEventListener('resize', () => {
+    scaleTitleToFit();
+    setMobileViewportHeight();
+  });
+  window.addEventListener('orientationchange', () => {
+    // Wait briefly for rotation layouts to settle before scaling
+    setTimeout(() => {
+      scaleTitleToFit();
+      setMobileViewportHeight();
+    }, 150);
+  });
+  window.addEventListener('load', () => {
+    scaleTitleToFit();
+    setMobileViewportHeight();
+  });
+  
   if (document.fonts) {
     document.fonts.ready.then(scaleTitleToFit);
   }
