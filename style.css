@@ -148,7 +148,7 @@ body {
 
 .hero-title {
   font-family: var(--font-title);
-  font-size: clamp(6rem, 21.2vw, 24rem);
+  font-size: clamp(6rem, 20.6vw, 22.8rem);
   font-weight: 900;
   color: var(--text-color);
   line-height: 0.8;
@@ -156,6 +156,7 @@ body {
   text-transform: uppercase;
   display: block;
   transform: scaleY(1.05);
+  white-space: nowrap;
 }
 
 .portfolio-stamp {

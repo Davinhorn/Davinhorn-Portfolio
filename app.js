@@ -65,13 +65,6 @@ function initHeroParallax() {
       scribblesLayer.style.transform = `translate(${xOffset * 30}px, ${yOffset * 30}px)`;
     }
 
-    // Layer 2: Main Bold Title (moves opposite to mouse, tilts slightly)
-    if (titleLayer) {
-      const rotX = -yOffset * 6;
-      const rotY = xOffset * 6;
-      titleLayer.style.transform = `translate(calc(-50% + ${xOffset * -20}px), ${yOffset * -20}px) rotateX(${rotX}deg) rotateY(${rotY}deg)`;
-    }
-
     // Layer 3: Portrait Cutout (moves with mouse, slight scale depth)
     if (portraitLayer) {
       // Must maintain the horizontal centering (-50% transform)
@@ -82,7 +75,6 @@ function initHeroParallax() {
   // Reset layers on mouse leave
   hero.addEventListener('mouseleave', () => {
     if (scribblesLayer) scribblesLayer.style.transform = 'translate(0px, 0px)';
-    if (titleLayer) titleLayer.style.transform = 'translate(-50%, 0px) rotateX(0deg) rotateY(0deg)';
     if (portraitLayer) portraitLayer.style.transform = 'translate(-50%, 0px) scale(1)';
   });
 }
