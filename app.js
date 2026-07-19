@@ -16,6 +16,11 @@ document.addEventListener('DOMContentLoaded', () => {
   if (document.fonts) {
     document.fonts.ready.then(scaleTitleToFit);
   }
+  
+  // Delayed safety checks for slower mobile font loading or rendering lags
+  setTimeout(scaleTitleToFit, 400);
+  setTimeout(scaleTitleToFit, 1000);
+  setTimeout(scaleTitleToFit, 2000);
 });
 
 /* ==========================================================================

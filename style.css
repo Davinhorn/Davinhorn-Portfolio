@@ -146,7 +146,6 @@ body {
   position: relative;
   display: inline-block;
   width: max-content;
-  max-width: 100%;
   margin: 0 auto;
   text-align: center;
 }
@@ -710,12 +709,6 @@ section {
   }
 
   .portfolio-stamp {
-    position: relative;
-    right: auto;
-    top: auto;
-    display: block;
-    text-align: right;
-    margin-right: 5%;
     font-size: clamp(1.8rem, 5.5vw, 4rem);
   }
   
@@ -752,6 +745,6 @@ section {
   }
   
   .hero-footer {
-    display: none;
+    bottom: 3.5%;
   }
 }
