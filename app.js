@@ -267,7 +267,8 @@ function initDynamicScribbles() {
     scribble.style.position = 'absolute';
     scribble.style.top = `${topPercent}%`;
     scribble.style.left = `${leftPercent}%`;
-    scribble.style.transform = `rotate(${rotation}deg)`;
+    scribble.dataset.rotation = rotation;
+    scribble.style.transform = `translate(-50%, -50%) rotate(${rotation}deg)`;
     scribble.style.fontFamily = `'${font}'`;
     scribble.style.fontSize = baseFontSize;
     scribble.style.pointerEvents = 'auto';
@@ -376,16 +377,14 @@ function initSingleScribbleInteractivity(scribble) {
 
   scribble.addEventListener('mouseenter', () => {
     scribble.style.color = '#4f46e5';
-    const match = scribble.style.transform.match(/rotate\(([^)]+)\)/);
-    const rot = match ? match[0] : '';
-    scribble.style.transform = `${rot} scale(1.15)`;
+    const rot = scribble.dataset.rotation || '0';
+    scribble.style.transform = `translate(-50%, -50%) rotate(${rot}deg) scale(1.15)`;
   });
 
   scribble.addEventListener('mouseleave', () => {
     scribble.style.color = '';
-    const match = scribble.style.transform.match(/rotate\(([^)]+)\)/);
-    const rot = match ? match[0] : '';
-    scribble.style.transform = rot;
+    const rot = scribble.dataset.rotation || '0';
+    scribble.style.transform = `translate(-50%, -50%) rotate(${rot}deg)`;
   });
 
   scribble.addEventListener('click', (e) => {
