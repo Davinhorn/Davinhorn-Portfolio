@@ -209,8 +209,8 @@ body {
 /* Bottom Footer Details */
 .hero-footer {
   position: absolute;
-  bottom: 7%;
-  bottom: calc(var(--vh, 1vh) * 7);
+  bottom: 5.5%;
+  bottom: calc(var(--vh, 1vh) * 5.5);
   left: 50%;
   transform: translateX(-50%);
   width: 90vw;
