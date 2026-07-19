@@ -7,8 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initHeroParallax();
   initDraggableCollage();
   initProjectTilt();
-  initInteractiveScribbles();
-  initScribbleWritingAnimation();
+  initDynamicScribbles();
   
   // Dynamic typography scale
   scaleTitleToFit();
@@ -184,11 +183,123 @@ function initProjectTilt() {
 }
 
 /* ==========================================================================
-   5. INTERACTIVE BACKGROUND SCRIBBLES (EASTER EGGS)
+   5. DYNAMIC BACKGROUND SCRIBBLES & INTERACTIVITY
    ========================================================================== */
-function initInteractiveScribbles() {
-  const scribbles = document.querySelectorAll('.scribble');
+function initDynamicScribbles() {
+  const container = document.getElementById('scribbles-layer');
+  if (!container) return;
+  
+  // Clear any existing elements
+  container.innerHTML = '';
+  
+  const phrases = [
+    "What is reality?",
+    "I love her",
+    "Mom's favorite developer",
+    "CSS is my passion (help)",
+    "Will code for sneakers",
+    "Why am i here?",
+    "What is life?",
+    "Are you looking at my face?",
+    "Sleep is for compile times",
+    "I love Nana",
+    "hehe boi",
+    "Built with caffeine & vibes",
+    "Insert cool quote here",
+    "Peak human",
+    "This is not a template, mom",
+    "This portfolio sucks",
+    "No cookies, only vibes",
+    "Enjoy the time"
+  ];
+  
+  const fonts = ['Reenie Beanie', 'Caveat', 'Nothing You Could Do'];
+  const activePhrases = new Set();
+  
+  function spawnScribble() {
+    // Pick unique phrase
+    let available = phrases.filter(p => !activePhrases.has(p));
+    if (available.length === 0) {
+      activePhrases.clear();
+      available = phrases;
+    }
+    const phrase = available[Math.floor(Math.random() * available.length)];
+    activePhrases.add(phrase);
+    
+    const scribble = document.createElement('div');
+    scribble.className = 'scribble';
+    
+    // Position outside center zone (where title & portrait sit)
+    const isLeft = Math.random() > 0.5;
+    const leftPercent = isLeft 
+      ? (4 + Math.random() * 20)
+      : (72 + Math.random() * 20);
+    const topPercent = 8 + Math.random() * 76;
+    const rotation = -15 + Math.random() * 30;
+    const font = fonts[Math.floor(Math.random() * fonts.length)];
+    
+    let baseFontSize = 'clamp(1.5rem, 3vw, 3rem)';
+    if (font === 'Reenie Beanie') {
+      baseFontSize = 'clamp(2.2rem, 4.5vw, 5.5rem)';
+    }
+    
+    scribble.style.position = 'absolute';
+    scribble.style.top = `${topPercent}%`;
+    scribble.style.left = `${leftPercent}%`;
+    scribble.style.transform = `rotate(${rotation}deg)`;
+    scribble.style.fontFamily = `'${font}'`;
+    scribble.style.fontSize = baseFontSize;
+    scribble.style.pointerEvents = 'auto';
+    scribble.style.cursor = 'pointer';
+    scribble.style.transition = 'color 0.2s, opacity 0.5s, transform 0.5s';
+    
+    // Clear and build character spans for letter-by-letter writing animation
+    const chars = phrase.split('');
+    chars.forEach((char) => {
+      const span = document.createElement('span');
+      span.textContent = char === ' ' ? '\u00A0' : char;
+      span.style.opacity = '0';
+      span.style.display = 'inline-block';
+      span.style.transform = 'scale(0.85) translateY(4px)';
+      span.style.transition = 'opacity 0.25s ease-out, transform 0.25s ease-out';
+      scribble.appendChild(span);
+    });
+    
+    container.appendChild(scribble);
+    initSingleScribbleInteractivity(scribble);
+    
+    // Character typing reveal
+    const charInterval = 40 + Math.random() * 30;
+    const spans = scribble.querySelectorAll('span');
+    spans.forEach((span, index) => {
+      setTimeout(() => {
+        span.style.opacity = '1';
+        span.style.transform = 'scale(1) translateY(0)';
+      }, index * charInterval);
+    });
+    
+    const typingDuration = spans.length * charInterval;
+    const visibleDuration = 6000 + Math.random() * 4000; // Visible for 6-10s
+    
+    // Clean fade-out and replace loop
+    setTimeout(() => {
+      scribble.style.opacity = '0';
+      scribble.style.transform = `rotate(${rotation}deg) scale(0.95)`;
+      setTimeout(() => {
+        scribble.remove();
+        activePhrases.delete(phrase);
+        spawnScribble();
+      }, 500);
+    }, typingDuration + visibleDuration);
+  }
+  
+  // Stagger spawner
+  for (let i = 0; i < 4; i++) {
+    setTimeout(spawnScribble, i * 1800);
+  }
+}
 
+function initSingleScribbleInteractivity(scribble) {
   const messages = [
     "You found me!",
     "Life is code.",
@@ -199,69 +310,53 @@ function initInteractiveScribbles() {
     "Made with love in 2026."
   ];
 
-  scribbles.forEach(scribble => {
-    scribble.style.pointerEvents = 'auto'; // Enable pointer events so users can hover/click
-    scribble.style.cursor = 'pointer';
+  scribble.addEventListener('mouseenter', () => {
+    scribble.style.color = '#4f46e5';
+    const match = scribble.style.transform.match(/rotate\(([^)]+)\)/);
+    const rot = match ? match[0] : '';
+    scribble.style.transform = `${rot} scale(1.15)`;
+  });
 
-    // Wiggle and pop opacity on hover
-    scribble.addEventListener('mouseenter', () => {
-      scribble.style.color = '#4f46e5'; // Indigo color highlight
-      scribble.style.opacity = '1.0';
-      scribble.style.transition = 'color 0.2s, opacity 0.2s, transform 0.2s';
-      const currentTransform = scribble.style.transform;
-      scribble.style.transform = `${currentTransform} scale(1.15)`;
+  scribble.addEventListener('mouseleave', () => {
+    scribble.style.color = '';
+    const match = scribble.style.transform.match(/rotate\(([^)]+)\)/);
+    const rot = match ? match[0] : '';
+    scribble.style.transform = rot;
+  });
+
+  scribble.addEventListener('click', (e) => {
+    const existing = document.querySelector('.scribble-bubble');
+    if (existing) existing.remove();
+
+    const bubble = document.createElement('div');
+    bubble.className = 'scribble-bubble';
+    bubble.textContent = messages[Math.floor(Math.random() * messages.length)];
+    
+    bubble.style.position = 'fixed';
+    bubble.style.left = `${e.clientX}px`;
+    bubble.style.top = `${e.clientY - 40}px`;
+    bubble.style.backgroundColor = '#0c0c0c';
+    bubble.style.color = '#faf9f5';
+    bubble.style.padding = '0.5rem 1rem';
+    bubble.style.fontSize = '0.85rem';
+    bubble.style.fontWeight = 'bold';
+    bubble.style.borderRadius = '4px';
+    bubble.style.boxShadow = '0 4px 10px rgba(0,0,0,0.15)';
+    bubble.style.zIndex = '999';
+    bubble.style.transform = 'translate(-50%, -10px)';
+    bubble.style.pointerEvents = 'none';
+    bubble.style.transition = 'opacity 0.4s, transform 0.4s';
+    
+    document.body.appendChild(bubble);
+    requestAnimationFrame(() => {
+      bubble.style.transform = 'translate(-50%, 0)';
     });
 
-    scribble.addEventListener('mouseleave', () => {
-      scribble.style.color = ''; // Reset color
-      scribble.style.opacity = ''; // Reset opacity
-      const cleanTransform = scribble.style.transform.replace(' scale(1.15)', '');
-      scribble.style.transform = cleanTransform;
-    });
-
-    // Spawn a temporary popup bubble when clicked
-    scribble.addEventListener('click', (e) => {
-      // Prevent bubble stacking
-      const existingBubble = document.querySelector('.scribble-bubble');
-      if (existingBubble) existingBubble.remove();
-
-      const bubble = document.createElement('div');
-      bubble.className = 'scribble-bubble';
-      
-      // Random message select
-      const randomText = messages[Math.floor(Math.random() * messages.length)];
-      bubble.textContent = randomText;
-
-      // Position bubble relative to clicked screen coordinates
-      bubble.style.position = 'fixed';
-      bubble.style.left = `${e.clientX}px`;
-      bubble.style.top = `${e.clientY - 40}px`;
-      bubble.style.backgroundColor = '#0c0c0c';
-      bubble.style.color = '#faf9f5';
-      bubble.style.padding = '0.5rem 1rem';
-      bubble.style.fontSize = '0.85rem';
-      bubble.style.fontWeight = 'bold';
-      bubble.style.borderRadius = '4px';
-      bubble.style.boxShadow = '0 4px 10px rgba(0,0,0,0.15)';
-      bubble.style.zIndex = '999';
+    setTimeout(() => {
+      bubble.style.opacity = '0';
       bubble.style.transform = 'translate(-50%, -10px)';
-      bubble.style.pointerEvents = 'none';
-      bubble.style.transition = 'opacity 0.4s, transform 0.4s';
-      
-      document.body.appendChild(bubble);
-
-      // Animate bubble entry
-      requestAnimationFrame(() => {
-        bubble.style.transform = 'translate(-50%, 0)';
-      });
-
-      // Remove after 1.5 seconds
-      setTimeout(() => {
-        bubble.style.opacity = '0';
-        bubble.style.transform = 'translate(-50%, -10px)';
-        setTimeout(() => bubble.remove(), 400);
-      }, 1500);
-    });
+      setTimeout(() => bubble.remove(), 400);
+    }, 1500);
   });
 }
 
@@ -273,56 +368,13 @@ function scaleTitleToFit() {
   const container = document.querySelector('.hero-title-container');
   if (!title || !container) return;
   
-  // Temporarily set base font size to measure container vs text proportions
   title.style.fontSize = '100px';
-  
   const textWidth = title.offsetWidth;
   const containerWidth = container.offsetWidth;
-  
   if (textWidth === 0 || containerWidth === 0) return;
   
-  // Calculate dynamic font size to occupy 100% of container width
   const targetFontSize = (containerWidth / textWidth) * 100;
-  
-  // Apply calculated font size directly
   title.style.fontSize = `${targetFontSize}px`;
-}
-
-/* ==========================================================================
-   7. SCRIBBLE WRITING ANIMATION (ORGANIC TYPING EFFECT)
-   ========================================================================== */
-function initScribbleWritingAnimation() {
-  const scribbles = document.querySelectorAll('.scribble');
-  scribbles.forEach((scribble) => {
-    const text = scribble.textContent.trim();
-    scribble.innerHTML = ''; // Clear original text
-    
-    // Split into characters and wrap each in a transition span
-    const chars = text.split('');
-    chars.forEach((char) => {
-      const span = document.createElement('span');
-      span.textContent = char === ' ' ? '\u00A0' : char; // Preserve whitespace character
-      span.style.opacity = '0';
-      span.style.display = 'inline-block';
-      span.style.transform = 'scale(0.85) translateY(4px)';
-      span.style.transition = 'opacity 0.25s ease-out, transform 0.25s ease-out';
-      scribble.appendChild(span);
-    });
-    
-    // Organic start delay and per-character intervals
-    const startDelay = 200 + Math.random() * 1800; // 0.2s to 2.0s
-    const charInterval = 40 + Math.random() * 45;  // 40ms to 85ms per character
-    
-    setTimeout(() => {
-      const spans = scribble.querySelectorAll('span');
-      spans.forEach((span, index) => {
-        setTimeout(() => {
-          span.style.opacity = '1';
-          span.style.transform = 'scale(1) translateY(0)';
-        }, index * charInterval);
-      });
-    }, startDelay);
-  });
 }
 
 
