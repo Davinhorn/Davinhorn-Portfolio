@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Davin Horn | Portfolio</title>
+  <meta name="description" content="Professional portfolio of Davin Horn - Fullstack Developer & Designer featuring a streetwear-inspired collage layout, 3D parallax effects, and premium interactive web experiences.">
+  
+  <!-- Preconnect and Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Caveat:wght@400..700&family=Outfit:wght@300;400;600;800&family=Reenie+Beanie&family=Nothing+You+Could+Do&display=swap" rel="stylesheet">
+  
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Custom Cursor Overlay -->
+  <div class="custom-cursor" id="custom-cursor"></div>
+
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <div class="nav-logo">
+      <a href="#hero" id="logo-link">DH.2026</a>
+    </div>
+    <nav class="nav-menu">
+      <a href="#work" class="nav-item" id="nav-work">WORK</a>
+      <a href="#about" class="nav-item" id="nav-about">ABOUT</a>
+      <a href="#contact" class="nav-item" id="nav-contact">CONTACT</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- HERO / LANDING SECTION -->
+    <section class="hero-section" id="hero">
+      
+      <!-- Handwritten Background Scribbles (Parallax Layer 1) -->
+      <div class="scribbles-container" id="scribbles-layer">
+        <div class="scribble" style="top: 10%; left: 8%; transform: rotate(-12deg); font-family: 'Reenie Beanie'; font-size: clamp(2rem, 4vw, 5rem);">What is reality?</div>
+        <div class="scribble" style="top: 18%; right: 12%; transform: rotate(8deg); font-family: 'Caveat'; font-size: clamp(1.5rem, 3vw, 3rem);">I love her</div>
+        <div class="scribble" style="top: 42%; left: 15%; transform: rotate(-5deg); font-family: 'Nothing You Could Do'; font-size: clamp(1.2rem, 2.5vw, 2.5rem);">Why am i here?</div>
+        <div class="scribble" style="top: 40%; right: 18%; transform: rotate(15deg); font-family: 'Reenie Beanie'; font-size: clamp(2.5rem, 4.5vw, 6rem);">What is life?</div>
+        <div class="scribble" style="top: 55%; left: 10%; transform: rotate(6deg); font-family: 'Caveat'; font-size: clamp(1.8rem, 3.5vw, 4rem);">I love Nana</div>
+        <div class="scribble" style="top: 45%; right: 35%; transform: rotate(-8deg); font-family: 'Nothing You Could Do'; font-size: clamp(1.2rem, 2vw, 2.2rem);">hehe boi</div>
+        <div class="scribble" style="top: 72%; left: 8%; transform: rotate(-15deg); font-family: 'Reenie Beanie'; font-size: clamp(2.2rem, 4vw, 5.5rem);">Peak human</div>
+        <div class="scribble" style="top: 80%; right: 25%; transform: rotate(-3deg); font-family: 'Caveat'; font-size: clamp(1.5rem, 2.8vw, 3.2rem);">This portfolio sucks</div>
+        <div class="scribble" style="top: 88%; left: 22%; transform: rotate(5deg); font-family: 'Nothing You Could Do'; font-size: clamp(1.5rem, 3vw, 3.5rem);">Enjoy the time</div>
+      </div>
+
+      <!-- Main Title (Parallax Layer 2) -->
+      <div class="hero-title-container" id="title-layer">
+        <h1 class="hero-title title-left">DAVIN</h1>
+        <div class="hero-title-right-group">
+          <h1 class="hero-title title-right">HORN</h1>
+          <span class="portfolio-stamp">PORTFOLIO</span>
+        </div>
+      </div>
+
+      <!-- Portrait Cutout (Parallax Layer 3) -->
+      <div class="hero-portrait-container" id="portrait-layer">
+        <img src="portrait.png" alt="Davin Horn Portrait" class="portrait-img" id="hero-portrait">
+      </div>
+
+      <!-- Bottom Layout Signatures -->
+      <div class="hero-footer">
+        <div class="footer-left">
+          <span class="small-text font-bold">Life is nice.</span>
+        </div>
+        <div class="footer-right">
+          <span class="small-text font-bold">VOL. 2026</span>
+        </div>
+      </div>
+
+      <!-- Scroll Indicator -->
+      <div class="scroll-indicator">
+        <a href="#work" class="scroll-arrow" id="scroll-arrow" aria-label="Scroll to Work">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M7 13L12 18L17 13" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M12 6L12 17.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+
+    </section>
+
+    <!-- WORK SECTION -->
+    <section class="work-section" id="work">
+      <div class="section-container">
+        <div class="section-header">
+          <h2 class="section-title">SELECTED WORK</h2>
+          <span class="section-subtitle">// 01</span>
+        </div>
+
+        <div class="work-grid">
+          <!-- Project 1 -->
+          <div class="work-card" id="project-1">
+            <div class="card-image-wrapper">
+              <div class="card-bg-glow" style="background: radial-gradient(circle, rgba(99,102,241,0.15) 0%, transparent 70%);"></div>
+              <div class="card-image-placeholder">
+                <span class="card-index">01</span>
+                <span class="card-project-tag">WEB APP</span>
+              </div>
+            </div>
+            <div class="card-info">
+              <h3 class="card-title">Chantrea Travel</h3>
+              <p class="card-desc">A premium travel planning platform with rich interactive maps, seamless itinerary scheduling, and customized routes.</p>
+              <div class="card-tags">
+                <span>Vite</span>
+                <span>Supabase</span>
+                <span>Vanilla CSS</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Project 2 -->
+          <div class="work-card" id="project-2">
+            <div class="card-image-wrapper">
+              <div class="card-bg-glow" style="background: radial-gradient(circle, rgba(16,185,129,0.15) 0%, transparent 70%);"></div>
+              <div class="card-image-placeholder">
+                <span class="card-index">02</span>
+                <span class="card-project-tag">DEV TOOLS</span>
+              </div>
+            </div>
+            <div class="card-info">
+              <h3 class="card-title">Antigravity Dev-Tools</h3>
+              <p class="card-desc">An advanced developer productivity suite offering real-time canvas overlays, visual performance metrics, and debuggers.</p>
+              <div class="card-tags">
+                <span>Node.js</span>
+                <span>Canvas API</span>
+                <span>Chrome Ext</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Project 3 -->
+          <div class="work-card" id="project-3">
+            <div class="card-image-wrapper">
+              <div class="card-bg-glow" style="background: radial-gradient(circle, rgba(236,72,153,0.15) 0%, transparent 70%);"></div>
+              <div class="card-image-placeholder">
+                <span class="card-index">03</span>
+                <span class="card-project-tag">AI DASHBOARD</span>
+              </div>
+            </div>
+            <div class="card-info">
+              <h3 class="card-title">Synapse UI</h3>
+              <p class="card-desc">A modern, responsive AI analytics dashboard implementing glassmorphism, glowing gradients, and fluid charts.</p>
+              <div class="card-tags">
+                <span>Next.js</span>
+                <span>ChartJS</span>
+                <span>Framer Motion</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Project 4 -->
+          <div class="work-card" id="project-4">
+            <div class="card-image-wrapper">
+              <div class="card-bg-glow" style="background: radial-gradient(circle, rgba(245,158,11,0.15) 0%, transparent 70%);"></div>
+              <div class="card-image-placeholder">
+                <span class="card-index">04</span>
+                <span class="card-project-tag">EXPERIMENT</span>
+              </div>
+            </div>
+            <div class="card-info">
+              <h3 class="card-title">Neptune Sound</h3>
+              <p class="card-desc">An immersive, audio-reactive 3D visualizer based on the Web Audio API, shifting colors dynamically with music frequencies.</p>
+              <div class="card-tags">
+                <span>Web Audio API</span>
+                <span>Three.js</span>
+                <span>GLSL Shaders</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT SECTION -->
+    <section class="about-section" id="about">
+      <div class="section-container">
+        <div class="section-header">
+          <h2 class="section-title">ABOUT ME</h2>
+          <span class="section-subtitle">// 02</span>
+        </div>
+
+        <div class="about-grid">
+          <!-- Text Bio -->
+          <div class="about-bio">
+            <h3 class="about-lead">Davin Horn is a fullstack developer and creative designer crafting highly polished digital experiences.</h3>
+            <p class="about-paragraph">
+              Combining a passion for clean software architecture with visual design, I build web applications that look premium and perform flawlessly. I specialize in core web technologies (HTML, CSS, JavaScript) alongside modern ecosystems like React, Node.js, and cloud backend solutions.
+            </p>
+            <p class="about-paragraph">
+              My design ethos is heavily inspired by urban streetwear, retro-futurism, and dynamic layout design. I strive to make web platforms feel alive and engaging through motion, micro-animations, and high-fidelity user interactions.
+            </p>
+
+            <div class="skills-showcase">
+              <h4 class="skills-title">SKILLS & FRAMEWORKS</h4>
+              <div class="skills-tags">
+                <span class="skill-pill">JavaScript (ES6+)</span>
+                <span class="skill-pill">HTML5 / CSS3</span>
+                <span class="skill-pill">Vite & Next.js</span>
+                <span class="skill-pill">Node.js / Express</span>
+                <span class="skill-pill">Supabase & SQL</span>
+                <span class="skill-pill">Git / GitHub Workflow</span>
+                <span class="skill-pill">UI/UX Layouts</span>
+                <span class="skill-pill">Visual Animation</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Visual Zine Collage -->
+          <div class="about-collage">
+            <div class="polaroid-wrapper drag-polaroid" id="polaroid-1">
+              <div class="polaroid">
+                <div class="polaroid-photo">
+                  <div class="photo-placeholder-graphic">DH.2026</div>
+                </div>
+                <div class="polaroid-caption">Creative Coding</div>
+              </div>
+            </div>
+            
+            <div class="polaroid-wrapper drag-polaroid" id="polaroid-2">
+              <div class="polaroid">
+                <div class="polaroid-photo">
+                  <div class="photo-placeholder-graphic secondary">STREETWEAR INSPIRED</div>
+                </div>
+                <div class="polaroid-caption">Design Ethos</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT SECTION -->
+    <section class="contact-section" id="contact">
+      <div class="section-container">
+        <div class="contact-card-container">
+          <div class="contact-card">
+            <!-- Card Corner Elements -->
+            <div class="card-corner top-left">+</div>
+            <div class="card-corner top-right">+</div>
+            <div class="card-corner bottom-left">+</div>
+            <div class="card-corner bottom-right">+</div>
+
+            <div class="contact-header">
+              <span class="contact-stamp">LET'S CONNECT</span>
+              <h2 class="contact-title">START A PROJECT</h2>
+            </div>
+            
+            <p class="contact-desc">
+              Have an idea, project, or want to discuss creative coding? Reach out through any channel below.
+            </p>
+
+            <div class="contact-links">
+              <a href="mailto:horndavin63@gmail.com" class="contact-btn" id="contact-email">
+                <span class="btn-text">Email Me</span>
+                <span class="btn-subtext">horndavin63@gmail.com</span>
+              </a>
+              
+              <a href="https://github.com/Davinhorn" target="_blank" rel="noopener noreferrer" class="contact-btn" id="contact-github">
+                <span class="btn-text">GitHub</span>
+                <span class="btn-subtext">@Davinhorn</span>
+              </a>
+            </div>
+
+            <div class="contact-footer">
+              <span class="contact-serial">NO. 86C25970-AF1A</span>
+              <span class="contact-status">AVAILABLE FOR WORK</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-container">
+      <p class="footer-copy">&copy; 2026 Davin Horn. All rights reserved. Created with Antigravity.</p>
+    </div>
+  </footer>
+
+  <!-- Script File -->
+  <script src="app.js"></script>
+</body>
+</html>
