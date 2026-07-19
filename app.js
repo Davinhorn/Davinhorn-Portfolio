@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initDraggableCollage();
   initProjectTilt();
   initInteractiveScribbles();
+  initScribbleWritingAnimation();
   
   // Dynamic typography scale
   scaleTitleToFit();
@@ -285,6 +286,43 @@ function scaleTitleToFit() {
   
   // Apply calculated font size directly
   title.style.fontSize = `${targetFontSize}px`;
+}
+
+/* ==========================================================================
+   7. SCRIBBLE WRITING ANIMATION (ORGANIC TYPING EFFECT)
+   ========================================================================== */
+function initScribbleWritingAnimation() {
+  const scribbles = document.querySelectorAll('.scribble');
+  scribbles.forEach((scribble) => {
+    const text = scribble.textContent.trim();
+    scribble.innerHTML = ''; // Clear original text
+    
+    // Split into characters and wrap each in a transition span
+    const chars = text.split('');
+    chars.forEach((char) => {
+      const span = document.createElement('span');
+      span.textContent = char === ' ' ? '\u00A0' : char; // Preserve whitespace character
+      span.style.opacity = '0';
+      span.style.display = 'inline-block';
+      span.style.transform = 'scale(0.85) translateY(4px)';
+      span.style.transition = 'opacity 0.25s ease-out, transform 0.25s ease-out';
+      scribble.appendChild(span);
+    });
+    
+    // Organic start delay and per-character intervals
+    const startDelay = 200 + Math.random() * 1800; // 0.2s to 2.0s
+    const charInterval = 40 + Math.random() * 45;  // 40ms to 85ms per character
+    
+    setTimeout(() => {
+      const spans = scribble.querySelectorAll('span');
+      spans.forEach((span, index) => {
+        setTimeout(() => {
+          span.style.opacity = '1';
+          span.style.transform = 'scale(1) translateY(0)';
+        }, index * charInterval);
+      });
+    }, startDelay);
+  });
 }
 
 
