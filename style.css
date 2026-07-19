@@ -133,8 +133,8 @@ body {
   left: 50%;
   transform: translate(-50%, 0);
   z-index: 3;
-  width: 90vw;
-  max-width: 1400px;
+  width: 100vw;
+  max-width: none;
   display: flex;
   justify-content: center;
   pointer-events: none;
@@ -148,11 +148,10 @@ body {
 
 .hero-title {
   font-family: var(--font-title);
-  font-size: clamp(6rem, 20.6vw, 22.8rem);
+  font-size: clamp(6rem, 22.8vw, 45rem);
   font-weight: 900;
   color: var(--text-color);
   line-height: 0.8;
-  letter-spacing: -0.045em;
   text-transform: uppercase;
   display: block;
   transform: scaleY(1.05);
@@ -164,7 +163,7 @@ body {
   font-size: clamp(2.2rem, 5.2vw, 5.5rem);
   color: var(--text-color);
   position: absolute;
-  right: 0;
+  right: 0.8%;
   top: 96%;
   letter-spacing: -0.03em;
   line-height: 0.8;
@@ -204,11 +203,11 @@ body {
   bottom: 5%;
   left: 50%;
   transform: translateX(-50%);
-  width: 90vw;
-  max-width: 1400px;
+  width: 100vw;
+  max-width: none;
   display: flex;
   justify-content: space-between;
-  padding: 0;
+  padding: 0 1.5%;
   z-index: 20;
   pointer-events: none;
 }
