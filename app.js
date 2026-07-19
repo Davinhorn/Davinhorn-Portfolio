@@ -70,7 +70,7 @@ function initHeroParallax() {
     if (titleLayer) {
       const rotX = -yOffset * 6;
       const rotY = xOffset * 6;
-      titleLayer.style.transform = `translate(${xOffset * -20}px, ${yOffset * -20}px) rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+      titleLayer.style.transform = `translate(calc(-50% + ${xOffset * -20}px), ${yOffset * -20}px) rotateX(${rotX}deg) rotateY(${rotY}deg)`;
     }
 
     // Layer 3: Portrait Cutout (moves with mouse, slight scale depth)
@@ -83,7 +83,7 @@ function initHeroParallax() {
   // Reset layers on mouse leave
   hero.addEventListener('mouseleave', () => {
     if (scribblesLayer) scribblesLayer.style.transform = 'translate(0px, 0px)';
-    if (titleLayer) titleLayer.style.transform = 'translate(0px, 0px) rotateX(0deg) rotateY(0deg)';
+    if (titleLayer) titleLayer.style.transform = 'translate(-50%, 0px) rotateX(0deg) rotateY(0deg)';
     if (portraitLayer) portraitLayer.style.transform = 'translate(-50%, 0px) scale(1)';
   });
 }
