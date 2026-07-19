@@ -214,18 +214,9 @@ function initDynamicScribbles() {
   ];
   
   const fonts = ['Reenie Beanie', 'Caveat', 'Nothing You Could Do'];
-  const activePhrases = new Set();
+  let activeScribbles = [];
   
-  function spawnScribble() {
-    // Pick unique phrase
-    let available = phrases.filter(p => !activePhrases.has(p));
-    if (available.length === 0) {
-      activePhrases.clear();
-      available = phrases;
-    }
-    const phrase = available[Math.floor(Math.random() * available.length)];
-    activePhrases.add(phrase);
-    
+  function createScribbleElement(phrase) {
     const scribble = document.createElement('div');
     scribble.className = 'scribble';
     
@@ -253,7 +244,7 @@ function initDynamicScribbles() {
     scribble.style.cursor = 'pointer';
     scribble.style.transition = 'color 0.2s, opacity 0.5s, transform 0.5s';
     
-    // Clear and build character spans for letter-by-letter writing animation
+    // Split into character spans for letter-by-letter writing animation
     const chars = phrase.split('');
     chars.forEach((char) => {
       const span = document.createElement('span');
@@ -269,7 +260,7 @@ function initDynamicScribbles() {
     initSingleScribbleInteractivity(scribble);
     
     // Character typing reveal
-    const charInterval = 40 + Math.random() * 30;
+    const charInterval = 40 + Math.random() * 20;
     const spans = scribble.querySelectorAll('span');
     spans.forEach((span, index) => {
       setTimeout(() => {
@@ -278,25 +269,56 @@ function initDynamicScribbles() {
       }, index * charInterval);
     });
     
-    const typingDuration = spans.length * charInterval;
-    const visibleDuration = 6000 + Math.random() * 4000; // Visible for 6-10s
-    
-    // Clean fade-out and replace loop
-    setTimeout(() => {
-      scribble.style.opacity = '0';
-      scribble.style.transform = `rotate(${rotation}deg) scale(0.95)`;
-      setTimeout(() => {
-        scribble.remove();
-        activePhrases.delete(phrase);
-        spawnScribble();
-      }, 500);
-    }, typingDuration + visibleDuration);
+    return scribble;
   }
   
-  // Stagger spawner
-  for (let i = 0; i < 4; i++) {
-    setTimeout(spawnScribble, i * 1800);
-  }
+  // Spawn all 17 initial phrases (leaving 1 out of play for the cycle pool)
+  const initialPhrases = [...phrases];
+  initialPhrases.sort(() => Math.random() - 0.5);
+  
+  initialPhrases.forEach((phrase, index) => {
+    setTimeout(() => {
+      const scribbleEl = createScribbleElement(phrase);
+      activeScribbles.push({ element: scribbleEl, phrase: phrase });
+    }, index * 180); // Stagger initial writing across the canvas
+  });
+  
+  // Start the cyclical fade-out / fade-in spawner once initial spawn completes
+  const loopStartDelay = (initialPhrases.length * 180) + 3000;
+  
+  setTimeout(() => {
+    setInterval(() => {
+      if (activeScribbles.length === 0) return;
+      
+      // Select random active scribble to remove
+      const removeIndex = Math.floor(Math.random() * activeScribbles.length);
+      const removed = activeScribbles.splice(removeIndex, 1)[0];
+      
+      const scribbleEl = removed.element;
+      const rotationMatch = scribbleEl.style.transform.match(/rotate\(([^)]+)\)/);
+      const rot = rotationMatch ? rotationMatch[0] : '';
+      
+      // Fade out
+      scribbleEl.style.opacity = '0';
+      scribbleEl.style.transform = `${rot} scale(0.92)`;
+      
+      setTimeout(() => {
+        scribbleEl.remove();
+      }, 500);
+      
+      // Pick a phrase that is NOT currently visible on screen
+      const currentVisiblePhrases = activeScribbles.map(s => s.phrase);
+      const available = phrases.filter(p => !currentVisiblePhrases.includes(p));
+      const newPhrase = available[Math.floor(Math.random() * available.length)];
+      
+      // Spawn new scribble in a new random coordinate after fade-out completes
+      setTimeout(() => {
+        const newScribbleEl = createScribbleElement(newPhrase);
+        activeScribbles.push({ element: newScribbleEl, phrase: newPhrase });
+      }, 600);
+      
+    }, 3200); // Cycle one phrase every 3.2 seconds
+  }, loopStartDelay);
 }
 
 function initSingleScribbleInteractivity(scribble) {
