@@ -100,12 +100,12 @@ function applyParallax(xOffset, yOffset) {
   if (titleLayer) {
     const rotX = -yOffset * 6;
     const rotY = xOffset * 6;
-    titleLayer.style.transform = `translate(calc(-50% + ${xOffset * -20}px), ${yOffset * -20}px) rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+    titleLayer.style.transform = `translate(${xOffset * -20}px, ${yOffset * -20}px) rotateX(${rotX}deg) rotateY(${rotY}deg)`;
   }
 
   // Layer 3: Portrait Cutout (slight scaling shift)
   if (portraitLayer) {
-    portraitLayer.style.transform = `translate(calc(-50% + ${xOffset * 15}px), ${yOffset * 10}px) scale(1.02)`;
+    portraitLayer.style.transform = `translate(${xOffset * 15}px, ${yOffset * 10}px) scale(1.02)`;
   }
 }
 
@@ -126,8 +126,8 @@ function initHeroParallax() {
     const titleLayer = document.getElementById('title-layer');
     const portraitLayer = document.getElementById('portrait-layer');
     if (scribblesLayer) scribblesLayer.style.transform = 'translate(0px, 0px)';
-    if (titleLayer) titleLayer.style.transform = 'translate(-50%, 0px) rotateX(0deg) rotateY(0deg)';
-    if (portraitLayer) portraitLayer.style.transform = 'translate(-50%, 0px) scale(1)';
+    if (titleLayer) titleLayer.style.transform = 'translate(0px, 0px) rotateX(0deg) rotateY(0deg)';
+    if (portraitLayer) portraitLayer.style.transform = 'translate(0px, 0px) scale(1)';
   });
 
   // Gyroscope / Tilt tracking on mobile devices
@@ -453,16 +453,6 @@ function initDynamicScribbles() {
 }
 
 function initSingleScribbleInteractivity(scribble) {
-  const messages = [
-    "You found me!",
-    "Life is code.",
-    "Aesthetics matter.",
-    "Wait, is this a dream?",
-    "Keep scrolling!",
-    "Streetwear is a lifestyle.",
-    "Made with love in 2026."
-  ];
-
   scribble.addEventListener('mouseenter', () => {
     scribble.style.color = '#4f46e5';
     const rot = scribble.dataset.rotation || '0';
@@ -473,41 +463,6 @@ function initSingleScribbleInteractivity(scribble) {
     scribble.style.color = '';
     const rot = scribble.dataset.rotation || '0';
     scribble.style.transform = `translate(-50%, -50%) rotate(${rot}deg)`;
-  });
-
-  scribble.addEventListener('click', (e) => {
-    const existing = document.querySelector('.scribble-bubble');
-    if (existing) existing.remove();
-
-    const bubble = document.createElement('div');
-    bubble.className = 'scribble-bubble';
-    bubble.textContent = messages[Math.floor(Math.random() * messages.length)];
-    
-    bubble.style.position = 'fixed';
-    bubble.style.left = `${e.clientX}px`;
-    bubble.style.top = `${e.clientY - 40}px`;
-    bubble.style.backgroundColor = '#0c0c0c';
-    bubble.style.color = '#faf9f5';
-    bubble.style.padding = '0.5rem 1rem';
-    bubble.style.fontSize = '0.85rem';
-    bubble.style.fontWeight = 'bold';
-    bubble.style.borderRadius = '4px';
-    bubble.style.boxShadow = '0 4px 10px rgba(0,0,0,0.15)';
-    bubble.style.zIndex = '999';
-    bubble.style.transform = 'translate(-50%, -10px)';
-    bubble.style.pointerEvents = 'none';
-    bubble.style.transition = 'opacity 0.4s, transform 0.4s';
-    
-    document.body.appendChild(bubble);
-    requestAnimationFrame(() => {
-      bubble.style.transform = 'translate(-50%, 0)';
-    });
-
-    setTimeout(() => {
-      bubble.style.opacity = '0';
-      bubble.style.transform = 'translate(-50%, -10px)';
-      setTimeout(() => bubble.remove(), 400);
-    }, 1500);
   });
 }
 
