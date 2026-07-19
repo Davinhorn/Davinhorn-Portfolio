@@ -216,31 +216,17 @@ function initDynamicScribbles() {
   const fonts = ['Reenie Beanie', 'Caveat', 'Nothing You Could Do'];
   const activePhrases = new Set();
   
-  // Grid settings to ensure even distribution and prevent overlaps
+  // Grid layout parameters (5 columns, 4 rows)
   const gridCols = 5;
   const gridRows = 4;
-  const totalCells = gridCols * gridRows; // 20 grid slots
-  const occupiedCells = new Set();
   
-  function spawnScribble() {
-    // Find empty grid cells
-    const availableCells = [];
-    for (let i = 0; i < totalCells; i++) {
-      if (!occupiedCells.has(i)) {
-        availableCells.push(i);
-      }
-    }
-    
-    // Safety check (should not be needed since max active scribbles is 15 of 20 cells)
-    if (availableCells.length === 0) {
-      occupiedCells.clear();
-      for (let i = 0; i < totalCells; i++) availableCells.push(i);
-    }
-    
-    // Choose random available grid slot
-    const cellIndex = availableCells[Math.floor(Math.random() * availableCells.length)];
-    occupiedCells.add(cellIndex);
-    
+  // Track occupied rows for each column: Map<colIndex, Set<rowIndex>>
+  const occupiedByColumn = new Map();
+  for (let c = 0; c < gridCols; c++) {
+    occupiedByColumn.set(c, new Set());
+  }
+  
+  function spawnScribble(col, row) {
     // Pick unique phrase
     let availablePhrases = phrases.filter(p => !activePhrases.has(p));
     if (availablePhrases.length === 0) {
@@ -250,21 +236,21 @@ function initDynamicScribbles() {
     const phrase = availablePhrases[Math.floor(Math.random() * availablePhrases.length)];
     activePhrases.add(phrase);
     
+    // Mark as occupied
+    occupiedByColumn.get(col).add(row);
+    
     const scribble = document.createElement('div');
     scribble.className = 'scribble';
     
     // Calculate cell layout positions
-    const col = cellIndex % gridCols;
-    const row = Math.floor(cellIndex / gridCols);
-    
-    const cellWidth = 84 / gridCols; // Distribute across 84% width
-    const cellHeight = 74 / gridRows; // Distribute across 74% height
+    const cellWidth = 84 / gridCols; // 16.8%
+    const cellHeight = 74 / gridRows; // 18.5%
     
     const colLeft = 6 + (col * cellWidth);
     const rowTop = 8 + (row * cellHeight);
     
-    // Add organic wiggling within the cell bounds to prevent looking like a rigid table
-    const wiggleX = (Math.random() * 0.4 - 0.2) * cellWidth; // ±20% wiggle
+    // Add organic wiggling within the cell bounds to keep it casual
+    const wiggleX = (Math.random() * 0.4 - 0.2) * cellWidth;
     const wiggleY = (Math.random() * 0.4 - 0.2) * cellHeight;
     
     const leftPercent = colLeft + (cellWidth / 2) + wiggleX;
@@ -332,20 +318,49 @@ function initDynamicScribbles() {
       const eraseDuration = spans.length * eraseInterval;
       setTimeout(() => {
         scribble.remove();
-        occupiedCells.delete(cellIndex);
+        occupiedByColumn.get(col).delete(row);
         activePhrases.delete(phrase);
-        // Spawn replacement
-        spawnScribble();
+        
+        // Find empty rows in this column to spawn replacement
+        const emptyRows = [];
+        for (let r = 0; r < gridRows; r++) {
+          if (!occupiedByColumn.get(col).has(r)) {
+            emptyRows.push(r);
+          }
+        }
+        
+        const nextRow = emptyRows.length > 0 
+          ? emptyRows[Math.floor(Math.random() * emptyRows.length)]
+          : row; // fallback
+          
+        // Spawn replacement in the same column
+        spawnScribble(col, nextRow);
       }, eraseDuration + 100);
       
     }, typingDuration + visibleDuration);
   }
   
-  // Stagger spawner for 15 initial phrases to populate screen on page load
-  const maxInitialScribbles = 15;
-  for (let i = 0; i < maxInitialScribbles; i++) {
-    setTimeout(spawnScribble, i * 200); // Stagger initial text typing sequence
+  // Build initial cell list: exactly 3 rows per column
+  const initialCells = [];
+  for (let c = 0; c < gridCols; c++) {
+    // Pick 3 random rows out of {0, 1, 2, 3}
+    const rows = [0, 1, 2, 3];
+    rows.sort(() => Math.random() - 0.5);
+    const chosenRows = rows.slice(0, 3);
+    chosenRows.forEach(r => {
+      initialCells.push({ col: c, row: r });
+    });
   }
+  
+  // Shuffle initial cells so the spawn stagger is randomly distributed across the screen
+  initialCells.sort(() => Math.random() - 0.5);
+  
+  initialCells.forEach((cell, index) => {
+    setTimeout(() => {
+      spawnScribble(cell.col, cell.row);
+    }, index * 200); // Stagger initial text typing sequence
+  }
+  );
 }
 
 function initSingleScribbleInteractivity(scribble) {
