@@ -196,7 +196,7 @@ body {
   width: auto;
   object-fit: contain;
   position: absolute;
-  bottom: -27.2vh;
+  bottom: -26vh;
   left: 50%;
   transform: translateX(-50%);
   display: block;
