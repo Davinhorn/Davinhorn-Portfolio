@@ -131,7 +131,8 @@ body {
 /* Parallax Layer 2: Main Title */
 .hero-title-container {
   position: absolute;
-  top: 5%;
+  top: 7%;
+  top: calc(var(--vh, 1vh) * 7);
   left: 0;
   right: 0;
   margin: 0 auto;
@@ -208,7 +209,8 @@ body {
 /* Bottom Footer Details */
 .hero-footer {
   position: absolute;
-  bottom: 5%;
+  bottom: 7%;
+  bottom: calc(var(--vh, 1vh) * 7);
   left: 50%;
   transform: translateX(-50%);
   width: 90vw;
