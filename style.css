@@ -890,18 +890,19 @@ html, body {
 }
 
 .portfolio-stamp {
+  font-family: var(--font-title);
+  font-size: clamp(2.2rem, 5.2vw, 5.5rem);
+  color: var(--text-color);
+  letter-spacing: -0.03em;
+  line-height: 0.8;
+  display: inline-block;
+  transform: rotate(0deg);
+  
   background: none;
   border: none;
   padding: 0;
   margin: 0;
-  font-family: inherit;
-  font-size: inherit;
-  font-weight: inherit;
-  color: inherit;
   cursor: pointer;
-  letter-spacing: inherit;
-  line-height: inherit;
-  display: inline-block;
   text-transform: uppercase;
   outline: none;
   transition: color 0.3s ease, transform 0.3s ease;
@@ -1048,11 +1049,15 @@ html, body {
 }
 
 .hero-portrait-container {
-  cursor: pointer;
-  pointer-events: auto !important;
+  pointer-events: none !important;
 }
 
-.hero-portrait-container:hover .portrait-overlay {
+.portrait-img {
+  pointer-events: auto !important;
+  cursor: pointer;
+}
+
+.portrait-overlay.hovered {
   opacity: 1;
 }
 
@@ -1117,23 +1122,6 @@ html, body {
 
 .contact-page-content .contact-card {
   max-width: 600px;
-}
-
-/* Static footer alignment */
-.footer {
-  position: absolute;
-  bottom: 12px;
-  left: 0;
-  width: 100%;
-  text-align: center;
-  z-index: 1;
-  pointer-events: none;
-}
-
-.footer-copy {
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  opacity: 0.5;
 }
 
 

@@ -749,9 +749,17 @@ function initNavigationInteractions() {
   });
 
   // Portrait Hover overlay / click interactions (About Me trigger)
-  const portraitContainer = document.querySelector('.hero-portrait-container');
-  if (portraitContainer) {
-    portraitContainer.addEventListener('click', (e) => {
+  const portraitImg = document.getElementById('hero-portrait');
+  const portraitOverlay = document.querySelector('.portrait-overlay');
+  
+  if (portraitImg && portraitOverlay) {
+    portraitImg.addEventListener('mouseenter', () => {
+      portraitOverlay.classList.add('hovered');
+    });
+    portraitImg.addEventListener('mouseleave', () => {
+      portraitOverlay.classList.remove('hovered');
+    });
+    portraitImg.addEventListener('click', (e) => {
       e.stopPropagation();
       window.navigateToRoute('aboutme');
     });
