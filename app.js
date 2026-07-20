@@ -114,8 +114,9 @@ function applyParallax(xOffset, yOffset) {
   }
 
   // Layer 4: Foreground footer elements (Contact and VOL.2026 moving with layout depth)
+  // Preserves translateX(-50%) centering layout rule
   if (footerLayer) {
-    footerLayer.style.transform = `translate(${xOffset * 10}px, ${yOffset * 5}px)`;
+    footerLayer.style.transform = `translateX(-50%) translate(${xOffset * 10}px, ${yOffset * 5}px)`;
   }
 }
 
@@ -142,7 +143,7 @@ function initHeroParallax() {
     if (scribblesLayer) scribblesLayer.style.transform = 'translate(0px, 0px)';
     if (titleLayer) titleLayer.style.transform = 'translate(0px, 0px) rotateX(0deg) rotateY(0deg)';
     if (portraitLayer) portraitLayer.style.transform = 'translate(0px, 0px) scale(1)';
-    if (footerLayer) footerLayer.style.transform = 'translate(0px, 0px)';
+    if (footerLayer) footerLayer.style.transform = 'translateX(-50%) translate(0px, 0px)';
   });
 
   // Gyroscope / Tilt tracking on mobile devices
