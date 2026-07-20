@@ -134,11 +134,9 @@ function initHeroParallax() {
   if (window.DeviceOrientationEvent) {
     let baselineBeta = null;
     let baselineGamma = null;
-    let lastBeta = null;
-    let lastGamma = null;
-    let lastMoveTime = Date.now();
-    const movementThreshold = 0.08; // degrees of change to detect tilting
-    const idleTimeout = 1200; // time in ms of no tilting before resetting baseline
+    const recentReadings = [];
+    const WINDOW_DURATION = 1000; // 1 second sliding window
+    const STATIONARY_THRESHOLD = 0.8; // degrees of change to detect holding steady
 
     function handleOrientation(e) {
       const beta = e.beta; // Tilt front-to-back: -180 to 180
@@ -152,28 +150,34 @@ function initHeroParallax() {
       if (baselineBeta === null) {
         baselineBeta = beta;
         baselineGamma = gamma;
-        lastBeta = beta;
-        lastGamma = gamma;
-        lastMoveTime = now;
-        return;
       }
       
-      // Calculate change since last event to detect user tilting
-      const changeBeta = Math.abs(beta - lastBeta);
-      const changeGamma = Math.abs(gamma - lastGamma);
+      // Add current reading to history
+      recentReadings.push({ beta, gamma, timestamp: now });
       
-      if (changeBeta > movementThreshold || changeGamma > movementThreshold) {
-        lastMoveTime = now;
+      // Remove readings older than the window duration
+      while (recentReadings.length > 0 && now - recentReadings[0].timestamp > WINDOW_DURATION) {
+        recentReadings.shift();
       }
       
-      lastBeta = beta;
-      lastGamma = gamma;
+      // Calculate range of movement (max - min) over the window
+      let minBeta = beta, maxBeta = beta;
+      let minGamma = gamma, maxGamma = gamma;
       
-      // If the user stopped tilting for longer than the idle timeout,
+      for (let i = 0; i < recentReadings.length; i++) {
+        const r = recentReadings[i];
+        if (r.beta < minBeta) minBeta = r.beta;
+        if (r.beta > maxBeta) maxBeta = r.beta;
+        if (r.gamma < minGamma) minGamma = r.gamma;
+        if (r.gamma > maxGamma) maxGamma = r.gamma;
+      }
+      
+      const rangeBeta = maxBeta - minBeta;
+      const rangeGamma = maxGamma - minGamma;
+      
+      // If the device is held steady (movement range < threshold over the last 1s),
       // reset the baseline orientation to the current orientation.
-      // This returns visual offsets to 0, which transitions them smoothly
-      // back to default via CSS transitions.
-      if (now - lastMoveTime > idleTimeout) {
+      if (rangeBeta < STATIONARY_THRESHOLD && rangeGamma < STATIONARY_THRESHOLD) {
         baselineBeta = beta;
         baselineGamma = gamma;
       }
