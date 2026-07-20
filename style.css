@@ -109,14 +109,22 @@ body {
 
 /* Parallax Layer 1: Scribbles */
 .scribbles-container {
-  position: absolute;
+  position: fixed;
   top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  left: -10vw;
+  width: 120vw;
+  height: 100vh;
   pointer-events: none;
   z-index: 1;
-  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s ease;
+}
+
+.homepage-inactive .scribbles-container {
+  transform: translateX(-10vw);
+}
+
+.about-active .scribbles-container {
+  transform: translateX(-8vw);
 }
 
 .scribble {
@@ -136,7 +144,7 @@ body {
   left: 0;
   right: 0;
   margin: 0 auto;
-  z-index: 3;
+  z-index: auto; /* Remove z-index to prevent creating a stacking context */
   width: 90vw;
   max-width: 1450px;
   display: flex;
@@ -163,6 +171,8 @@ body {
   display: block;
   transform: scaleY(1.05);
   white-space: nowrap;
+  position: relative;
+  z-index: 3; /* Title stacks behind the portrait (z-index 5) */
 }
 
 .portfolio-stamp {
@@ -976,7 +986,7 @@ html, body {
   right: 0;
   list-style: none;
   padding: 0;
-  margin: 10px 0 0 0;
+  margin: 20px 0 0 0; /* Pushed down to prevent trigger overlap */
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -1012,10 +1022,7 @@ html, body {
   transform: scale(1.08);
 }
 
-/* Elevate main title when nav is active to prevent overlapping with portrait cutout */
-.hero-title-container.nav-open {
-  z-index: 10;
-}
+/* Title container remains z-index: auto so that dropdown and title stack independently */
 
 /* About Me Panel Styles (Desktop default) */
 .about-content-panel {
@@ -1081,7 +1088,7 @@ html, body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(12, 12, 12, 0.4);
+  background-color: transparent; /* No screen darkening */
   opacity: 0;
   transition: opacity 0.3s ease;
   pointer-events: none;
@@ -1092,6 +1099,8 @@ html, body {
   font-family: var(--font-title);
   font-size: clamp(2.5rem, 5vw, 5rem);
   letter-spacing: 0.05em;
+  /* Add glitchy animation to the ABOUT ME text */
+  animation: tvGlitch 3s infinite;
 }
 
 .hero-portrait-container {
@@ -1109,7 +1118,8 @@ html, body {
 
 /* Slide portrait when about is active */
 .about-active #portrait-layer {
-  transform: translateX(-25%) scale(0.95);
+  transform: translateX(-35%) scale(0.98); /* Slide further left */
+  z-index: 9; /* Bring portrait to front to overlay About Me panel beautifully */
 }
 
 .about-active #title-layer {
@@ -1119,7 +1129,7 @@ html, body {
 }
 
 .about-active .scribbles-container {
-  opacity: 0.2;
+  opacity: 1; /* Keep scribbles fully visible */
 }
 
 /* Footer layout elements */
