@@ -50,8 +50,8 @@ document.addEventListener('DOMContentLoaded', () => {
   setTimeout(scaleTitleToFit, 2000);
 
   // Initialize SPA Router and interactive navigation elements
-  initSpaRouter();
   initNavigationInteractions();
+  initSpaRouter();
 });
 
 /* ==========================================================================
@@ -620,7 +620,7 @@ function initSpaRouter() {
     document.body.classList.remove('homepage-inactive');
     
     // Close any open dropdowns
-    closeAllDropdowns();
+    if (typeof closeAllDropdowns === 'function') closeAllDropdowns();
     
     if (path === '' || path === 'index.html') {
       // Home page is active, no additional action needed
@@ -752,16 +752,71 @@ function initNavigationInteractions() {
   const portraitImg = document.getElementById('hero-portrait');
   const portraitOverlay = document.querySelector('.portrait-overlay');
   
+  let offscreenCanvas = null;
+  let offscreenCtx = null;
+  
+  function initPortraitCanvas() {
+    if (!portraitImg || portraitImg.naturalWidth === 0) return;
+    offscreenCanvas = document.createElement('canvas');
+    offscreenCanvas.width = portraitImg.naturalWidth;
+    offscreenCanvas.height = portraitImg.naturalHeight;
+    offscreenCtx = offscreenCanvas.getContext('2d', { willReadFrequently: true });
+    offscreenCtx.drawImage(portraitImg, 0, 0);
+  }
+  
+  function checkPortraitAlpha(e) {
+    if (!offscreenCtx) return false;
+    const img = e.target;
+    const rect = img.getBoundingClientRect();
+    
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    const naturalX = Math.floor((x / rect.width) * img.naturalWidth);
+    const naturalY = Math.floor((y / rect.height) * img.naturalHeight);
+    
+    // Bounds guard
+    if (naturalX < 0 || naturalX >= img.naturalWidth || naturalY < 0 || naturalY >= img.naturalHeight) {
+      return false;
+    }
+    
+    try {
+      const pixel = offscreenCtx.getImageData(naturalX, naturalY, 1, 1).data;
+      const alpha = pixel[3]; // alpha channel
+      return alpha > 15;
+    } catch (err) {
+      console.error("Canvas read failed", err);
+      return true; // fallback
+    }
+  }
+  
   if (portraitImg && portraitOverlay) {
-    portraitImg.addEventListener('mouseenter', () => {
-      portraitOverlay.classList.add('hovered');
+    if (portraitImg.complete) {
+      initPortraitCanvas();
+    } else {
+      portraitImg.addEventListener('load', initPortraitCanvas);
+    }
+    
+    portraitImg.addEventListener('mousemove', (e) => {
+      const isOverVisible = checkPortraitAlpha(e);
+      if (isOverVisible) {
+        portraitOverlay.classList.add('hovered');
+        portraitImg.style.cursor = 'pointer';
+      } else {
+        portraitOverlay.classList.remove('hovered');
+        portraitImg.style.cursor = 'default';
+      }
     });
+    
     portraitImg.addEventListener('mouseleave', () => {
       portraitOverlay.classList.remove('hovered');
     });
+    
     portraitImg.addEventListener('click', (e) => {
-      e.stopPropagation();
-      window.navigateToRoute('aboutme');
+      if (checkPortraitAlpha(e)) {
+        e.stopPropagation();
+        window.navigateToRoute('aboutme');
+      }
     });
   }
 }
