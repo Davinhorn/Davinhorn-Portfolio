@@ -49,6 +49,11 @@ document.addEventListener('DOMContentLoaded', () => {
   setTimeout(scaleTitleToFit, 1000);
   setTimeout(scaleTitleToFit, 2000);
 
+  // Initialize device-specific gyroscope states
+  window.isAboutMeTappable = false;
+  window.aboutMeFadeTimeout = null;
+  initAboutPagination();
+
   // Initialize SPA Router and interactive navigation elements
   initNavigationInteractions();
   initSpaRouter();
@@ -193,9 +198,28 @@ function initHeroParallax() {
       
       // If the device is held steady (movement range < threshold over the last 1s),
       // reset the baseline orientation to the current orientation.
+      const portraitOverlay = document.querySelector('.portrait-overlay');
+      
       if (rangeBeta < STATIONARY_THRESHOLD && rangeGamma < STATIONARY_THRESHOLD) {
         baselineBeta = beta;
         baselineGamma = gamma;
+        
+        // Device is steady. Start the 1s fade-out timer for About Me trigger
+        if (window.isAboutMeTappable && !window.aboutMeFadeTimeout) {
+          window.aboutMeFadeTimeout = setTimeout(() => {
+            if (portraitOverlay) portraitOverlay.classList.remove('mobile-visible');
+            window.isAboutMeTappable = false;
+            window.aboutMeFadeTimeout = null;
+          }, 1000);
+        }
+      } else {
+        // Device is actively tilting! Show the overlay immediately
+        if (window.aboutMeFadeTimeout) {
+          clearTimeout(window.aboutMeFadeTimeout);
+          window.aboutMeFadeTimeout = null;
+        }
+        if (portraitOverlay) portraitOverlay.classList.add('mobile-visible');
+        window.isAboutMeTappable = true;
       }
       
       // Calculate shifts relative to baseline
@@ -627,6 +651,7 @@ function initSpaRouter() {
     document.body.classList.remove('about-active');
     const aboutPanel = document.getElementById('about-content-panel');
     if (aboutPanel) aboutPanel.classList.remove('active');
+    if (typeof resetAboutPagination === 'function') resetAboutPagination();
     
     // Reset Home layout
     document.body.classList.remove('homepage-inactive');
@@ -827,10 +852,63 @@ function initNavigationInteractions() {
     portraitImg.addEventListener('click', (e) => {
       if (checkPortraitAlpha(e)) {
         e.stopPropagation();
-        window.navigateToRoute('aboutme');
+        const isMobile = window.innerWidth <= 767;
+        if (isMobile) {
+          // On mobile, click is only active if the device is currently tilting
+          if (window.isAboutMeTappable) {
+            window.navigateToRoute('aboutme');
+          }
+        } else {
+          // Desktop is always active on hover
+          window.navigateToRoute('aboutme');
+        }
       }
     });
   }
+}
+
+// Mobile About Me Pagination Handler
+function initAboutPagination() {
+  const btnPrev = document.getElementById('about-btn-prev');
+  const btnNext = document.getElementById('about-btn-next');
+  const indicator = document.getElementById('about-page-indicator');
+  const slide1 = document.getElementById('about-slide-1');
+  const slide2 = document.getElementById('about-slide-2');
+  
+  if (!btnPrev || !btnNext || !indicator || !slide1 || !slide2) return;
+  
+  let currentPage = 1;
+  
+  function updatePagination() {
+    if (currentPage === 1) {
+      slide1.classList.add('active');
+      slide2.classList.remove('active');
+      btnPrev.setAttribute('disabled', 'true');
+      btnNext.removeAttribute('disabled');
+      indicator.textContent = 'PAGE 1/2';
+    } else {
+      slide1.classList.remove('active');
+      slide2.classList.add('active');
+      btnPrev.removeAttribute('disabled');
+      btnNext.setAttribute('disabled', 'true');
+      indicator.textContent = 'PAGE 2/2';
+    }
+  }
+  
+  btnPrev.addEventListener('click', () => {
+    currentPage = 1;
+    updatePagination();
+  });
+  
+  btnNext.addEventListener('click', () => {
+    currentPage = 2;
+    updatePagination();
+  });
+  
+  window.resetAboutPagination = function() {
+    currentPage = 1;
+    updatePagination();
+  };
 }
 
 

@@ -117,6 +117,10 @@ body {
   pointer-events: none;
   z-index: 1;
   transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
 
 .scribble {
@@ -1059,6 +1063,22 @@ html, body {
   margin-bottom: 20px;
 }
 
+.about-page-slide {
+  display: block;
+}
+
+.about-pagination-controls {
+  display: none;
+}
+
+.about-page-slide {
+  display: block;
+}
+
+.about-pagination-controls {
+  display: none;
+}
+
 /* Portrait hover overlay for desktop */
 .portrait-overlay {
   position: absolute;
@@ -1230,18 +1250,20 @@ html, body {
   
   .mobile-dropdown {
     position: absolute;
-    bottom: calc(100% + 12px);
+    bottom: calc(100% + 10px);
     right: 0;
     background-color: var(--text-color);
     border: 2px solid var(--text-color);
-    padding: 18px 24px;
+    padding: 12px 16px;
     list-style: none;
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    gap: 14px;
-    min-width: 210px;
+    gap: 8px;
+    min-width: 180px;
     z-index: 100;
+    max-height: 60vh;
+    overflow-y: auto;
     
     opacity: 0;
     visibility: hidden;
@@ -1260,7 +1282,7 @@ html, body {
     color: var(--bg-color);
     font-family: var(--font-sans);
     font-weight: 800;
-    font-size: 1.05rem;
+    font-size: 0.95rem;
     text-decoration: none;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -1274,7 +1296,7 @@ html, body {
   /* Mobile About Me Layout */
   .about-content-panel {
     width: 100%;
-    padding: 80px 30px 40px 30px;
+    padding: 60px 30px 40px 30px;
     background-color: rgba(250, 249, 245, 0.96);
   }
   
@@ -1287,9 +1309,15 @@ html, body {
     transform: none !important; /* Portrait stays full-size in background */
   }
   
+  /* Gyroscope active About Me overlay trigger styles for mobile */
   .portrait-overlay {
-    opacity: 0.8;
-    background-color: rgba(12, 12, 12, 0.15);
+    opacity: 0 !important;
+    background-color: transparent !important;
+    transition: opacity 0.3s ease;
+  }
+
+  .portrait-overlay.mobile-visible {
+    opacity: 0.85 !important;
   }
   
   /* Mobile Flicker Animation on the Overlay Text */
@@ -1304,7 +1332,56 @@ html, body {
   }
   
   .portrait-overlay span {
-    animation: mobileFlicker 3s infinite;
+    animation: mobileFlicker 3s infinite, tvGlitch 3s infinite;
+  }
+
+  /* About pagination presentation elements on mobile */
+  .about-page-slide {
+    display: none;
+  }
+
+  .about-page-slide.active {
+    display: block;
+  }
+
+  .about-pagination-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    border-top: 1px solid var(--text-color);
+    padding-top: 12px;
+  }
+
+  .pagination-btn {
+    background: none;
+    border: 1.5px solid var(--text-color);
+    padding: 6px 14px;
+    font-family: var(--font-sans);
+    font-weight: 800;
+    font-size: 0.8rem;
+    cursor: pointer;
+    color: var(--text-color);
+    transition: background-color 0.2s, color 0.2s;
+  }
+
+  .pagination-btn:active {
+    background-color: var(--text-color);
+    color: var(--bg-color);
+  }
+
+  .pagination-btn[disabled] {
+    opacity: 0.25;
+    cursor: not-allowed;
+    background: none !important;
+    color: var(--text-color) !important;
+  }
+
+  .pagination-indicator {
+    font-family: var(--font-sans);
+    font-weight: 800;
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
   }
   
   .contact-page-content {
