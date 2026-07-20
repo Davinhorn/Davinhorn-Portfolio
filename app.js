@@ -5,6 +5,16 @@ function setMobileViewportHeight() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  // Handle Loading Screen (Only on initial load of Homepage)
+  const initialPath = window.location.pathname.replace(/^\/|\/$/g, '');
+  if (initialPath === '' || initialPath === 'index.html') {
+    setTimeout(() => {
+      document.body.classList.remove('app-loading');
+    }, 2500);
+  } else {
+    document.body.classList.remove('app-loading');
+  }
+
   initCustomCursor();
   initHeroParallax();
   initDraggableCollage();
