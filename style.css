@@ -887,6 +887,7 @@ html, body {
   flex-direction: column;
   align-items: flex-end;
   z-index: 20;
+  pointer-events: auto !important;
 }
 
 .portfolio-stamp {
@@ -930,6 +931,9 @@ html, body {
 }
 
 .portfolio-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
   list-style: none;
   padding: 0;
   margin: 10px 0 0 0;
@@ -941,6 +945,7 @@ html, body {
   visibility: hidden;
   transform: translateY(-10px);
   transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+  pointer-events: auto !important;
 }
 
 .portfolio-dropdown.active {
@@ -959,6 +964,7 @@ html, body {
   transition: color 0.3s ease, transform 0.3s ease;
   cursor: pointer;
   white-space: nowrap;
+  pointer-events: auto !important;
 }
 
 .portfolio-dropdown li a:hover {
@@ -1089,7 +1095,7 @@ html, body {
   letter-spacing: 0.1em;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.3s ease, color 0.3s ease;
-  pointer-events: auto;
+  pointer-events: auto !important;
   z-index: 15;
 }
 
@@ -1179,6 +1185,7 @@ html, body {
   .mobile-portfolio-nav {
     position: relative;
     display: inline-block;
+    pointer-events: auto !important;
   }
   
   .mobile-dropdown {
@@ -1200,6 +1207,7 @@ html, body {
     visibility: hidden;
     transform: translateY(12px);
     transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+    pointer-events: auto !important;
   }
   
   .mobile-dropdown.active {
