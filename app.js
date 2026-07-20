@@ -48,6 +48,10 @@ document.addEventListener('DOMContentLoaded', () => {
   setTimeout(scaleTitleToFit, 400);
   setTimeout(scaleTitleToFit, 1000);
   setTimeout(scaleTitleToFit, 2000);
+
+  // Initialize SPA Router and interactive navigation elements
+  initSpaRouter();
+  initNavigationInteractions();
 });
 
 /* ==========================================================================
@@ -532,6 +536,225 @@ function scaleTitleToFit() {
       const targetStampFontSize = (rnWidth / stampWidth) * 100;
       stamp.style.fontSize = `${targetStampFontSize}px`;
     }
+  }
+}
+
+/* ==========================================================================
+   7. CLIENT SIDE SPA ROUTING & DYNAMIC PAGES
+   ========================================================================== */
+const categoryData = {
+  graphicdesign: {
+    title: "Graphic Design",
+    projects: [
+      { num: "01", tag: "POSTER", title: "Streetwear Campaign", desc: "A series of high-contrast typographic posters for a retro-futuristic streetwear brand.", tags: ["Photoshop", "Illustrator", "Print"] },
+      { num: "02", tag: "ZINE", title: "Cyber-Brutalist Zine", desc: "A printed zine exploring raw textures, scanned imagery, and bold neo-brutalist layouts.", tags: ["Indesign", "Graphic Layout", "Riso"] },
+      { num: "03", tag: "IDENTITY", title: "Krypton Tech Identity", desc: "Visual identity design, logo design, and brand styling for a decentralised tech startup.", tags: ["Vector", "Figma", "Branding"] }
+    ]
+  },
+  videoediting: {
+    title: "Video Editing",
+    projects: [
+      { num: "01", tag: "REEL", title: "Creative Agency Showreel", desc: "Dynamic showreel editing featuring fast pacing, glitch transitions, and music sync.", tags: ["Premiere Pro", "After Effects", "Sound Design"] },
+      { num: "02", tag: "PROMO", title: "Vaporwave Fashion Film", desc: "Color grading and editing for a retro-themed street fashion video campaign.", tags: ["DaVinci Resolve", "Editing", "Color"] },
+      { num: "03", tag: "MUSIC", title: "Synthwave Music Video", desc: "Beat-matched, highly stylized music video with stylized overlay assets.", tags: ["Premiere Pro", "Effects", "Sync"] }
+    ]
+  },
+  videoproduction: {
+    title: "Video Production",
+    projects: [
+      { num: "01", tag: "SHORT", title: "Urban Concrete", desc: "A short documentary film profiling local street skaters and creative artists.", tags: ["Cinematography", "Direction", "Directing"] },
+      { num: "02", tag: "COMMERCIAL", title: "Apex Apparel Promo", desc: "Creative direction and filming for a high-end streetwear release in industrial settings.", tags: ["Red Camera", "Lighting", "Fashion"] },
+      { num: "03", tag: "MV", title: "Neon Nights Music Video", desc: "Full-scale music video production featuring cyberpunk aesthetics and custom set design.", tags: ["Cinematography", "Set Design", "Production"] }
+    ]
+  },
+  sounddesign: {
+    title: "Sound Design",
+    projects: [
+      { num: "01", tag: "AMBIENCE", title: "Cyberpunk Cityscape", desc: "Immersive field recordings and synth textures for a futuristic tabletop audio game.", tags: ["Ableton", "Sound Synthesis", "Foley"] },
+      { num: "02", tag: "FILM SCORE", title: "Echoes of Silence OST", desc: "Minimalist, ambient cinematic soundscapes and orchestral elements for an indie short film.", tags: ["Logic Pro X", "Synthesis", "Scoring"] },
+      { num: "03", tag: "AUDIO LOGO", title: "Vortex Tech Audio Logo", desc: "Sleek, digital interface sound effects and brand audio logo design.", tags: ["Sound Design", "Audio Brand", "Foley"] }
+    ]
+  },
+  uxui: {
+    title: "UX/UI Design",
+    projects: [
+      { num: "01", tag: "WEB PORTAL", title: "Apex Design System", desc: "A modern design library containing responsive components, typography guidelines, and clean design tokens.", tags: ["Figma", "Design System", "Tokens"] },
+      { num: "02", tag: "MOBILE APP", title: "Shift Fitness Mobile", desc: "A clean mobile fitness application with interactive goal tracking and gamified badges.", tags: ["UX Research", "Figma Prototypes", "Wireframes"] },
+      { num: "03", tag: "DASHBOARD", title: "Quant Exchange Dashboard", desc: "Sleek user experience design for a complex financial dashboard.", tags: ["UI Design", "Data Visualization", "Figma"] }
+    ]
+  },
+  webdevelopment: {
+    title: "Web Development",
+    projects: [
+      { num: "01", tag: "WEB APP", title: "Chantrea Travel Platform", desc: "A premium travel planning platform with rich interactive maps, seamless itinerary scheduling, and customized routes.", tags: ["Vite", "Supabase", "Vanilla CSS"] },
+      { num: "02", tag: "DEV TOOLS", title: "Antigravity Dev-Tools", desc: "An advanced developer productivity suite offering real-time canvas overlays, visual performance metrics, and debuggers.", tags: ["Node.js", "Canvas API", "Chrome Ext"] },
+      { num: "03", tag: "AI DASHBOARD", title: "Synapse UI Dashboard", desc: "A modern, responsive AI analytics dashboard implementing glassmorphism, glowing gradients, and fluid charts.", tags: ["Next.js", "ChartJS", "Framer Motion"] }
+    ]
+  },
+  branding: {
+    title: "Branding",
+    projects: [
+      { num: "01", tag: "IDENTITY", title: "Helix Brand System", desc: "A raw, urban identity package including streetwear tags, packaging assets, and custom vector typography.", tags: ["Branding", "Vector Design", "Packaging"] },
+      { num: "02", tag: "LOGO", title: "Nirvana Coffee Co.", desc: "Retro-modern logo design, physical product tags, and customized typography details.", tags: ["Logo Design", "Illustration", "Typography"] },
+      { num: "03", tag: "CAMPAIGN", title: "Synthetics 2.0 Campaign", desc: "A comprehensive digital advertising design project combining graphic guidelines and video assets.", tags: ["Art Direction", "Motion Graphics", "Branding"] }
+    ]
+  }
+};
+
+function initSpaRouter() {
+  function handleRouting() {
+    const rawPath = window.location.pathname;
+    const path = rawPath.replace(/^\/|\/$/g, '');
+    
+    // Deactivate all secondary views
+    document.querySelectorAll('.page-secondary').forEach(page => {
+      page.classList.remove('active');
+    });
+    
+    // Reset About Me layouts
+    document.body.classList.remove('about-active');
+    const aboutPanel = document.getElementById('about-content-panel');
+    if (aboutPanel) aboutPanel.classList.remove('active');
+    
+    // Reset Home layout
+    document.body.classList.remove('homepage-inactive');
+    
+    // Close any open dropdowns
+    closeAllDropdowns();
+    
+    if (path === '' || path === 'index.html') {
+      // Home page is active, no additional action needed
+    } else if (path === 'contact') {
+      // Open contact page
+      const contactPage = document.getElementById('page-contact');
+      if (contactPage) contactPage.classList.add('active');
+      document.body.classList.add('homepage-inactive');
+    } else if (path === 'aboutme') {
+      // Open About Me layout
+      document.body.classList.add('about-active');
+      if (aboutPanel) aboutPanel.classList.add('active');
+    } else if (categoryData[path]) {
+      // Populate category page content
+      const cat = categoryData[path];
+      const catTitle = document.getElementById('category-title');
+      if (catTitle) catTitle.textContent = cat.title;
+      
+      const grid = document.getElementById('category-project-grid');
+      if (grid) {
+        grid.innerHTML = '';
+        
+        cat.projects.forEach(proj => {
+          const card = document.createElement('div');
+          card.className = 'work-card';
+          card.innerHTML = `
+            <div class="card-image-wrapper">
+              <div class="card-bg-glow" style="background: radial-gradient(circle, rgba(79,70,229,0.1) 0%, transparent 70%);"></div>
+              <div class="card-image-placeholder">
+                <span class="card-index">${proj.num}</span>
+                <span class="card-project-tag">${proj.tag}</span>
+              </div>
+            </div>
+            <div class="card-info">
+              <h3 class="card-title">${proj.title}</h3>
+              <p class="card-desc">${proj.desc}</p>
+              <div class="card-tags">
+                ${proj.tags.map(t => `<span>${t}</span>`).join('')}
+              </div>
+            </div>
+          `;
+          grid.appendChild(card);
+        });
+      }
+      
+      // Slide in category page
+      const categoryPage = document.getElementById('page-category');
+      if (categoryPage) categoryPage.classList.add('active');
+      document.body.classList.add('homepage-inactive');
+      
+      // Reinitialize 3D tilts for newly added cards
+      initProjectTilt();
+    } else {
+      // Path not found, fallback to root
+      history.replaceState({}, '', '/');
+    }
+  }
+  
+  // Re-define standard navigation function
+  window.navigateToRoute = function(route) {
+    const formattedRoute = route === '/' ? '/' : `/${route}`;
+    history.pushState({}, '', formattedRoute);
+    handleRouting();
+  };
+  
+  // Intercept click events for routes
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest('[data-route]');
+    if (link) {
+      e.preventDefault();
+      const route = link.getAttribute('data-route');
+      window.navigateToRoute(route);
+    }
+  });
+  
+  // Popstate history listener
+  window.addEventListener('popstate', handleRouting);
+  
+  // Handle initial page load routing
+  handleRouting();
+}
+
+function initNavigationInteractions() {
+  // Desktop Trigger Elements
+  const desktopTrigger = document.getElementById('portfolio-nav-trigger');
+  const desktopMenu = document.getElementById('portfolio-dropdown-menu');
+  const titleLayer = document.getElementById('title-layer');
+  
+  // Mobile Trigger Elements
+  const mobileTrigger = document.getElementById('mobile-portfolio-trigger');
+  const mobileMenu = document.getElementById('mobile-portfolio-dropdown');
+
+  // Toggle desktop dropdown
+  if (desktopTrigger && desktopMenu && titleLayer) {
+    desktopTrigger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isExpanded = desktopTrigger.getAttribute('aria-expanded') === 'true';
+      desktopTrigger.setAttribute('aria-expanded', !isExpanded);
+      desktopMenu.classList.toggle('active');
+      titleLayer.classList.toggle('nav-open');
+    });
+  }
+
+  // Toggle mobile dropdown (inverted upward)
+  if (mobileTrigger && mobileMenu) {
+    mobileTrigger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isExpanded = mobileTrigger.getAttribute('aria-expanded') === 'true';
+      mobileTrigger.setAttribute('aria-expanded', !isExpanded);
+      mobileMenu.classList.toggle('active');
+    });
+  }
+
+  // Close helper
+  window.closeAllDropdowns = function() {
+    if (desktopTrigger) desktopTrigger.setAttribute('aria-expanded', 'false');
+    if (desktopMenu) desktopMenu.classList.remove('active');
+    if (titleLayer) titleLayer.classList.remove('nav-open');
+    if (mobileTrigger) mobileTrigger.setAttribute('aria-expanded', 'false');
+    if (mobileMenu) mobileMenu.classList.remove('active');
+  };
+
+  // Close dropdowns when clicking outside
+  document.addEventListener('click', () => {
+    closeAllDropdowns();
+  });
+
+  // Portrait Hover overlay / click interactions (About Me trigger)
+  const portraitContainer = document.querySelector('.hero-portrait-container');
+  if (portraitContainer) {
+    portraitContainer.addEventListener('click', (e) => {
+      e.stopPropagation();
+      window.navigateToRoute('aboutme');
+    });
   }
 }
 

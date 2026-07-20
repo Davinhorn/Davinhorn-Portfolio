@@ -756,3 +756,522 @@ section {
     bottom: calc(var(--vh, 1vh) * -18);
   }
 }
+
+/* ==========================================================================
+   SINGLE SCREEN SPA REDESIGN STYLES
+   ========================================================================== */
+
+/* Overrides to lock viewport and disable scrolling */
+html, body {
+  overflow: hidden !important;
+  height: 100%;
+  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
+}
+
+.app-wrapper {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
+  overflow: hidden;
+}
+
+/* Page transitions */
+.hero-section {
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s ease;
+}
+
+.homepage-inactive #hero {
+  transform: translateX(-30%);
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.page-secondary {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
+  z-index: 50;
+  transform: translateX(100%);
+  background-color: var(--bg-color);
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.page-secondary.active {
+  transform: translateX(0);
+}
+
+/* Category & Secondary Page Header */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 40px 60px;
+  border-bottom: 2px solid var(--text-color);
+  flex-shrink: 0;
+}
+
+.back-home-btn {
+  background: none;
+  border: 2px solid var(--text-color);
+  padding: 10px 24px;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+  text-transform: uppercase;
+  pointer-events: auto;
+  z-index: 10;
+}
+
+.back-home-btn:hover {
+  background-color: var(--text-color);
+  color: var(--bg-color);
+  transform: translateX(-4px);
+}
+
+.category-page-title {
+  font-family: var(--font-title);
+  font-size: clamp(2.5rem, 5vw, 6rem);
+  color: var(--text-color);
+  text-transform: uppercase;
+  margin: 0;
+  line-height: 1;
+}
+
+/* Category grid layouts */
+.category-content-container {
+  flex-grow: 1;
+  padding: 40px 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-y: auto; /* Fallback for small viewports */
+}
+
+#category-project-grid {
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+  width: 100%;
+  max-width: 1400px;
+  justify-content: center;
+  align-items: stretch;
+}
+
+#category-project-grid .work-card {
+  flex: 1;
+  min-width: 250px;
+  max-width: 400px;
+  margin: 0;
+}
+
+/* Desktop Portfolio Navigation Dropdown */
+.portfolio-stamp-nav {
+  position: absolute;
+  right: 0;
+  top: 96%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  z-index: 20;
+}
+
+.portfolio-stamp {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
+  cursor: pointer;
+  letter-spacing: inherit;
+  line-height: inherit;
+  display: inline-block;
+  text-transform: uppercase;
+  outline: none;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+/* Flicker Animation for Trigger in Idle State */
+@keyframes textFlicker {
+  0%, 100% { color: var(--text-color); }
+  45% { color: var(--text-color); }
+  50% { color: #4f46e5; }
+  55% { color: var(--text-color); }
+  85% { color: var(--text-color); }
+  90% { color: #4f46e5; }
+  95% { color: var(--text-color); }
+}
+
+.portfolio-stamp.flicker {
+  animation: textFlicker 6s infinite;
+}
+
+.portfolio-stamp:hover {
+  animation: none !important;
+  color: #4f46e5 !important;
+  transform: scale(1.05);
+}
+
+.portfolio-dropdown {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+}
+
+.portfolio-dropdown.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.portfolio-dropdown li a {
+  font-family: var(--font-title);
+  font-size: clamp(1.2rem, 2.2vw, 2.2rem);
+  color: var(--text-color);
+  text-decoration: none;
+  text-transform: uppercase;
+  display: inline-block;
+  transition: color 0.3s ease, transform 0.3s ease;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.portfolio-dropdown li a:hover {
+  color: #4f46e5;
+  transform: scale(1.08);
+}
+
+/* Elevate main title when nav is active to prevent overlapping with portrait cutout */
+.hero-title-container.nav-open {
+  z-index: 10;
+}
+
+/* About Me Panel Styles (Desktop default) */
+.about-content-panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50%;
+  height: 100%;
+  background-color: var(--bg-color);
+  z-index: 8;
+  padding: 60px 80px 40px 40px;
+  overflow-y: auto;
+  transform: translateX(100%);
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.about-content-panel.active {
+  transform: translateX(0);
+}
+
+.about-content-panel .back-home-btn {
+  align-self: flex-start;
+  margin-bottom: 30px;
+}
+
+.about-content-inner {
+  max-width: 650px;
+}
+
+.about-title-large {
+  font-family: var(--font-title);
+  font-size: clamp(3rem, 6vw, 6rem);
+  margin-bottom: 20px;
+  line-height: 0.9;
+}
+
+.about-lead {
+  font-family: var(--font-sans);
+  font-size: clamp(1.2rem, 1.8vw, 1.6rem);
+  font-weight: 600;
+  line-height: 1.4;
+  margin-bottom: 25px;
+}
+
+.about-paragraph {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+}
+
+/* Portrait hover overlay for desktop */
+.portrait-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(12, 12, 12, 0.4);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.portrait-overlay span {
+  color: #ffffff;
+  font-family: var(--font-title);
+  font-size: clamp(2.5rem, 5vw, 5rem);
+  letter-spacing: 0.05em;
+}
+
+.hero-portrait-container {
+  cursor: pointer;
+  pointer-events: auto !important;
+}
+
+.hero-portrait-container:hover .portrait-overlay {
+  opacity: 1;
+}
+
+/* Slide portrait when about is active */
+.about-active #portrait-layer {
+  transform: translateX(-25%) scale(0.95);
+}
+
+.about-active #title-layer {
+  transform: translateX(-35%) scale(0.9);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.about-active .scribbles-container {
+  opacity: 0.2;
+}
+
+/* Footer layout elements */
+.footer-pill-btn {
+  background-color: var(--text-color);
+  color: var(--bg-color);
+  border: none;
+  padding: 12px 28px;
+  border-radius: 50px;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease, color 0.3s ease;
+  pointer-events: auto;
+  z-index: 15;
+}
+
+.footer-pill-btn:hover {
+  background-color: #4f46e5;
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+.desktop-only {
+  display: inline-block;
+}
+
+.mobile-only {
+  display: none;
+}
+
+/* Contact Page specific content */
+.contact-page-content {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+}
+
+.contact-page-content .contact-card-container {
+  margin: 0;
+}
+
+.contact-page-content .contact-card {
+  max-width: 600px;
+}
+
+/* Static footer alignment */
+.footer {
+  position: absolute;
+  bottom: 12px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.footer-copy {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  opacity: 0.5;
+}
+
+
+/* ==========================================================================
+   RESPONSIVE DESIGN AND MOBILE PORTFOLIO STYLES
+   ========================================================================== */
+@media (max-width: 767px) {
+  .desktop-only {
+    display: none;
+  }
+  
+  .mobile-only {
+    display: inline-block;
+  }
+  
+  /* Page Header Mobile */
+  .page-header {
+    padding: 20px;
+    flex-direction: column-reverse;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  
+  .category-page-title {
+    font-size: clamp(2.2rem, 6vw, 3.5rem);
+  }
+  
+  .category-content-container {
+    padding: 20px;
+    align-items: flex-start;
+  }
+  
+  #category-project-grid {
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+  }
+  
+  #category-project-grid .work-card {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* Disable interactive desktop title triggers */
+  .portfolio-stamp-nav {
+    pointer-events: none !important;
+  }
+  
+  .portfolio-stamp {
+    pointer-events: none !important;
+    animation: none !important;
+  }
+  
+  /* Mobile Portfolio Dropdown (Upward Expanding) */
+  .mobile-portfolio-nav {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .mobile-dropdown {
+    position: absolute;
+    bottom: calc(100% + 12px);
+    right: 0;
+    background-color: var(--text-color);
+    border: 2px solid var(--text-color);
+    padding: 18px 24px;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 14px;
+    min-width: 210px;
+    z-index: 100;
+    
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(12px);
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+  }
+  
+  .mobile-dropdown.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+  
+  .mobile-dropdown li a {
+    color: var(--bg-color);
+    font-family: var(--font-sans);
+    font-weight: 800;
+    font-size: 1.05rem;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: color 0.2s ease;
+  }
+  
+  .mobile-dropdown li a:hover {
+    color: #4f46e5;
+  }
+  
+  /* Mobile About Me Layout */
+  .about-content-panel {
+    width: 100%;
+    padding: 80px 30px 40px 30px;
+    background-color: rgba(250, 249, 245, 0.96);
+  }
+  
+  .about-active #hero-portrait {
+    filter: grayscale(100%);
+    opacity: 0.15;
+  }
+  
+  .about-active #portrait-layer {
+    transform: none !important; /* Portrait stays full-size in background */
+  }
+  
+  .portrait-overlay {
+    opacity: 0.8;
+    background-color: rgba(12, 12, 12, 0.15);
+  }
+  
+  /* Mobile Flicker Animation on the Overlay Text */
+  @keyframes mobileFlicker {
+    0%, 100% { opacity: 0.25; }
+    45% { opacity: 0.25; }
+    50% { opacity: 0.9; }
+    55% { opacity: 0.25; }
+    80% { opacity: 0.25; }
+    85% { opacity: 0.9; }
+    90% { opacity: 0.25; }
+  }
+  
+  .portrait-overlay span {
+    animation: mobileFlicker 3s infinite;
+  }
+  
+  .contact-page-content {
+    padding: 20px;
+  }
+}
