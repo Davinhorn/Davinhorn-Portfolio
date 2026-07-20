@@ -134,6 +134,11 @@ function initHeroParallax() {
   if (window.DeviceOrientationEvent) {
     let baselineBeta = null;
     let baselineGamma = null;
+    let lastBeta = null;
+    let lastGamma = null;
+    let lastMoveTime = Date.now();
+    const movementThreshold = 0.08; // degrees of change to detect tilting
+    const idleTimeout = 1200; // time in ms of no tilting before resetting baseline
 
     function handleOrientation(e) {
       const beta = e.beta; // Tilt front-to-back: -180 to 180
@@ -141,14 +146,39 @@ function initHeroParallax() {
       
       if (beta === null || gamma === null) return;
       
+      const now = Date.now();
+      
       // Capture initial hold orientation as baseline
       if (baselineBeta === null) {
         baselineBeta = beta;
         baselineGamma = gamma;
+        lastBeta = beta;
+        lastGamma = gamma;
+        lastMoveTime = now;
         return;
       }
       
-      // Calculate shifts relative to initial baseline
+      // Calculate change since last event to detect user tilting
+      const changeBeta = Math.abs(beta - lastBeta);
+      const changeGamma = Math.abs(gamma - lastGamma);
+      
+      if (changeBeta > movementThreshold || changeGamma > movementThreshold) {
+        lastMoveTime = now;
+      }
+      
+      lastBeta = beta;
+      lastGamma = gamma;
+      
+      // If the user stopped tilting for longer than the idle timeout,
+      // reset the baseline orientation to the current orientation.
+      // This returns visual offsets to 0, which transitions them smoothly
+      // back to default via CSS transitions.
+      if (now - lastMoveTime > idleTimeout) {
+        baselineBeta = beta;
+        baselineGamma = gamma;
+      }
+      
+      // Calculate shifts relative to baseline
       let deltaBeta = beta - baselineBeta;
       let deltaGamma = gamma - baselineGamma;
       
