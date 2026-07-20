@@ -167,18 +167,6 @@ body {
   z-index: 3; /* Title stacks behind the portrait (z-index 5) */
 }
 
-.portfolio-stamp {
-  font-family: var(--font-title);
-  font-size: clamp(2.2rem, 5.2vw, 5.5rem);
-  color: var(--text-color);
-  position: absolute;
-  right: 0;
-  top: 96%;
-  letter-spacing: -0.03em;
-  line-height: 0.8;
-  display: inline-block;
-  transform: rotate(0deg);
-}
 
 /* Parallax Layer 3: Portrait Image */
 .hero-portrait-container {
@@ -1110,9 +1098,18 @@ html, body {
 }
 
 /* Slide portrait when about is active */
-.about-active #portrait-layer {
-  transform: translateX(-35%) scale(0.98); /* Slide further left */
-  z-index: 9; /* Bring portrait to front to overlay About Me panel beautifully */
+@media (min-width: 768px) {
+  .about-active #portrait-layer {
+    transform: translateX(-25vw) scale(0.98) !important; /* Slide left and override JS inline styles */
+    z-index: 9; /* Bring portrait to front to overlay About Me panel beautifully */
+  }
+}
+
+@media (max-width: 767px) {
+  .about-active #portrait-layer {
+    transform: translate(0px, 0px) scale(0.95) !important; /* Stay centered on mobile */
+    z-index: 4; /* Sits behind text */
+  }
 }
 
 .about-active #title-layer {
