@@ -422,9 +422,9 @@ function initDynamicScribbles() {
     const rotation = -15 + Math.random() * 30; // -15deg to 15deg
     const font = fonts[Math.floor(Math.random() * fonts.length)];
     
-    let baseFontSize = isMobile ? 'clamp(2.0rem, 5.5vw, 3.8rem)' : 'clamp(1.5rem, 3vw, 3rem)';
+    let baseFontSize = isMobile ? 'clamp(2.0rem, 5.5vw, 3.8rem)' : 'clamp(1.0rem, 1.8vw, 1.8rem)';
     if (font === 'Reenie Beanie') {
-      baseFontSize = isMobile ? 'clamp(3.2rem, 7.5vw, 7.0rem)' : 'clamp(2.2rem, 4.5vw, 5.5rem)';
+      baseFontSize = isMobile ? 'clamp(3.2rem, 7.5vw, 7.0rem)' : 'clamp(1.5rem, 2.8vw, 3.2rem)';
     }
     
     scribble.style.position = 'absolute';
@@ -434,9 +434,9 @@ function initDynamicScribbles() {
     scribble.style.transform = `translate(-50%, -50%) rotate(${rotation}deg)`;
     scribble.style.fontFamily = `'${font}'`;
     scribble.style.fontSize = baseFontSize;
-    scribble.style.pointerEvents = 'auto';
-    scribble.style.cursor = 'pointer';
-    scribble.style.transition = 'color 0.2s, opacity 0.5s, transform 0.5s';
+    scribble.style.pointerEvents = 'none';
+    scribble.style.cursor = 'default';
+    scribble.style.transition = 'opacity 0.5s, transform 0.5s';
     
     // Build character spans for letter-by-letter writing animation
     const chars = phrase.split('');
@@ -527,17 +527,7 @@ function initDynamicScribbles() {
 }
 
 function initSingleScribbleInteractivity(scribble) {
-  scribble.addEventListener('mouseenter', () => {
-    scribble.style.color = '#4f46e5';
-    const rot = scribble.dataset.rotation || '0';
-    scribble.style.transform = `translate(-50%, -50%) rotate(${rot}deg) scale(1.15)`;
-  });
-
-  scribble.addEventListener('mouseleave', () => {
-    scribble.style.color = '';
-    const rot = scribble.dataset.rotation || '0';
-    scribble.style.transform = `translate(-50%, -50%) rotate(${rot}deg)`;
-  });
+  // Disallowed hover interactions on scribbles
 }
 
 /* ==========================================================================
