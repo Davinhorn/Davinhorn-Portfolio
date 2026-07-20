@@ -94,6 +94,7 @@ function applyParallax(xOffset, yOffset) {
   const scribblesLayer = document.getElementById('scribbles-layer');
   const titleLayer = document.getElementById('title-layer');
   const portraitLayer = document.getElementById('portrait-layer');
+  const footerLayer = document.querySelector('.hero-footer');
   
   // Layer 1: Background Scribbles (moderate motion)
   if (scribblesLayer) {
@@ -111,27 +112,37 @@ function applyParallax(xOffset, yOffset) {
   if (portraitLayer) {
     portraitLayer.style.transform = `translate(${xOffset * 15}px, ${yOffset * 10}px) scale(1.02)`;
   }
+
+  // Layer 4: Foreground footer elements (Contact and VOL.2026 moving with layout depth)
+  if (footerLayer) {
+    footerLayer.style.transform = `translate(${xOffset * 10}px, ${yOffset * 5}px)`;
+  }
 }
 
 function initHeroParallax() {
   const hero = document.getElementById('hero');
   if (!hero) return;
 
-  // Mouse movement tracking on desktop
-  hero.addEventListener('mousemove', (e) => {
+  // Track mouse coordinates globally on window to prevent interruptions when hovering overlay elements
+  window.addEventListener('mousemove', (e) => {
+    // Only track if on homepage (body does not have homepage-inactive)
+    if (document.body.classList.contains('homepage-inactive')) return;
+    
     const xOffset = (e.clientX - window.innerWidth / 2) / (window.innerWidth / 2);
     const yOffset = (e.clientY - window.innerHeight / 2) / (window.innerHeight / 2);
     applyParallax(xOffset, yOffset);
   });
 
-  // Reset layers on mouse leave
-  hero.addEventListener('mouseleave', () => {
+  // Reset layers when cursor leaves the window entirely
+  document.addEventListener('mouseleave', () => {
     const scribblesLayer = document.getElementById('scribbles-layer');
     const titleLayer = document.getElementById('title-layer');
     const portraitLayer = document.getElementById('portrait-layer');
+    const footerLayer = document.querySelector('.hero-footer');
     if (scribblesLayer) scribblesLayer.style.transform = 'translate(0px, 0px)';
     if (titleLayer) titleLayer.style.transform = 'translate(0px, 0px) rotateX(0deg) rotateY(0deg)';
     if (portraitLayer) portraitLayer.style.transform = 'translate(0px, 0px) scale(1)';
+    if (footerLayer) footerLayer.style.transform = 'translate(0px, 0px)';
   });
 
   // Gyroscope / Tilt tracking on mobile devices
