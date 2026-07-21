@@ -922,6 +922,7 @@ html, body {
 /* Category & Secondary Page Header */
 .page-header {
   display: flex;
+  flex-direction: row-reverse; /* Put title on left and home button on right on desktop */
   align-items: center;
   justify-content: space-between;
   padding: 40px 60px;
