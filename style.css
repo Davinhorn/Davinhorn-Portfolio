@@ -297,6 +297,7 @@ body.app-loading #scribbles-layer {
   left: 50%;
   transform: translateX(-50%);
   display: block;
+  will-change: filter, opacity, transform; /* Hardware accelerate filter transitions & wiggles */
 }
 
 /* Bottom Footer Details */
@@ -917,6 +918,7 @@ html, body {
   visibility: hidden; /* Prevent tabbing/focus mapping when page is inactive */
   background-color: var(--bg-color);
   transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.8s;
+  will-change: transform, visibility; /* Hardware accelerate transitions */
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -1186,6 +1188,7 @@ html, body {
   transform: translateX(100%);
   visibility: hidden; /* Prevent tabbing/focus mapping when panel is inactive */
   transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.8s;
+  will-change: transform, visibility; /* Hardware accelerate transitions */
   display: flex;
   flex-direction: column;
 }
