@@ -8,22 +8,20 @@ document.addEventListener('DOMContentLoaded', () => {
   // Handle Loading Screen (Only on initial load of Homepage)
   const initialPath = window.location.pathname.replace(/^\/|\/$/g, '');
   if (initialPath === '' || initialPath === 'index.html') {
-    const startLoadingReveal = () => {
-      // Scale titles now that fonts are loaded to prevent visual jumping
-      scaleTitleToFit();
-      document.body.classList.add('fonts-loaded');
-      
-      // Start the 2.5s countdown
-      setTimeout(() => {
+    scaleTitleToFit();
+    
+    // Start the 3.0s countdown
+    setTimeout(() => {
+      const loader = document.getElementById('loading-screen');
+      if (loader) {
+        loader.classList.add('glitch-out');
+        setTimeout(() => {
+          document.body.classList.remove('app-loading');
+        }, 400); // 400ms animation duration
+      } else {
         document.body.classList.remove('app-loading');
-      }, 2500);
-    };
-
-    if (document.fonts) {
-      document.fonts.ready.then(startLoadingReveal).catch(startLoadingReveal);
-    } else {
-      startLoadingReveal();
-    }
+      }
+    }, 3000);
   } else {
     document.body.classList.remove('app-loading');
   }

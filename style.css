@@ -52,7 +52,6 @@ body {
   z-index: 990; /* Covers everything except elevated titles */
   opacity: 0;
   visibility: hidden;
-  transition: opacity 1.0s cubic-bezier(0.25, 1, 0.5, 1), visibility 1.0s;
   pointer-events: none;
 }
 
@@ -66,25 +65,21 @@ body.app-loading .loading-overlay {
   pointer-events: all;
 }
 
-/* Hide titles completely until fonts are buffered and ready to scale */
-body.app-loading .hero-title-container {
-  opacity: 0;
-  visibility: hidden;
+.loading-overlay.glitch-out {
+  animation: bgGlitchOut 0.4s forwards;
 }
 
-/* Elevate and show glitched white titles only when fonts are fully buffered */
-body.app-loading.fonts-loaded .hero-title-container {
-  opacity: 1;
-  visibility: visible;
+/* Elevate and show glitched white titles when loading */
+body.app-loading .hero-title-container {
   z-index: 1000 !important;
 }
 
-body.app-loading.fonts-loaded .hero-title {
+body.app-loading .hero-title {
   color: #ffffff !important;
   animation: textGlitchWhite 0.5s infinite !important;
 }
 
-body.app-loading.fonts-loaded .portfolio-stamp {
+body.app-loading .portfolio-stamp {
   color: #ffffff !important;
   animation: textGlitchWhite 0.5s infinite !important;
 }
@@ -95,16 +90,10 @@ body.app-loading #portrait-layer {
   pointer-events: none !important;
 }
 
-/* Fade transition for elements recovering as loading overlay fades out */
+/* Transition text color when recovering from loading */
 .hero-title,
 .portfolio-stamp {
   transition: color 1.0s cubic-bezier(0.25, 1, 0.5, 1), text-shadow 1.0s;
-}
-
-#portrait-layer,
-.hero-footer,
-#scribbles-layer {
-  transition: opacity 1.0s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 @keyframes textGlitchWhite {
@@ -124,6 +113,17 @@ body.app-loading #portrait-layer {
     text-shadow: none;
     transform: translate(0, 0);
   }
+}
+
+@keyframes bgGlitchOut {
+  0% { background-color: #000000; opacity: 1; visibility: visible; }
+  15% { background-color: #ffffff; opacity: 1; visibility: visible; }
+  30% { background-color: #000000; opacity: 1; visibility: visible; }
+  45% { background-color: #ffffff; opacity: 1; visibility: visible; }
+  60% { background-color: #000000; opacity: 1; visibility: visible; }
+  75% { background-color: #ffffff; opacity: 1; visibility: visible; }
+  90% { background-color: #000000; opacity: 1; visibility: visible; }
+  100% { background-color: #ffffff; opacity: 0; visibility: hidden; }
 }
 
 /* Custom Selection Color */
@@ -1158,12 +1158,10 @@ html, body {
   display: none;
 }
 
-.about-page-slide {
-  display: block;
-}
-
-.about-pagination-controls {
-  display: none;
+.about-contact-wrapper {
+  margin-top: 30px;
+  display: flex;
+  justify-content: flex-start;
 }
 
 /* Portrait hover overlay for desktop */
