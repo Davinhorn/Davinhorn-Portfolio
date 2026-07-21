@@ -842,20 +842,23 @@ function initNavigationInteractions() {
       portraitImg.addEventListener('load', initPortraitCanvas);
     }
     
-    portraitImg.addEventListener('mousemove', (e) => {
+    const portraitLayer = document.getElementById('portrait-layer');
+    const trackingTarget = portraitLayer || portraitImg;
+    
+    trackingTarget.addEventListener('mousemove', (e) => {
       const isMobile = window.innerWidth <= 767;
       if (isMobile) return;
       const isOverVisible = checkPortraitAlpha(e);
       if (isOverVisible) {
         portraitOverlay.classList.add('hovered');
-        portraitImg.style.cursor = 'pointer';
+        trackingTarget.style.cursor = 'pointer';
       } else {
         portraitOverlay.classList.remove('hovered');
-        portraitImg.style.cursor = 'default';
+        trackingTarget.style.cursor = 'default';
       }
     });
     
-    portraitImg.addEventListener('mouseleave', () => {
+    trackingTarget.addEventListener('mouseleave', () => {
       portraitOverlay.classList.remove('hovered');
     });
     
@@ -874,8 +877,8 @@ function initNavigationInteractions() {
       }
     };
     
-    portraitImg.addEventListener('click', handlePortraitTrigger);
-    portraitImg.addEventListener('touchend', handlePortraitTrigger);
+    trackingTarget.addEventListener('click', handlePortraitTrigger);
+    trackingTarget.addEventListener('touchend', handlePortraitTrigger);
   }
 }
 
