@@ -914,4 +914,11 @@ function initAboutPagination() {
   };
 }
 
+// Disable right-click context menu on images to prevent downloading
+document.addEventListener('contextmenu', (e) => {
+  if (e.target.tagName === 'IMG') {
+    e.preventDefault();
+  }
+});
+
 

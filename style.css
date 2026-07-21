@@ -23,6 +23,18 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+img {
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  user-drag: none;
 }
 
 html {
@@ -1171,14 +1183,7 @@ html, body {
   pointer-events: none;
 }
 
-@media (min-width: 768px) {
-  .portrait-img {
-    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  .portrait-img:hover {
-    transform: scale(1.03);
-  }
-}
+
 
 .portrait-overlay span {
   color: #ffffff;
