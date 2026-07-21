@@ -1275,23 +1275,23 @@ html, body {
   opacity: 1;
 }
 
-/* Slide portrait when about is active */
-@media (min-width: 768px) {
-  .about-active .portrait-img {
-    transform: none !important;
-  }
-}
+/* Portrait mouse parallax wiggles remain fully enabled on desktop */
 
 .about-active #portrait-layer {
-  transform: none !important; /* Portrait stays centered and full-size in background */
-  left: 0 !important;
   z-index: 4 !important; /* Sits behind panel text */
+}
+
+/* Black & White low-opacity background portrait when about route is active (both desktop & mobile) */
+.about-active #hero-portrait {
+  filter: grayscale(100%) !important;
+  opacity: 0.12 !important; /* Low opacity so it sits softly in the background */
+  transition: filter 0.8s ease, opacity 0.8s ease;
 }
 
 @media (max-width: 767px) {
   .about-active #portrait-layer {
     transform: translate(0px, 0px) scale(0.95) !important; /* Stay centered on mobile */
-    z-index: 4; /* Sits behind text */
+    z-index: 4 !important;
   }
 }
 
