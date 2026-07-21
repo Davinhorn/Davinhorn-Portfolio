@@ -128,11 +128,16 @@ function applyParallax(xOffset, yOffset) {
     scribblesLayer.style.transform = `translate(${xOffset * 30}px, ${yOffset * 30}px)`;
   }
 
-  // Layer 2: Main Bold Title (moves opposite, tilts slightly)
+  // Layer 2: Main Bold Title and Nav Layer (moves opposite, tilts slightly)
   if (titleLayer) {
     const rotX = -yOffset * 6;
     const rotY = xOffset * 6;
-    titleLayer.style.transform = `translate(${xOffset * -20}px, ${yOffset * -20}px) rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+    const transformStr = `translate(${xOffset * -20}px, ${yOffset * -20}px) rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+    titleLayer.style.transform = transformStr;
+    const navLayer = document.getElementById('nav-layer');
+    if (navLayer) {
+      navLayer.style.transform = transformStr;
+    }
   }
 
   // Layer 3: Portrait Cutout (slight scaling shift)
@@ -167,10 +172,12 @@ function initHeroParallax() {
     if (window.innerWidth <= 767) return;
     const scribblesLayer = document.getElementById('scribbles-layer');
     const titleLayer = document.getElementById('title-layer');
+    const navLayer = document.getElementById('nav-layer');
     const portraitLayer = document.getElementById('portrait-layer');
     const footerLayer = document.querySelector('.hero-footer');
     if (scribblesLayer) scribblesLayer.style.transform = 'translate(0px, 0px)';
     if (titleLayer) titleLayer.style.transform = 'translate(0px, 0px) rotateX(0deg) rotateY(0deg)';
+    if (navLayer) navLayer.style.transform = 'translate(0px, 0px) rotateX(0deg) rotateY(0deg)';
     if (portraitLayer) portraitLayer.style.transform = 'translate(0px, 0px) scale(1)';
     if (footerLayer) footerLayer.style.transform = 'translateX(-50%) translate(0px, 0px)';
   });
@@ -759,6 +766,7 @@ function initNavigationInteractions() {
   const desktopTrigger = document.getElementById('portfolio-nav-trigger');
   const desktopMenu = document.getElementById('portfolio-dropdown-menu');
   const titleLayer = document.getElementById('title-layer');
+  const navLayer = document.getElementById('nav-layer');
 
   // Toggle dropdown
   if (desktopTrigger && desktopMenu && titleLayer) {
@@ -768,6 +776,7 @@ function initNavigationInteractions() {
       desktopTrigger.setAttribute('aria-expanded', !isExpanded);
       desktopMenu.classList.toggle('active');
       titleLayer.classList.toggle('nav-open');
+      if (navLayer) navLayer.classList.toggle('nav-open');
     });
   }
 
@@ -776,6 +785,7 @@ function initNavigationInteractions() {
     if (desktopTrigger) desktopTrigger.setAttribute('aria-expanded', 'false');
     if (desktopMenu) desktopMenu.classList.remove('active');
     if (titleLayer) titleLayer.classList.remove('nav-open');
+    if (navLayer) navLayer.classList.remove('nav-open');
   };
 
   // Close dropdowns when clicking outside

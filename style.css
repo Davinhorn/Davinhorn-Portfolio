@@ -1123,9 +1123,17 @@ html, body {
   transform: scale(1.08);
 }
 
-/* Title container remains z-index: auto so that dropdown and title stack independently */
-#title-layer.nav-open {
-  z-index: 210 !important; /* Stack dropdown menu above portrait container on both desktop and mobile */
+/* Title container stays behind, nav layer elevates when dropdown menu is open */
+#title-layer {
+  z-index: 3 !important;
+}
+
+#nav-layer {
+  z-index: 20 !important;
+}
+
+#nav-layer.nav-open {
+  z-index: 210 !important; /* Stack dropdown menu above portrait container on both desktop and mobile when open */
 }
 
 /* About Me Panel Styles (Desktop default) */
@@ -1464,9 +1472,10 @@ html, body {
     top: 50% !important;
     bottom: auto !important;
     left: 50% !important;
-    transform: translate(-50%, -46%) !important; /* Shift Y coordinate up to overlap title */
-    height: 92vh !important;
-    height: calc(var(--vh, 1vh) * 92) !important;
+    transform: translate(-50%, -48%) !important; /* Shift Y coordinate up to overlap title */
+    height: 96vh !important;
+    height: calc(var(--vh, 1vh) * 96) !important;
+    max-width: none !important; /* Allow the image width to expand past body screen bounds so skater scales big! */
     width: auto !important;
     object-fit: contain !important;
   }
