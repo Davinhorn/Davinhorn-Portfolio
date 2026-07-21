@@ -755,16 +755,12 @@ function initSpaRouter() {
 }
 
 function initNavigationInteractions() {
-  // Desktop Trigger Elements
+  // Trigger Elements (Unified for Desktop and Mobile)
   const desktopTrigger = document.getElementById('portfolio-nav-trigger');
   const desktopMenu = document.getElementById('portfolio-dropdown-menu');
   const titleLayer = document.getElementById('title-layer');
-  
-  // Mobile Trigger Elements
-  const mobileTrigger = document.getElementById('mobile-portfolio-trigger');
-  const mobileMenu = document.getElementById('mobile-portfolio-dropdown');
 
-  // Toggle desktop dropdown
+  // Toggle dropdown
   if (desktopTrigger && desktopMenu && titleLayer) {
     desktopTrigger.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -775,23 +771,11 @@ function initNavigationInteractions() {
     });
   }
 
-  // Toggle mobile dropdown (inverted upward)
-  if (mobileTrigger && mobileMenu) {
-    mobileTrigger.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const isExpanded = mobileTrigger.getAttribute('aria-expanded') === 'true';
-      mobileTrigger.setAttribute('aria-expanded', !isExpanded);
-      mobileMenu.classList.toggle('active');
-    });
-  }
-
   // Close helper
   window.closeAllDropdowns = function() {
     if (desktopTrigger) desktopTrigger.setAttribute('aria-expanded', 'false');
     if (desktopMenu) desktopMenu.classList.remove('active');
     if (titleLayer) titleLayer.classList.remove('nav-open');
-    if (mobileTrigger) mobileTrigger.setAttribute('aria-expanded', 'false');
-    if (mobileMenu) mobileMenu.classList.remove('active');
   };
 
   // Close dropdowns when clicking outside
