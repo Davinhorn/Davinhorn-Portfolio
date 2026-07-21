@@ -74,6 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initialize device-specific gyroscope states
   window.isAboutMeTappable = false;
   window.aboutMeFadeTimeout = null;
+  window.aboutMeRevealTimeout = null;
   initAboutPagination();
 
   // Initialize SPA Router and interactive navigation elements
@@ -235,6 +236,12 @@ function initHeroParallax() {
         baselineBeta = beta;
         baselineGamma = gamma;
         
+        // Cancel any pending reveal timer if device stopped tilting
+        if (window.aboutMeRevealTimeout) {
+          clearTimeout(window.aboutMeRevealTimeout);
+          window.aboutMeRevealTimeout = null;
+        }
+
         // Device is steady. Start the 1s fade-out timer for About Me trigger
         if (window.isAboutMeTappable && !window.aboutMeFadeTimeout) {
           window.aboutMeFadeTimeout = setTimeout(() => {
@@ -244,13 +251,20 @@ function initHeroParallax() {
           }, 1000);
         }
       } else {
-        // Device is actively tilting! Show the overlay immediately
+        // Device is actively tilting!
         if (window.aboutMeFadeTimeout) {
           clearTimeout(window.aboutMeFadeTimeout);
           window.aboutMeFadeTimeout = null;
         }
-        if (portraitOverlay) portraitOverlay.classList.add('mobile-visible');
-        window.isAboutMeTappable = true;
+        
+        // Appear after a 1.5-second delay when tilting is detected
+        if (portraitOverlay && !portraitOverlay.classList.contains('mobile-visible') && !window.aboutMeRevealTimeout) {
+          window.aboutMeRevealTimeout = setTimeout(() => {
+            portraitOverlay.classList.add('mobile-visible');
+            window.isAboutMeTappable = true;
+            window.aboutMeRevealTimeout = null;
+          }, 1500);
+        }
       }
       
       // Calculate shifts relative to baseline
@@ -680,6 +694,19 @@ function initSpaRouter() {
     const aboutPanel = document.getElementById('about-content-panel');
     if (aboutPanel) aboutPanel.classList.remove('active');
     if (typeof resetAboutPagination === 'function') resetAboutPagination();
+    
+    // Reset gyroscope tilt timeouts
+    if (window.aboutMeRevealTimeout) {
+      clearTimeout(window.aboutMeRevealTimeout);
+      window.aboutMeRevealTimeout = null;
+    }
+    if (window.aboutMeFadeTimeout) {
+      clearTimeout(window.aboutMeFadeTimeout);
+      window.aboutMeFadeTimeout = null;
+    }
+    const portraitOverlay = document.querySelector('.portrait-overlay');
+    if (portraitOverlay) portraitOverlay.classList.remove('mobile-visible');
+    window.isAboutMeTappable = false;
     
     // Reset Home layout
     document.body.classList.remove('homepage-inactive');
