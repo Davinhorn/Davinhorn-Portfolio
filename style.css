@@ -1125,11 +1125,16 @@ html, body {
 
 /* Title container stays behind, nav layer elevates when dropdown menu is open */
 #title-layer {
-  z-index: 3 !important;
+  z-index: 1 !important;
 }
 
 #nav-layer {
   z-index: 20 !important;
+}
+
+/* Force portrait layer above title text globally and in Safari 3D */
+#portrait-layer {
+  z-index: 10 !important;
 }
 
 #nav-layer.nav-open {
@@ -1472,7 +1477,7 @@ html, body {
     top: 50% !important;
     bottom: auto !important;
     left: 50% !important;
-    transform: translate(-50%, -45%) !important; /* Shift Y coordinate up to overlap title */
+    transform: translate(-50%, -62%) !important; /* Shift Y coordinate up to center the skater and overlap title */
     height: 140vh !important;
     height: calc(var(--vh, 1vh) * 140) !important;
     max-width: none !important; /* Allow the image width to expand past body screen bounds so skater scales big! */

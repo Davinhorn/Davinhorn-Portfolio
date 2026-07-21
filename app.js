@@ -565,33 +565,40 @@ function initSingleScribbleInteractivity(scribble) {
    6. DYNAMIC FONT SCALING (FIT TITLE TO BOX)
    ========================================================================== */
 function scaleTitleToFit() {
-  const title = document.querySelector('.hero-title');
+  const titles = document.querySelectorAll('.hero-title');
   const container = document.querySelector('.hero-title-container');
   const stamp = document.querySelector('.portfolio-stamp');
   const rnLetters = document.querySelector('.rn-letters');
+  const ornLetters = document.querySelector('.orn-letters');
   
-  if (!title || !container) return;
+  if (titles.length === 0 || !container) return;
   
-  // 1. Scale main title to container width
-  title.style.fontSize = '100px';
-  const textWidth = title.offsetWidth;
+  // 1. Scale main title copy to container width
+  const primaryTitle = titles[0];
+  primaryTitle.style.fontSize = '100px';
+  const textWidth = primaryTitle.offsetWidth;
   const containerWidth = container.offsetWidth;
   if (textWidth === 0 || containerWidth === 0) return;
   
   const targetFontSize = (containerWidth / textWidth) * 100;
-  title.style.fontSize = `${targetFontSize}px`;
+  titles.forEach(t => {
+    t.style.fontSize = `${targetFontSize}px`;
+  });
   
-  // 2. Scale PORTFOLIO stamp to match the exact layout width of "RN"
-  if (stamp && rnLetters) {
-    const rnWidth = rnLetters.offsetWidth;
+  // 2. Scale PORTFOLIO stamp to match the exact layout width of "RN" (desktop) or "ORN" (mobile)
+  if (stamp) {
+    const isMobile = window.innerWidth <= 767;
+    const targetSpan = (isMobile && ornLetters) ? ornLetters : rnLetters;
     
-    // Measure stamp base width at 100px font size
-    stamp.style.fontSize = '100px';
-    const stampWidth = stamp.offsetWidth;
-    
-    if (stampWidth > 0 && rnWidth > 0) {
-      const targetStampFontSize = (rnWidth / stampWidth) * 100;
-      stamp.style.fontSize = `${targetStampFontSize}px`;
+    if (targetSpan) {
+      const targetSpanWidth = targetSpan.offsetWidth;
+      stamp.style.fontSize = '100px';
+      const stampWidth = stamp.offsetWidth;
+      
+      if (stampWidth > 0 && targetSpanWidth > 0) {
+        const targetStampFontSize = (targetSpanWidth / stampWidth) * 100;
+        stamp.style.fontSize = `${targetStampFontSize}px`;
+      }
     }
   }
 }
