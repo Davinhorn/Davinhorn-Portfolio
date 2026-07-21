@@ -1231,9 +1231,10 @@ html, body {
 }
 
 .about-contact-wrapper {
-  margin-top: 30px;
+  margin: 40px 0;
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
+  width: 100%;
 }
 
 /* Portrait hover overlay for desktop */
@@ -1278,8 +1279,11 @@ html, body {
 
 /* Slide portrait when about is active */
 @media (min-width: 768px) {
+  .about-active .portrait-img {
+    position: relative !important;
+    left: -25vw !important; /* Shift child image to preserve parent JS transform parallax motion */
+  }
   .about-active #portrait-layer {
-    left: -25vw !important; /* Shift left via layout offset to preserve JS transform parallax motion */
     z-index: 9; /* Bring portrait to front to overlay About Me panel beautifully */
   }
 }
@@ -1289,6 +1293,14 @@ html, body {
     transform: translate(0px, 0px) scale(0.95) !important; /* Stay centered on mobile */
     z-index: 4; /* Sits behind text */
   }
+}
+
+/* Hide About Me hover overlay text when about route is active */
+.about-active .portrait-overlay,
+.about-active .portrait-overlay.hovered {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  display: none !important;
 }
 
 .about-active #title-layer {
@@ -1393,7 +1405,10 @@ html, body {
 
 
   
-  /* Mobile About Me Layout */
+  /* Mobile About Me Layout */  .about-active #portrait-layer {
+    transform: none !important; /* Portrait stays full-size in background */
+  }
+
   .about-content-panel {
     width: 100%;
     padding: 0 0 100px 0 !important; /* Standardize scroll wrapper, leave bottom offset */
@@ -1406,30 +1421,12 @@ html, body {
     padding: 24px 24px 100px 24px !important;
     overflow-y: visible !important;
   }
-
-  .header-buttons-group {
-    gap: 10px !important;
-  }
-
-  .header-buttons-group .footer-pill-btn {
-    padding: 8px 18px !important;
-    font-size: 0.8rem !important;
-  }
-
-  .header-buttons-group .back-home-btn {
-    padding: 8px 16px !important;
-    font-size: 0.8rem !important;
-  }
   
   .about-active #hero-portrait {
     filter: grayscale(100%) !important;
     opacity: 0.35 !important; /* Keep visible in background with low opacity */
   }
-  
-  .about-active #portrait-layer {
-    transform: none !important; /* Portrait stays full-size in background */
-  }
-  
+
   /* Gyroscope active About Me overlay trigger styles for mobile */
   .portrait-overlay {
     opacity: 0 !important;
