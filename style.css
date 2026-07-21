@@ -1074,11 +1074,13 @@ html, body {
   animation: textFlicker 6s infinite, tvGlitch 4s infinite;
 }
 
-.portfolio-stamp:hover {
-  animation: none !important;
-  color: #4f46e5 !important;
-  transform: scale(1.05) !important;
-  text-shadow: none !important;
+@media (hover: hover) {
+  .portfolio-stamp:hover {
+    animation: none !important;
+    color: #4f46e5 !important;
+    transform: scale(1.05) !important;
+    text-shadow: none !important;
+  }
 }
 
 .portfolio-dropdown {
@@ -1141,11 +1143,13 @@ html, body {
   z-index: 210 !important; /* Stack dropdown menu above portrait container on both desktop and mobile when open */
 }
 
-/* Hide header layers on secondary routes */
+/* Hide header layers and footer on secondary routes */
 .about-active #title-layer,
 .about-active #nav-layer,
 .homepage-inactive #title-layer,
-.homepage-inactive #nav-layer {
+.homepage-inactive #nav-layer,
+.about-active .hero-footer,
+.homepage-inactive .hero-footer {
   opacity: 0 !important;
   pointer-events: none !important;
   visibility: hidden !important;
@@ -1380,12 +1384,12 @@ html, body {
   .about-content-panel {
     width: 100%;
     padding: 40px 24px 20px 24px;
-    background-color: rgba(250, 249, 245, 0.96);
+    background-color: rgba(250, 249, 245, 0.85) !important; /* Semi-transparent cream so background portrait shows through */
   }
   
   .about-active #hero-portrait {
-    filter: grayscale(100%);
-    opacity: 0.15;
+    filter: grayscale(100%) !important;
+    opacity: 0.35 !important; /* Keep visible in background with low opacity */
   }
   
   .about-active #portrait-layer {
