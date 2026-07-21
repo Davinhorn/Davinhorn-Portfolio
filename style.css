@@ -1171,6 +1171,7 @@ html, body {
 
 .about-content-panel.active {
   transform: translateX(0);
+  z-index: 30 !important; /* Stack active panel above portrait layer (z-index 10) to make buttons clickable */
 }
 
 .about-content-panel .back-home-btn {
