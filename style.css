@@ -932,6 +932,13 @@ html, body {
   flex-shrink: 0;
 }
 
+.header-buttons-group {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  z-index: 10;
+}
+
 .back-home-btn {
   background: none;
   border: 2px solid var(--text-color);
@@ -1272,7 +1279,7 @@ html, body {
 /* Slide portrait when about is active */
 @media (min-width: 768px) {
   .about-active #portrait-layer {
-    transform: translateX(-25vw) scale(0.98) !important; /* Slide left and override JS inline styles */
+    left: -25vw !important; /* Shift left via layout offset to preserve JS transform parallax motion */
     z-index: 9; /* Bring portrait to front to overlay About Me panel beautifully */
   }
 }
@@ -1355,12 +1362,13 @@ html, body {
     display: inline-block;
   }
   
-  /* Page Header Mobile */
+  /* Page Header Mobile - Matches Desktop row layout */
   .page-header {
-    padding: 20px;
-    flex-direction: column-reverse;
-    align-items: flex-start;
-    gap: 15px;
+    padding: 20px 24px !important;
+    flex-direction: row-reverse !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 10px !important;
   }
   
   .category-page-title {
@@ -1388,8 +1396,29 @@ html, body {
   /* Mobile About Me Layout */
   .about-content-panel {
     width: 100%;
-    padding: 40px 24px 20px 24px;
+    padding: 0 0 100px 0 !important; /* Standardize scroll wrapper, leave bottom offset */
+    justify-content: flex-start !important; /* Align content to top so header stays top */
+    overflow-y: auto !important;
     background-color: rgba(250, 249, 245, 0.85) !important; /* Semi-transparent cream so background portrait shows through */
+  }
+
+  .about-content-inner {
+    padding: 24px 24px 100px 24px !important;
+    overflow-y: visible !important;
+  }
+
+  .header-buttons-group {
+    gap: 10px !important;
+  }
+
+  .header-buttons-group .footer-pill-btn {
+    padding: 8px 18px !important;
+    font-size: 0.8rem !important;
+  }
+
+  .header-buttons-group .back-home-btn {
+    padding: 8px 16px !important;
+    font-size: 0.8rem !important;
   }
   
   .about-active #hero-portrait {
@@ -1437,14 +1466,7 @@ html, body {
     display: none !important;
   }
 
-  /* Position CONTACT button in top-right of mobile About Me page */
-  .about-contact-wrapper {
-    position: absolute !important;
-    top: 40px !important;
-    right: 24px !important;
-    margin: 0 !important;
-    z-index: 100 !important;
-  }
+  /* Redundant about-contact-wrapper deleted (contact trigger is now inside the page-header) */
   
   .contact-page-content {
     padding: 20px;
