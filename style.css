@@ -1170,18 +1170,18 @@ html, body {
   position: absolute;
   top: 0;
   right: 0;
-  width: 50%;
+  width: 100%; /* Fully expanded */
   height: 100%;
-  background-color: var(--bg-color);
+  background-color: rgba(250, 249, 245, 0.85); /* Semi-transparent cream */
   z-index: 8;
-  padding: 60px 80px 40px 40px;
+  padding: 0 0 100px 0; /* Standard scroll padding */
+  justify-content: flex-start; /* Align content to top */
   overflow-y: auto;
   transform: translateX(100%);
   visibility: hidden; /* Prevent tabbing/focus mapping when panel is inactive */
   transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.8s;
   display: flex;
   flex-direction: column;
-  justify-content: center;
 }
 
 .about-content-panel.active {
@@ -1190,13 +1190,11 @@ html, body {
   z-index: 30 !important; /* Stack active panel above portrait layer (z-index 10) to make buttons clickable */
 }
 
-.about-content-panel .back-home-btn {
-  align-self: flex-start;
-  margin-bottom: 30px;
-}
-
 .about-content-inner {
-  max-width: 650px;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 60px;
+  width: 100%;
 }
 
 .about-title-large {
@@ -1280,12 +1278,14 @@ html, body {
 /* Slide portrait when about is active */
 @media (min-width: 768px) {
   .about-active .portrait-img {
-    position: relative !important;
-    left: -25vw !important; /* Shift child image to preserve parent JS transform parallax motion */
+    transform: none !important;
   }
-  .about-active #portrait-layer {
-    z-index: 9; /* Bring portrait to front to overlay About Me panel beautifully */
-  }
+}
+
+.about-active #portrait-layer {
+  transform: none !important; /* Portrait stays centered and full-size in background */
+  left: 0 !important;
+  z-index: 4 !important; /* Sits behind panel text */
 }
 
 @media (max-width: 767px) {
@@ -1405,18 +1405,6 @@ html, body {
 
 
   
-  /* Mobile About Me Layout */  .about-active #portrait-layer {
-    transform: none !important; /* Portrait stays full-size in background */
-  }
-
-  .about-content-panel {
-    width: 100%;
-    padding: 0 0 100px 0 !important; /* Standardize scroll wrapper, leave bottom offset */
-    justify-content: flex-start !important; /* Align content to top so header stays top */
-    overflow-y: auto !important;
-    background-color: rgba(250, 249, 245, 0.85) !important; /* Semi-transparent cream so background portrait shows through */
-  }
-
   .about-content-inner {
     padding: 24px 24px 100px 24px !important;
     overflow-y: visible !important;
