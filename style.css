@@ -65,6 +65,18 @@ body.app-loading .hero-section {
   background-color: #000000 !important;
 }
 
+/* Hide titles completely until fonts are loaded to prevent FOUT */
+body.app-loading .hero-title-container {
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+body.app-loading.fonts-loaded .hero-title-container {
+  opacity: 1 !important;
+  visibility: visible !important;
+  z-index: 1000 !important;
+}
+
 body.app-loading .hero-title {
   color: #ffffff !important;
   animation: textGlitchWhite 0.5s infinite !important;
@@ -312,6 +324,12 @@ body.app-loading #scribbles-layer {
   letter-spacing: -0.02em;
   text-transform: none;
   pointer-events: auto;
+  transition: opacity 0.8s ease;
+}
+
+.about-active .footer-static-text {
+  opacity: 0 !important;
+  pointer-events: none !important;
 }
 
 /* Scroll Arrow */
@@ -1188,7 +1206,7 @@ html, body {
 .portrait-overlay span {
   color: #ffffff;
   font-family: var(--font-title);
-  font-size: clamp(2.5rem, 5vw, 5rem);
+  font-size: clamp(1.5rem, 3.2vw, 3.5rem);
   letter-spacing: 0.05em;
   /* Add glitchy animation to the ABOUT ME text */
   animation: tvGlitch 3s infinite;
@@ -1388,7 +1406,7 @@ html, body {
   /* Mobile About Me Layout */
   .about-content-panel {
     width: 100%;
-    padding: 60px 30px 40px 30px;
+    padding: 40px 24px 20px 24px;
     background-color: rgba(250, 249, 245, 0.96);
   }
   
@@ -1478,5 +1496,53 @@ html, body {
   
   .contact-page-content {
     padding: 20px;
+  }
+
+  /* Disable tap highlight color on mobile */
+  * {
+    -webkit-tap-highlight-color: transparent !important;
+  }
+
+  /* Hide custom cursor on mobile */
+  .custom-cursor,
+  #custom-cursor {
+    display: none !important;
+  }
+
+  /* Shrink mobile portrait */
+  .portrait-img {
+    height: 105vh !important;
+    height: calc(var(--vh, 1vh) * 105) !important;
+    bottom: -15vh !important;
+    bottom: calc(var(--vh, 1vh) * -15) !important;
+  }
+
+  /* Make mobile trigger behave like desktop styling (Sans Bold) */
+  #mobile-portfolio-trigger {
+    background: none !important;
+    border: none !important;
+    padding: 0 !important;
+    font-family: var(--font-sans) !important;
+    font-weight: 800 !important; /* Sans Bold */
+    font-size: clamp(1.2rem, 4vw, 1.8rem) !important;
+    color: var(--text-color) !important;
+    text-transform: uppercase !important;
+    letter-spacing: -0.01em !important;
+    box-shadow: none !important;
+    transform: none !important;
+    pointer-events: auto !important;
+    transition: color 0.2s ease, transform 0.2s ease !important;
+  }
+  
+  #mobile-portfolio-trigger:active,
+  #mobile-portfolio-trigger:hover {
+    background: none !important;
+    color: #4f46e5 !important;
+    transform: scale(1.05) !important;
+  }
+
+  /* Shrink ABOUT ME overlay text on mobile */
+  .portrait-overlay span {
+    font-size: clamp(1.1rem, 4vw, 2.0rem) !important;
   }
 }

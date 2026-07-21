@@ -8,12 +8,21 @@ document.addEventListener('DOMContentLoaded', () => {
   // Handle Loading Screen (Only on initial load of Homepage)
   const initialPath = window.location.pathname.replace(/^\/|\/$/g, '');
   if (initialPath === '' || initialPath === 'index.html') {
-    scaleTitleToFit();
-    
-    // Start the original 2.5s countdown
-    setTimeout(() => {
-      document.body.classList.remove('app-loading');
-    }, 2500);
+    const startLoadingReveal = () => {
+      scaleTitleToFit();
+      document.body.classList.add('fonts-loaded');
+      
+      // Start the original 2.5s countdown
+      setTimeout(() => {
+        document.body.classList.remove('app-loading');
+      }, 2500);
+    };
+
+    if (document.fonts) {
+      document.fonts.ready.then(startLoadingReveal).catch(startLoadingReveal);
+    } else {
+      startLoadingReveal();
+    }
   } else {
     document.body.classList.remove('app-loading');
   }
@@ -144,8 +153,9 @@ function initHeroParallax() {
 
   // Track mouse coordinates globally on window to prevent interruptions when hovering overlay elements
   window.addEventListener('mousemove', (e) => {
-    // Only track if on homepage (body does not have homepage-inactive)
+    // Only track if on homepage (body does not have homepage-inactive) and not on mobile viewports
     if (document.body.classList.contains('homepage-inactive')) return;
+    if (window.innerWidth <= 767) return;
     
     const xOffset = (e.clientX - window.innerWidth / 2) / (window.innerWidth / 2);
     const yOffset = (e.clientY - window.innerHeight / 2) / (window.innerHeight / 2);
@@ -154,6 +164,7 @@ function initHeroParallax() {
 
   // Reset layers when cursor leaves the window entirely
   document.addEventListener('mouseleave', () => {
+    if (window.innerWidth <= 767) return;
     const scribblesLayer = document.getElementById('scribbles-layer');
     const titleLayer = document.getElementById('title-layer');
     const portraitLayer = document.getElementById('portrait-layer');
@@ -805,12 +816,23 @@ function initNavigationInteractions() {
   }
   
   function checkPortraitAlpha(e) {
-    if (!offscreenCtx) return false;
-    const img = e.target;
+    if (!offscreenCtx || !portraitImg) return false;
+    const img = portraitImg; // always map against portrait image
     const rect = img.getBoundingClientRect();
     
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    // Retrieve touch or mouse client coordinates
+    let clientX = e.clientX;
+    let clientY = e.clientY;
+    if (e.touches && e.touches.length > 0) {
+      clientX = e.touches[0].clientX;
+      clientY = e.touches[0].clientY;
+    } else if (e.changedTouches && e.changedTouches.length > 0) {
+      clientX = e.changedTouches[0].clientX;
+      clientY = e.changedTouches[0].clientY;
+    }
+    
+    const x = clientX - rect.left;
+    const y = clientY - rect.top;
     
     const naturalX = Math.floor((x / rect.width) * img.naturalWidth);
     const naturalY = Math.floor((y / rect.height) * img.naturalHeight);
@@ -825,7 +847,6 @@ function initNavigationInteractions() {
       const alpha = pixel[3]; // alpha channel
       return alpha > 15;
     } catch (err) {
-      console.error("Canvas read failed", err);
       return true; // fallback
     }
   }
@@ -838,6 +859,8 @@ function initNavigationInteractions() {
     }
     
     portraitImg.addEventListener('mousemove', (e) => {
+      const isMobile = window.innerWidth <= 767;
+      if (isMobile) return;
       const isOverVisible = checkPortraitAlpha(e);
       if (isOverVisible) {
         portraitOverlay.classList.add('hovered');
@@ -852,21 +875,23 @@ function initNavigationInteractions() {
       portraitOverlay.classList.remove('hovered');
     });
     
-    portraitImg.addEventListener('click', (e) => {
+    const handlePortraitTrigger = (e) => {
       if (checkPortraitAlpha(e)) {
         e.stopPropagation();
         const isMobile = window.innerWidth <= 767;
         if (isMobile) {
-          // On mobile, click is only active if the device is currently tilting
           if (window.isAboutMeTappable) {
+            e.preventDefault();
             window.navigateToRoute('aboutme');
           }
         } else {
-          // Desktop is always active on hover
           window.navigateToRoute('aboutme');
         }
       }
-    });
+    };
+    
+    portraitImg.addEventListener('click', handlePortraitTrigger);
+    portraitImg.addEventListener('touchend', handlePortraitTrigger);
   }
 }
 
