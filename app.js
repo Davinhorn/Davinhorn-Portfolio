@@ -10,18 +10,10 @@ document.addEventListener('DOMContentLoaded', () => {
   if (initialPath === '' || initialPath === 'index.html') {
     scaleTitleToFit();
     
-    // Start the 3.0s countdown
+    // Start the original 2.5s countdown
     setTimeout(() => {
-      const loader = document.getElementById('loading-screen');
-      if (loader) {
-        loader.classList.add('glitch-out');
-        setTimeout(() => {
-          document.body.classList.remove('app-loading');
-        }, 500); // 500ms animation duration
-      } else {
-        document.body.classList.remove('app-loading');
-      }
-    }, 3000);
+      document.body.classList.remove('app-loading');
+    }, 2500);
   } else {
     document.body.classList.remove('app-loading');
   }
@@ -139,10 +131,10 @@ function applyParallax(xOffset, yOffset) {
     portraitLayer.style.transform = `translate(${xOffset * 15}px, ${yOffset * 10}px) scale(1.02)`;
   }
 
-  // Layer 4: Foreground footer elements (Contact and VOL.2026 moving with layout depth)
+  // Layer 4: Foreground footer elements (Moving in lockstep with title and subtitle)
   // Preserves translateX(-50%) centering layout rule
   if (footerLayer) {
-    footerLayer.style.transform = `translateX(-50%) translate(${xOffset * 10}px, ${yOffset * 5}px)`;
+    footerLayer.style.transform = `translateX(-50%) translate(${xOffset * -15}px, ${yOffset * -10}px)`;
   }
 }
 

@@ -37,41 +37,20 @@ body {
   min-height: 100vh;
   position: relative;
   -webkit-font-smoothing: antialiased;
+  background-color: var(--bg-color);
+  transition: background-color 0.8s ease-out;
 }
 
 /* ==========================================================================
-   LOADING INTRO SCREEN OVERLAY
+   LOADING INTRO SCREEN STYLES (ORIGINAL STYLE)
    ========================================================================== */
-.loading-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: #000000;
-  z-index: 990; /* Covers everything except elevated titles */
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-}
-
 body.app-loading {
+  background-color: #000000 !important;
   overflow: hidden;
 }
 
-body.app-loading .loading-overlay {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: all;
-}
-
-.loading-overlay.glitch-out {
-  animation: bgGlitchOut 0.4s forwards;
-}
-
-/* Elevate and show glitched white titles when loading */
-body.app-loading .hero-title-container {
-  z-index: 1000 !important;
+body.app-loading .hero-section {
+  background-color: #000000 !important;
 }
 
 body.app-loading .hero-title {
@@ -84,16 +63,28 @@ body.app-loading .portfolio-stamp {
   animation: textGlitchWhite 0.5s infinite !important;
 }
 
-/* Hide portrait layer entirely during the loading overlay */
+/* Hide portrait layer entirely during the loading screen */
 body.app-loading #portrait-layer {
   opacity: 0 !important;
   pointer-events: none !important;
 }
 
-/* Transition text color when recovering from loading */
+/* Hide other content layers during load screen */
+body.app-loading .hero-footer,
+body.app-loading #scribbles-layer {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Transitions for load reveal */
 .hero-title,
 .portfolio-stamp {
-  transition: color 1.0s cubic-bezier(0.25, 1, 0.5, 1), text-shadow 1.0s;
+  transition: color 0.8s ease-out, text-shadow 0.8s ease-out;
+}
+
+.hero-footer,
+#scribbles-layer {
+  transition: opacity 0.8s ease-out;
 }
 
 @keyframes textGlitchWhite {
@@ -113,17 +104,6 @@ body.app-loading #portrait-layer {
     text-shadow: none;
     transform: translate(0, 0);
   }
-}
-
-@keyframes bgGlitchOut {
-  0% { background-color: #000000; opacity: 1; visibility: visible; }
-  15% { background-color: #ffffff; opacity: 1; visibility: visible; }
-  30% { background-color: #000000; opacity: 1; visibility: visible; }
-  45% { background-color: #ffffff; opacity: 1; visibility: visible; }
-  60% { background-color: #000000; opacity: 1; visibility: visible; }
-  75% { background-color: #ffffff; opacity: 1; visibility: visible; }
-  90% { background-color: #000000; opacity: 1; visibility: visible; }
-  100% { background-color: #ffffff; opacity: 0; visibility: hidden; }
 }
 
 /* Custom Selection Color */
@@ -305,8 +285,9 @@ body.app-loading #portrait-layer {
 }
 
 .hero-footer .small-text {
+  font-family: var(--font-sans);
   font-size: clamp(1.1rem, 2.2vw, 1.6rem);
-  font-weight: 800;
+  font-weight: 500; /* Sans Medium */
   text-transform: none;
   letter-spacing: -0.02em;
 }
@@ -319,20 +300,6 @@ body.app-loading #portrait-layer {
   letter-spacing: -0.02em;
   text-transform: none;
   pointer-events: auto;
-}
-
-.last-updated-stamp {
-  position: absolute;
-  left: 0;
-  top: 96%;
-  font-family: var(--font-sans);
-  font-weight: 500; /* Sans Medium */
-  font-size: clamp(0.8rem, 1.3vw, 1.1rem);
-  color: var(--text-color);
-  letter-spacing: -0.01em;
-  text-transform: none;
-  pointer-events: none;
-  line-height: 0.8;
 }
 
 /* Scroll Arrow */
@@ -1202,6 +1169,15 @@ html, body {
   opacity: 0;
   transition: opacity 0.3s ease;
   pointer-events: none;
+}
+
+@media (min-width: 768px) {
+  .portrait-img {
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .portrait-img:hover {
+    transform: scale(1.03);
+  }
 }
 
 .portrait-overlay span {
