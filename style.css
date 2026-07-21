@@ -335,6 +335,12 @@ body.app-loading #scribbles-layer {
   transition: opacity 0.8s ease;
 }
 
+.footer-static-text.glitch-active {
+  animation: tvGlitch 0.15s linear infinite !important;
+  color: #ff0055 !important; /* Flash red during glitch */
+  display: inline-block;
+}
+
 .about-active .footer-static-text {
   opacity: 0 !important;
   pointer-events: none !important;
@@ -1286,6 +1292,12 @@ html, body {
   filter: grayscale(100%) !important;
   opacity: 0.12 !important; /* Low opacity so it sits softly in the background */
   transition: filter 0.8s ease, opacity 0.8s ease;
+}
+
+@media (min-width: 768px) {
+  .about-active #hero-portrait {
+    opacity: 0.22 !important; /* Desktop specific: 10% higher opacity */
+  }
 }
 
 @media (max-width: 767px) {

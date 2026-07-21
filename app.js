@@ -80,6 +80,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initialize SPA Router and interactive navigation elements
   initNavigationInteractions();
   initSpaRouter();
+  
+  // Start glitch interval for footer static signature
+  initFooterGlitch();
 });
 
 /* ==========================================================================
@@ -976,5 +979,37 @@ document.addEventListener('contextmenu', (e) => {
     e.preventDefault();
   }
 });
+
+function initFooterGlitch() {
+  const staticText = document.querySelector('.footer-static-text');
+  if (!staticText) return;
+  
+  setInterval(() => {
+    // Glitch transition to "Sometimes it's not."
+    staticText.classList.add('glitch-active');
+    
+    setTimeout(() => {
+      staticText.textContent = "Sometimes it's not.";
+    }, 150);
+    
+    setTimeout(() => {
+      staticText.classList.remove('glitch-active');
+    }, 350);
+    
+    // Glitch transition back to "Life is nice." after 1 second
+    setTimeout(() => {
+      staticText.classList.add('glitch-active');
+      
+      setTimeout(() => {
+        staticText.textContent = "Life is nice.";
+      }, 150);
+      
+      setTimeout(() => {
+        staticText.classList.remove('glitch-active');
+      }, 350);
+    }, 1000);
+    
+  }, 10000); // Trigger every 10 seconds
+}
 
 
