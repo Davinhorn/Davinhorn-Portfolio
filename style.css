@@ -1420,51 +1420,21 @@ html, body {
 
   /* About pagination presentation elements on mobile */
   .about-page-slide {
-    display: none;
-  }
-
-  .about-page-slide.active {
-    display: block;
+    display: block !important;
+    margin-bottom: 30px;
   }
 
   .about-pagination-controls {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 20px;
-    border-top: 1px solid var(--text-color);
-    padding-top: 12px;
+    display: none !important;
   }
 
-  .pagination-btn {
-    background: none;
-    border: 1.5px solid var(--text-color);
-    padding: 6px 14px;
-    font-family: var(--font-sans);
-    font-weight: 800;
-    font-size: 0.8rem;
-    cursor: pointer;
-    color: var(--text-color);
-    transition: background-color 0.2s, color 0.2s;
-  }
-
-  .pagination-btn:active {
-    background-color: var(--text-color);
-    color: var(--bg-color);
-  }
-
-  .pagination-btn[disabled] {
-    opacity: 0.25;
-    cursor: not-allowed;
-    background: none !important;
-    color: var(--text-color) !important;
-  }
-
-  .pagination-indicator {
-    font-family: var(--font-sans);
-    font-weight: 800;
-    font-size: 0.8rem;
-    letter-spacing: 0.05em;
+  /* Position CONTACT button in top-right of mobile About Me page */
+  .about-contact-wrapper {
+    position: absolute !important;
+    top: 40px !important;
+    right: 24px !important;
+    margin: 0 !important;
+    z-index: 100 !important;
   }
   
   .contact-page-content {
