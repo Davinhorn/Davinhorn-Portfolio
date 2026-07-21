@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
         loader.classList.add('glitch-out');
         setTimeout(() => {
           document.body.classList.remove('app-loading');
-        }, 400); // 400ms animation duration
+        }, 500); // 500ms animation duration
       } else {
         document.body.classList.remove('app-loading');
       }
