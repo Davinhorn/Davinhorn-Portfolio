@@ -50,7 +50,7 @@ body {
   position: relative;
   -webkit-font-smoothing: antialiased;
   background-color: var(--bg-color);
-  transition: background-color 0.8s ease-out;
+  transition: background-color 1.2s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 /* ==========================================================================
@@ -89,26 +89,26 @@ body.app-loading .portfolio-stamp {
 
 /* Hide portrait layer entirely during the loading screen */
 body.app-loading #portrait-layer {
-  opacity: 0 !important;
+  opacity: 0.01 !important;
   pointer-events: none !important;
 }
 
 /* Hide other content layers during load screen */
 body.app-loading .hero-footer,
 body.app-loading #scribbles-layer {
-  opacity: 0 !important;
+  opacity: 0.01 !important;
   pointer-events: none !important;
 }
 
 /* Transitions for load reveal */
 .hero-title,
 .portfolio-stamp {
-  transition: color 0.8s ease-out, text-shadow 0.8s ease-out;
+  transition: color 1.2s cubic-bezier(0.25, 1, 0.5, 1), text-shadow 1.2s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .hero-footer,
 #scribbles-layer {
-  transition: opacity 0.8s ease-out;
+  transition: opacity 1.2s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 @keyframes textGlitchWhite {
@@ -196,6 +196,7 @@ body.app-loading #scribbles-layer {
   overflow: hidden;
   background-color: var(--bg-color);
   perspective: 1200px;
+  transition: background-color 1.2s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 /* Parallax Layer 1: Scribbles */
@@ -212,6 +213,7 @@ body.app-loading #scribbles-layer {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
+  overflow: hidden;
 }
 
 .scribble {
