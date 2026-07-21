@@ -87,6 +87,12 @@ body.app-loading .portfolio-stamp {
   animation: textGlitchWhite 0.5s infinite !important;
 }
 
+/* Disable portfolio trigger interactions during loading */
+body.app-loading #portfolio-nav-trigger {
+  pointer-events: none !important;
+  cursor: default !important;
+}
+
 /* Hide portrait layer entirely during the loading screen */
 body.app-loading #portrait-layer {
   opacity: 0.01 !important;
@@ -1118,6 +1124,9 @@ html, body {
 }
 
 /* Title container remains z-index: auto so that dropdown and title stack independently */
+#title-layer.nav-open {
+  z-index: 210 !important; /* Stack dropdown menu above portrait container on both desktop and mobile */
+}
 
 /* About Me Panel Styles (Desktop default) */
 .about-content-panel {
@@ -1449,15 +1458,15 @@ html, body {
     display: none !important;
   }
 
-  /* Make mobile portrait large and center it perfectly (head to toe centered vertically and horizontally) */
+  /* Make mobile portrait large and center it (overlapping title slightly) */
   .portrait-img {
     position: absolute !important;
     top: 50% !important;
     bottom: auto !important;
     left: 50% !important;
-    transform: translate(-50%, -50%) !important;
-    height: 60vh !important;
-    height: calc(var(--vh, 1vh) * 60) !important;
+    transform: translate(-50%, -46%) !important; /* Shift Y coordinate up to overlap title */
+    height: 92vh !important;
+    height: calc(var(--vh, 1vh) * 92) !important;
     width: auto !important;
     object-fit: contain !important;
   }
