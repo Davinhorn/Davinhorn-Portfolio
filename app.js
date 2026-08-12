@@ -658,10 +658,64 @@ const categoryData = {
   branding: {
     title: "Branding",
     projects: [
-      { num: "01", tag: "IDENTITY", title: "Basement Club", desc: "Comprehensive brand identity and visual styling for Basement Club.", tags: ["Brand Identity", "Visual System", "Branding"] },
-      { num: "02", tag: "IDENTITY", title: "MR.JJAJANG", desc: "Brand identity, logo design, and visual concept for MR.JJAJANG.", tags: ["Logo Design", "Brand Identity", "Visual Concept"] },
-      { num: "03", tag: "IDENTITY", title: "Chantrea Travel", desc: "Brand identity design, logo assets, and visual design system for Chantrea Travel.", tags: ["Brand Identity", "Travel Branding", "Visual Assets"] }
+      { num: "01", tag: "IDENTITY", title: "Basement Club", desc: "Comprehensive brand identity and visual styling for Basement Club.", route: "branding/basementclub", tags: ["Brand Identity", "Visual System", "Branding"] },
+      { num: "02", tag: "IDENTITY", title: "MR.JJAJANG", desc: "Brand identity, logo design, and visual concept for MR.JJAJANG.", route: "branding/mrjjajang", tags: ["Logo Design", "Brand Identity", "Visual Concept"] },
+      { num: "03", tag: "IDENTITY", title: "Chantrea Travel", desc: "Brand identity design, logo assets, and visual design system for Chantrea Travel.", route: "branding/chantreatravel", tags: ["Brand Identity", "Travel Branding", "Visual Assets"] }
     ]
+  }
+};
+
+const brandingSubData = {
+  "branding/basementclub": {
+    title: "Basement Club",
+    tag: "BRAND IDENTITY & SYSTEM",
+    num: "01",
+    overview: "Basement Club is a premier culinary and night-life venue in Phnom Penh. The brand identity balances high-contrast brutalist typography with refined hospitality aesthetics, capturing the raw energy of urban street culture.",
+    specs: {
+      industry: "Hospitality & Nightlife",
+      deliverables: "Logo System, Typography, Packaging, Social Assets",
+      typography: "Bebas Neue / Outfit / Custom Lettering",
+      colors: [
+        { hex: "#0C0C0C", name: "Obsidian" },
+        { hex: "#4F46E5", name: "Electric Indigo" },
+        { hex: "#FAF9F5", name: "Raw Cream" }
+      ]
+    },
+    strategy: "The visual system was engineered to feel bold, industrial, and high-energy. Key brand touchpoints include custom food packaging, digital menu systems, staff apparel, and physical venue signage."
+  },
+  "branding/mrjjajang": {
+    title: "MR.JJAJANG",
+    tag: "LOGO & BRAND CONCEPT",
+    num: "02",
+    overview: "MR.JJAJANG is an authentic Korean-Chinese restaurant brand. The branding combines playfulness with traditional culinary roots, using vibrant graphic shapes, distinctive mascot motifs, and bold storefront graphics.",
+    specs: {
+      industry: "Food & Beverage",
+      deliverables: "Logo Design, Packaging, Storefront Graphics, Menu Layouts",
+      typography: "Anton / Outfit",
+      colors: [
+        { hex: "#E63946", name: "Chili Red" },
+        { hex: "#1D3557", name: "Deep Navy" },
+        { hex: "#F1FAEE", name: "Soft Pearl" }
+      ]
+    },
+    strategy: "Focusing on memorable dining experiences, the identity leverages energetic colors and high-impact graphic locks to establish instant recognition across delivery platforms and physical store locations."
+  },
+  "branding/chantreatravel": {
+    title: "Chantrea Travel",
+    tag: "TRAVEL & LIFESTYLE BRANDING",
+    num: "03",
+    overview: "Chantrea Travel is a luxury travel and eco-tourism platform. The visual identity reflects serene landscapes, organic minimalism, and modern travel aesthetics.",
+    specs: {
+      industry: "Travel & Tourism",
+      deliverables: "Brand Identity, Itinerary Templates, Digital Assets, Style Guide",
+      typography: "Outfit / Reenie Beanie / Sans Serif",
+      colors: [
+        { hex: "#2A9D8F", name: "Emerald Earth" },
+        { hex: "#E9C46A", name: "Sun Sand" },
+        { hex: "#264653", name: "Deep Ocean" }
+      ]
+    },
+    strategy: "Built around inspiring wanderlust and seamless travel planning, the brand system uses clean line art, serene color palettes, and elegant typography to resonate with modern global travelers."
   }
 };
 
@@ -711,6 +765,70 @@ function initSpaRouter() {
       // Open About Me layout
       document.body.classList.add('about-active');
       if (aboutPanel) aboutPanel.classList.add('active');
+    } else if (brandingSubData[path]) {
+      // Render Branding Sub-Route Detail View
+      const sub = brandingSubData[path];
+      const detailTitle = document.getElementById('detail-title');
+      if (detailTitle) detailTitle.textContent = sub.title;
+      
+      const detailBody = document.getElementById('detail-content-body');
+      if (detailBody) {
+        detailBody.innerHTML = `
+          <div class="detail-hero-frame">
+            <div class="detail-hero-glow"></div>
+            <div class="detail-hero-top">
+              <span class="detail-tag">${sub.tag}</span>
+              <span class="detail-badge">${sub.num}</span>
+            </div>
+            <div class="detail-hero-bottom">
+              <h1 class="detail-main-title">${sub.title}</h1>
+            </div>
+          </div>
+
+          <div class="detail-section">
+            <h4 class="detail-section-title">OVERVIEW & CONCEPT</h4>
+            <p class="detail-body-text">${sub.overview}</p>
+          </div>
+
+          <div class="detail-section">
+            <h4 class="detail-section-title">BRAND SPECIFICATIONS & SYSTEM</h4>
+            <div class="brand-specs-grid">
+              <div class="spec-card">
+                <div class="spec-title">Industry</div>
+                <div class="spec-value">${sub.specs.industry}</div>
+              </div>
+              <div class="spec-card">
+                <div class="spec-title">Deliverables</div>
+                <div class="spec-value">${sub.specs.deliverables}</div>
+              </div>
+              <div class="spec-card">
+                <div class="spec-title">Typography System</div>
+                <div class="spec-value">${sub.specs.typography}</div>
+              </div>
+              <div class="spec-card">
+                <div class="spec-title">Color Palette</div>
+                <div class="swatch-group">
+                  ${sub.specs.colors.map(c => `
+                    <div class="swatch-item" title="${c.name} (${c.hex})">
+                      <div class="swatch-box" style="background-color: ${c.hex};"></div>
+                      <span class="swatch-label">${c.name}</span>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="detail-section">
+            <h4 class="detail-section-title">STRATEGY & EXECUTION</h4>
+            <p class="detail-body-text">${sub.strategy}</p>
+          </div>
+        `;
+      }
+      
+      const detailPage = document.getElementById('page-detail');
+      if (detailPage) detailPage.classList.add('active');
+      document.body.classList.add('homepage-inactive');
     } else if (categoryData[path]) {
       // Populate category page content
       const cat = categoryData[path];
@@ -722,8 +840,19 @@ function initSpaRouter() {
         grid.innerHTML = '';
         
         cat.projects.forEach(proj => {
-          const card = document.createElement('div');
-          card.className = `work-card ${proj.url ? 'has-url' : ''}`;
+          const isExternal = !!proj.url;
+          const isInternalRoute = !!proj.route;
+          
+          const card = document.createElement(isExternal ? 'a' : 'div');
+          card.className = `work-card ${isExternal ? 'has-url' : ''}`;
+          
+          if (isExternal) {
+            card.href = proj.url;
+            card.target = '_blank';
+            card.rel = 'noopener noreferrer';
+          } else if (isInternalRoute) {
+            card.setAttribute('data-route', proj.route);
+          }
           
           const urlBadge = proj.url ? `
             <div class="card-url-link">
@@ -753,12 +882,6 @@ function initSpaRouter() {
               </div>
             </div>
           `;
-
-          if (proj.url) {
-            card.addEventListener('click', () => {
-              window.open(proj.url, '_blank', 'noopener,noreferrer');
-            });
-          }
 
           grid.appendChild(card);
         });
