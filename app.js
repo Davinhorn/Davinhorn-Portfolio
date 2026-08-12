@@ -839,52 +839,40 @@ function initSpaRouter() {
       if (grid) {
         grid.innerHTML = '';
         
-        cat.projects.forEach(proj => {
-          const isExternal = !!proj.url;
-          const isInternalRoute = !!proj.route;
-          
-          const card = document.createElement(isExternal ? 'a' : 'div');
-          card.className = `work-card ${isExternal ? 'has-url' : ''}`;
-          
-          if (isExternal) {
-            card.href = proj.url;
-            card.target = '_blank';
-            card.rel = 'noopener noreferrer';
-          } else if (isInternalRoute) {
-            card.setAttribute('data-route', proj.route);
-          }
-          
-          const urlBadge = proj.url ? `
-            <div class="card-url-link">
-              <span class="url-text">${proj.url.replace(/^https?:\/\//, '')}</span>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                <polyline points="15 3 21 3 21 9"></polyline>
-                <line x1="10" y1="14" x2="21" y2="3"></line>
-              </svg>
-            </div>
-          ` : '';
+          cat.projects.forEach(proj => {
+            const isExternal = !!proj.url;
+            const isInternalRoute = !!proj.route;
+            
+            const card = document.createElement(isExternal ? 'a' : 'div');
+            card.className = 'work-card';
+            
+            if (isExternal) {
+              card.href = proj.url;
+              card.target = '_blank';
+              card.rel = 'noopener noreferrer';
+            } else if (isInternalRoute) {
+              card.setAttribute('data-route', proj.route);
+            }
 
-          card.innerHTML = `
-            <div class="card-image-wrapper">
-              <div class="card-bg-glow" style="background: radial-gradient(circle, rgba(79,70,229,0.1) 0%, transparent 70%);"></div>
-              <div class="card-image-placeholder">
-                <span class="card-index">${proj.num}</span>
-                <span class="card-project-tag">${proj.tag}</span>
+            card.innerHTML = `
+              <div class="card-image-wrapper">
+                <div class="card-bg-glow" style="background: radial-gradient(circle, rgba(79,70,229,0.1) 0%, transparent 70%);"></div>
+                <div class="card-image-placeholder">
+                  <span class="card-index">${proj.num}</span>
+                  <span class="card-project-tag">${proj.tag}</span>
+                </div>
               </div>
-            </div>
-            <div class="card-info">
-              <h3 class="card-title">${proj.title}</h3>
-              <p class="card-desc">${proj.desc}</p>
-              ${urlBadge}
-              <div class="card-tags">
-                ${proj.tags.map(t => `<span>${t}</span>`).join('')}
+              <div class="card-info">
+                <h3 class="card-title">${proj.title}</h3>
+                <p class="card-desc">${proj.desc}</p>
+                <div class="card-tags">
+                  ${proj.tags.map(t => `<span>${t}</span>`).join('')}
+                </div>
               </div>
-            </div>
-          `;
+            `;
 
-          grid.appendChild(card);
-        });
+            grid.appendChild(card);
+          });
       }
       
       // Slide in category page
