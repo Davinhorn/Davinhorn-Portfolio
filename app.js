@@ -482,7 +482,7 @@ function initDynamicScribbles() {
     scribble.style.transform = `translate(-50%, -50%) rotate(${rotation}deg)`;
     scribble.style.fontFamily = `'${font}'`;
     scribble.style.fontSize = baseFontSize;
-    scribble.style.pointerEvents = 'none';
+    scribble.style.pointerEvents = isMobile ? 'none' : 'auto';
     scribble.style.cursor = 'default';
     scribble.style.transition = 'opacity 0.5s, transform 0.5s';
     

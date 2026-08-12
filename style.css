@@ -228,7 +228,24 @@ body.app-loading #scribbles-layer {
   font-weight: 500;
   white-space: nowrap;
   user-select: none;
-  transition: transform 0.1s ease-out;
+  transition: color 0.3s ease, transform 0.1s ease-out;
+}
+
+.scribble span {
+  color: inherit;
+  transition: opacity 0.25s ease-out, transform 0.25s ease-out, color 0.3s ease;
+}
+
+@media (min-width: 768px) {
+  .scribble {
+    pointer-events: auto;
+    cursor: default;
+  }
+
+  .scribble:hover,
+  .scribble:hover span {
+    color: #4f46e5 !important;
+  }
 }
 
 /* Parallax Layer 2: Main Title */
