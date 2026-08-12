@@ -632,52 +632,35 @@ const categoryData = {
       { num: "03", tag: "IDENTITY", title: "Krypton Tech Identity", desc: "Visual identity design, logo design, and brand styling for a decentralised tech startup.", tags: ["Vector", "Figma", "Branding"] }
     ]
   },
-  videoediting: {
-    title: "Video Editing",
-    projects: [
-      { num: "01", tag: "REEL", title: "Creative Agency Showreel", desc: "Dynamic showreel editing featuring fast pacing, glitch transitions, and music sync.", tags: ["Premiere Pro", "After Effects", "Sound Design"] },
-      { num: "02", tag: "PROMO", title: "Vaporwave Fashion Film", desc: "Color grading and editing for a retro-themed street fashion video campaign.", tags: ["DaVinci Resolve", "Editing", "Color"] },
-      { num: "03", tag: "MUSIC", title: "Synthwave Music Video", desc: "Beat-matched, highly stylized music video with stylized overlay assets.", tags: ["Premiere Pro", "Effects", "Sync"] }
-    ]
-  },
   videoproduction: {
     title: "Video Production",
     projects: [
-      { num: "01", tag: "SHORT", title: "Urban Concrete", desc: "A short documentary film profiling local street skaters and creative artists.", tags: ["Cinematography", "Direction", "Directing"] },
-      { num: "02", tag: "COMMERCIAL", title: "Apex Apparel Promo", desc: "Creative direction and filming for a high-end streetwear release in industrial settings.", tags: ["Red Camera", "Lighting", "Fashion"] },
-      { num: "03", tag: "MV", title: "Neon Nights Music Video", desc: "Full-scale music video production featuring cyberpunk aesthetics and custom set design.", tags: ["Cinematography", "Set Design", "Production"] }
+      { num: "01", tag: "CAMPAIGN", title: "iCAUR V23: Stop Oil, Start iCAUR", desc: "Video production and creative direction for the iCAUR V23 campaign.", tags: ["Directing", "Video Production", "Campaign"] },
+      { num: "02", tag: "PR VIDEO", title: "Chery Cambodia PR Video", desc: "PR video production and filming for Chery Cambodia.", tags: ["PR Video", "Commercial", "Cinematography"] },
+      { num: "03", tag: "PROMO", title: "Hyundai Venue 2026", desc: "Promotional video production for the Hyundai Venue 2026.", tags: ["Automotive", "Commercial", "Video Production"] }
     ]
   },
   sounddesign: {
     title: "Sound Design",
     projects: [
-      { num: "01", tag: "AMBIENCE", title: "Cyberpunk Cityscape", desc: "Immersive field recordings and synth textures for a futuristic tabletop audio game.", tags: ["Ableton", "Sound Synthesis", "Foley"] },
-      { num: "02", tag: "FILM SCORE", title: "Echoes of Silence OST", desc: "Minimalist, ambient cinematic soundscapes and orchestral elements for an indie short film.", tags: ["Logic Pro X", "Synthesis", "Scoring"] },
-      { num: "03", tag: "AUDIO LOGO", title: "Vortex Tech Audio Logo", desc: "Sleek, digital interface sound effects and brand audio logo design.", tags: ["Sound Design", "Audio Brand", "Foley"] }
+      { num: "01", tag: "AUDIO", title: "iCAUR V23: Born to Play", desc: "Custom sound design and audio composition for iCAUR V23.", tags: ["Sound Design", "Audio Composition", "Foley"] },
+      { num: "02", tag: "MEDIA", title: "Basement Club: Contents", desc: "Sound design and audio mixing for Basement Club media contents.", tags: ["Sound Design", "Audio Mixing", "Media"] }
     ]
   },
   uxui: {
     title: "UX/UI Design",
     projects: [
-      { num: "01", tag: "WEB PORTAL", title: "Apex Design System", desc: "A modern design library containing responsive components, typography guidelines, and clean design tokens.", tags: ["Figma", "Design System", "Tokens"] },
-      { num: "02", tag: "MOBILE APP", title: "Shift Fitness Mobile", desc: "A clean mobile fitness application with interactive goal tracking and gamified badges.", tags: ["UX Research", "Figma Prototypes", "Wireframes"] },
-      { num: "03", tag: "DASHBOARD", title: "Quant Exchange Dashboard", desc: "Sleek user experience design for a complex financial dashboard.", tags: ["UI Design", "Data Visualization", "Figma"] }
-    ]
-  },
-  webdevelopment: {
-    title: "Web Development",
-    projects: [
-      { num: "01", tag: "WEB APP", title: "Chantrea Travel Platform", desc: "A premium travel planning platform with rich interactive maps, seamless itinerary scheduling, and customized routes.", tags: ["Vite", "Supabase", "Vanilla CSS"] },
-      { num: "02", tag: "DEV TOOLS", title: "Antigravity Dev-Tools", desc: "An advanced developer productivity suite offering real-time canvas overlays, visual performance metrics, and debuggers.", tags: ["Node.js", "Canvas API", "Chrome Ext"] },
-      { num: "03", tag: "AI DASHBOARD", title: "Synapse UI Dashboard", desc: "A modern, responsive AI analytics dashboard implementing glassmorphism, glowing gradients, and fluid charts.", tags: ["Next.js", "ChartJS", "Framer Motion"] }
+      { num: "01", tag: "FOOD & MEMBERSHIP", title: "Basement Club", desc: "Food ordering website with membership system and more. Collaborative work.", url: "https://basementclubpp.com", tags: ["Food Ordering", "Membership System", "Collaborative Work"] },
+      { num: "02", tag: "TRAVEL AGENCY", title: "Chantrea Travel", desc: "Travel agency website. Created and developed independently.", url: "https://chantreatravel.com", tags: ["Travel Agency", "Solo Project", "Web Design"] },
+      { num: "03", tag: "LIFESTYLE COACHING", title: "Echtventure", desc: "Website for lifestyle coaching. Collaborative work.", url: "https://echtventure.com", tags: ["Lifestyle Coaching", "Collaborative Work", "Web Design"] }
     ]
   },
   branding: {
     title: "Branding",
     projects: [
-      { num: "01", tag: "IDENTITY", title: "Helix Brand System", desc: "A raw, urban identity package including streetwear tags, packaging assets, and custom vector typography.", tags: ["Branding", "Vector Design", "Packaging"] },
-      { num: "02", tag: "LOGO", title: "Nirvana Coffee Co.", desc: "Retro-modern logo design, physical product tags, and customized typography details.", tags: ["Logo Design", "Illustration", "Typography"] },
-      { num: "03", tag: "CAMPAIGN", title: "Synthetics 2.0 Campaign", desc: "A comprehensive digital advertising design project combining graphic guidelines and video assets.", tags: ["Art Direction", "Motion Graphics", "Branding"] }
+      { num: "01", tag: "IDENTITY", title: "Basement Club", desc: "Comprehensive brand identity and visual styling for Basement Club.", tags: ["Brand Identity", "Visual System", "Branding"] },
+      { num: "02", tag: "IDENTITY", title: "MR.JJAJANG", desc: "Brand identity, logo design, and visual concept for MR.JJAJANG.", tags: ["Logo Design", "Brand Identity", "Visual Concept"] },
+      { num: "03", tag: "IDENTITY", title: "Chantrea Travel", desc: "Brand identity design, logo assets, and visual design system for Chantrea Travel.", tags: ["Brand Identity", "Travel Branding", "Visual Assets"] }
     ]
   }
 };
@@ -740,7 +723,19 @@ function initSpaRouter() {
         
         cat.projects.forEach(proj => {
           const card = document.createElement('div');
-          card.className = 'work-card';
+          card.className = `work-card ${proj.url ? 'has-url' : ''}`;
+          
+          const urlBadge = proj.url ? `
+            <div class="card-url-link">
+              <span class="url-text">${proj.url.replace(/^https?:\/\//, '')}</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <line x1="10" y1="14" x2="21" y2="3"></line>
+              </svg>
+            </div>
+          ` : '';
+
           card.innerHTML = `
             <div class="card-image-wrapper">
               <div class="card-bg-glow" style="background: radial-gradient(circle, rgba(79,70,229,0.1) 0%, transparent 70%);"></div>
@@ -752,11 +747,19 @@ function initSpaRouter() {
             <div class="card-info">
               <h3 class="card-title">${proj.title}</h3>
               <p class="card-desc">${proj.desc}</p>
+              ${urlBadge}
               <div class="card-tags">
                 ${proj.tags.map(t => `<span>${t}</span>`).join('')}
               </div>
             </div>
           `;
+
+          if (proj.url) {
+            card.addEventListener('click', () => {
+              window.open(proj.url, '_blank', 'noopener,noreferrer');
+            });
+          }
+
           grid.appendChild(card);
         });
       }

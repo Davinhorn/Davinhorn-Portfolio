@@ -1019,6 +1019,26 @@ html, body {
   pointer-events: auto !important;
 }
 
+.portfolio-trigger-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.portfolio-arrow {
+  display: none;
+}
+
+@keyframes arrowBounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
 .portfolio-stamp {
   font-family: var(--font-title);
   font-size: clamp(2.2rem, 5.2vw, 5.5rem);
@@ -1523,4 +1543,49 @@ html, body {
     font-size: clamp(1.4rem, 5.5vw, 2.8rem) !important;
     letter-spacing: 0.05em !important;
   }
+
+  /* Minimalist mobile arrow below PORTFOLIO button */
+  .portfolio-arrow {
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    font-size: clamp(1.3rem, 4vw, 2rem);
+    font-weight: 900;
+    color: var(--text-color);
+    margin-top: 2px;
+    animation: arrowBounce 1.8s ease-in-out infinite;
+    pointer-events: none;
+    line-height: 1;
+  }
 }
+
+/* External Link Card Styling */
+.work-card.has-url {
+  position: relative;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
+}
+
+.work-card.has-url:hover {
+  border-color: #4f46e5;
+}
+
+.card-url-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #4f46e5;
+  letter-spacing: 0.02em;
+}
+
+.card-url-link svg {
+  transition: transform 0.2s ease;
+}
+
+.work-card.has-url:hover .card-url-link svg {
+  transform: translate(2px, -2px);
+}
+
