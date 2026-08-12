@@ -494,7 +494,7 @@ function initDynamicScribbles() {
       span.style.opacity = '0';
       span.style.display = 'inline-block';
       span.style.transform = 'scale(0.85) translateY(4px)';
-      span.style.transition = 'opacity 0.25s ease-out, transform 0.25s ease-out';
+      span.style.transition = 'opacity 0.25s ease-out, transform 0.25s ease-out, color 0.4s ease-in-out';
       scribble.appendChild(span);
     });
     
