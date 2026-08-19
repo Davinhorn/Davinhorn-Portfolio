@@ -33,6 +33,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initProjectTilt();
   initDynamicScribbles();
   initMinimalistVideoPlayer();
+  initImageLightbox();
+  initAdminPanel();
   
   // Set initial dynamic viewport height
   setMobileViewportHeight();
@@ -758,6 +760,12 @@ function initSpaRouter() {
     
     if (path === '' || path === 'index.html') {
       // Home page is active, no additional action needed
+    } else if (path === 'adminnn') {
+      // Open Admin control page for Graphic Design gallery management
+      const adminPage = document.getElementById('page-admin');
+      if (adminPage) adminPage.classList.add('active');
+      document.body.classList.add('homepage-inactive');
+      if (typeof renderAdminItemList === 'function') renderAdminItemList();
     } else if (path === 'contact') {
       // Open contact page
       const contactPage = document.getElementById('page-contact');
@@ -767,6 +775,19 @@ function initSpaRouter() {
       // Open About Me layout
       document.body.classList.add('about-active');
       if (aboutPanel) aboutPanel.classList.add('active');
+    } else if (path === 'graphicdesign') {
+      // Populate Graphic Design Bento Grid Gallery
+      const catTitle = document.getElementById('category-title');
+      if (catTitle) catTitle.textContent = "GRAPHIC DESIGN";
+      
+      const grid = document.getElementById('category-project-grid');
+      if (grid) {
+        renderGraphicDesignBentoGrid(grid);
+      }
+      
+      const categoryPage = document.getElementById('page-category');
+      if (categoryPage) categoryPage.classList.add('active');
+      document.body.classList.add('homepage-inactive');
     } else if (brandingSubData[path]) {
       // Render Branding Sub-Route Detail View
       const sub = brandingSubData[path];
@@ -1447,6 +1468,205 @@ function initMinimalistVideoPlayer() {
       updateMuteStateUI();
     } else if (e.key.toLowerCase() === 'f') {
       if (fullscreenBtn) fullscreenBtn.click();
+    }
+  });
+}
+
+/* ==========================================================================
+   GRAPHIC DESIGN BENTO GALLERY & ADMIN MANAGEMENT CONTROLLER
+   ========================================================================== */
+const DEFAULT_GRAPHIC_DESIGN_ITEMS = [
+  { id: "gd_1", title: "Streetwear Artboard 01", url: "assets/graphicdesign/Artboard 1.png", span: "tall" },
+  { id: "gd_2", title: "Streetwear Artboard 02", url: "assets/graphicdesign/Artboard 2.png", span: "wide" },
+  { id: "gd_3", title: "BAC Cap Mockup", url: "assets/graphicdesign/BAC_B-CAP-MOCKUP.png", span: "large" },
+  { id: "gd_4", title: "BAC Friday Fun Poster", url: "assets/graphicdesign/BAC_FRIDAYFUN-POSTERv2.png", span: "normal" },
+  { id: "gd_5", title: "Chery Ladies Notice", url: "assets/graphicdesign/CHR_LADIES-NOTICEv2.png", span: "tall" },
+  { id: "gd_6", title: "Chery Ladies Red Poster", url: "assets/graphicdesign/CHR_LADIES-RED38x53cm-v2.png", span: "wide" },
+  { id: "gd_7", title: "ORS Internship Poster", url: "assets/graphicdesign/ORS_INTERNSHIP-POSTER.png", span: "normal" }
+];
+
+function getGraphicDesignItems() {
+  try {
+    const saved = localStorage.getItem('davinhorn_graphicdesign_items');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+    }
+  } catch (e) {
+    console.error('Error reading localStorage:', e);
+  }
+  return DEFAULT_GRAPHIC_DESIGN_ITEMS;
+}
+
+function saveGraphicDesignItems(items) {
+  try {
+    localStorage.setItem('davinhorn_graphicdesign_items', JSON.stringify(items));
+  } catch (e) {
+    console.error('Error saving localStorage:', e);
+  }
+}
+
+function renderGraphicDesignBentoGrid(gridContainer) {
+  if (!gridContainer) return;
+  gridContainer.innerHTML = '';
+  gridContainer.className = 'bento-grid';
+  
+  const items = getGraphicDesignItems();
+  
+  items.forEach((item) => {
+    const bentoCard = document.createElement('div');
+    const spanClass = item.span ? `span-${item.span}` : 'span-normal';
+    bentoCard.className = `bento-item ${spanClass}`;
+    
+    bentoCard.innerHTML = `
+      <img src="${item.url}" alt="${item.title}" class="bento-img" loading="lazy" />
+      <div class="bento-overlay">
+        <h3 class="bento-item-title">${item.title}</h3>
+        <span class="bento-zoom-badge">VIEW IMAGE</span>
+      </div>
+    `;
+    
+    bentoCard.addEventListener('click', () => {
+      if (typeof openImageLightbox === 'function') {
+        openImageLightbox(item.url, item.title);
+      }
+    });
+    
+    gridContainer.appendChild(bentoCard);
+  });
+}
+
+function initAdminPanel() {
+  const addForm = document.getElementById('admin-add-form');
+  const titleInput = document.getElementById('admin-img-title');
+  const fileInput = document.getElementById('admin-img-file');
+  const urlInput = document.getElementById('admin-img-url');
+  const spanInput = document.getElementById('admin-img-span');
+  const resetBtn = document.getElementById('admin-reset-btn');
+
+  if (!addForm) return;
+
+  window.renderAdminItemList = function() {
+    const listContainer = document.getElementById('admin-items-list');
+    const countSpan = document.getElementById('admin-item-count');
+    if (!listContainer) return;
+
+    const items = getGraphicDesignItems();
+    if (countSpan) countSpan.textContent = items.length;
+
+    listContainer.innerHTML = '';
+    items.forEach((item) => {
+      const row = document.createElement('div');
+      row.className = 'admin-item-card';
+      row.innerHTML = `
+        <div class="admin-item-preview">
+          <img src="${item.url}" alt="${item.title}" />
+        </div>
+        <div class="admin-item-info">
+          <h4 class="admin-item-name">${item.title}</h4>
+          <span class="admin-item-tag">LAYOUT: ${item.span || 'normal'}</span>
+        </div>
+        <button class="admin-delete-btn" data-id="${item.id}" aria-label="Remove item">
+          REMOVE
+        </button>
+      `;
+
+      const deleteBtn = row.querySelector('.admin-delete-btn');
+      if (deleteBtn) {
+        deleteBtn.addEventListener('click', () => {
+          const updated = getGraphicDesignItems().filter(i => i.id !== item.id);
+          saveGraphicDesignItems(updated);
+          renderAdminItemList();
+        });
+      }
+
+      listContainer.appendChild(row);
+    });
+  };
+
+  addForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const title = titleInput.value.trim();
+    const url = urlInput.value.trim();
+    const span = spanInput.value;
+    const file = fileInput.files[0];
+
+    if (!title) return;
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        const newItem = {
+          id: 'gd_' + Date.now(),
+          title: title,
+          url: evt.target.result,
+          span: span
+        };
+        const current = getGraphicDesignItems();
+        current.push(newItem);
+        saveGraphicDesignItems(current);
+        addForm.reset();
+        renderAdminItemList();
+        alert('Picture successfully added to Graphic Design gallery!');
+      };
+      reader.readAsDataURL(file);
+    } else if (url) {
+      const newItem = {
+        id: 'gd_' + Date.now(),
+        title: title,
+        url: url,
+        span: span
+      };
+      const current = getGraphicDesignItems();
+      current.push(newItem);
+      saveGraphicDesignItems(current);
+      addForm.reset();
+      renderAdminItemList();
+      alert('Picture successfully added to Graphic Design gallery!');
+    } else {
+      alert('Please upload an image file or enter an image URL.');
+    }
+  });
+
+  if (resetBtn) {
+    resetBtn.addEventListener('click', () => {
+      if (confirm('Reset Graphic Design gallery to default pictures?')) {
+        saveGraphicDesignItems(DEFAULT_GRAPHIC_DESIGN_ITEMS);
+        renderAdminItemList();
+      }
+    });
+  }
+}
+
+function initImageLightbox() {
+  const modal = document.getElementById('lightbox-modal');
+  const modalImg = document.getElementById('lightbox-img');
+  const modalTitle = document.getElementById('lightbox-title');
+  const closeBtn = document.getElementById('lightbox-close-btn');
+  const backdrop = document.getElementById('lightbox-backdrop');
+
+  if (!modal || !modalImg) return;
+
+  window.openImageLightbox = function(src, title) {
+    if (modalTitle) modalTitle.textContent = title || 'GRAPHIC DESIGN';
+    modalImg.src = src;
+    modal.classList.add('active');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  };
+
+  window.closeImageLightbox = function() {
+    modal.classList.remove('active');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  };
+
+  if (closeBtn) closeBtn.addEventListener('click', closeImageLightbox);
+  if (backdrop) backdrop.addEventListener('click', closeImageLightbox);
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal.classList.contains('active')) {
+      closeImageLightbox();
     }
   });
 }
