@@ -652,9 +652,9 @@ const categoryData = {
   uxui: {
     title: "UX/UI Design",
     projects: [
-      { num: "01", tag: "FOOD & MEMBERSHIP", title: "Basement Club", desc: "Food ordering website with membership system and more. Collaborative work.", url: "https://basementclubpp.com", tags: ["Food Ordering", "Membership System", "Collaborative Work"] },
-      { num: "02", tag: "TRAVEL AGENCY", title: "Chantrea Travel", desc: "Travel agency website. Created and developed independently.", url: "https://chantreatravel.com", tags: ["Travel Agency", "Solo Project", "Web Design"] },
-      { num: "03", tag: "LIFESTYLE COACHING", title: "Echtventure", desc: "Website for lifestyle coaching. Collaborative work.", url: "https://echtventure.com", tags: ["Lifestyle Coaching", "Collaborative Work", "Web Design"] }
+      { num: "01", tag: "FOOD & MEMBERSHIP", title: "Basement Club", desc: "Food ordering website with membership system and more. Collaborative work.", url: "https://basementclubpp.com", thumb: "assets/images/basementclubweb.png", tags: ["Food Ordering", "Membership System", "Collaborative Work"] },
+      { num: "02", tag: "TRAVEL AGENCY", title: "Chantrea Travel", desc: "Travel agency website. Created and developed independently.", url: "https://chantreatravel.com", thumb: "assets/images/chantreaweb.png", tags: ["Travel Agency", "Solo Project", "Web Design"] },
+      { num: "03", tag: "LIFESTYLE COACHING", title: "Echtventure", desc: "Website for lifestyle coaching. Collaborative work.", url: "https://echtventure.com", thumb: "assets/images/echtweb.png", tags: ["Lifestyle Coaching", "Collaborative Work", "Web Design"] }
     ]
   },
   branding: {
@@ -865,15 +865,10 @@ function initSpaRouter() {
               });
             }
 
-            const cardImageWrapper = isVideo && proj.thumb
-              ? `
-                <div class="card-image-wrapper card-video-thumb">
-                  <img src="${proj.thumb}" alt="${proj.title}" class="card-thumb-image" />
-                  <div class="card-bg-glow" style="background: radial-gradient(circle, rgba(79,70,229,0.15) 0%, transparent 70%);"></div>
-                  <div class="card-image-placeholder">
-                    <span class="card-index">${proj.num}</span>
-                    <span class="card-project-tag">${proj.tag}</span>
-                  </div>
+            let cardImageWrapper = '';
+            if (proj.thumb) {
+              const overlayContent = isVideo
+                ? `
                   <div class="card-play-overlay">
                     <div class="play-icon-badge">
                       <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -882,9 +877,34 @@ function initSpaRouter() {
                       <span>PLAY VIDEO</span>
                     </div>
                   </div>
+                `
+                : isExternal
+                ? `
+                  <div class="card-play-overlay">
+                    <div class="play-icon-badge">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="7" y1="17" x2="17" y2="7"></line>
+                        <polyline points="7 7 17 7 17 17"></polyline>
+                      </svg>
+                      <span>VISIT WEBSITE</span>
+                    </div>
+                  </div>
+                `
+                : '';
+
+              cardImageWrapper = `
+                <div class="card-image-wrapper card-video-thumb">
+                  <img src="${proj.thumb}" alt="${proj.title}" class="card-thumb-image" />
+                  <div class="card-bg-glow" style="background: radial-gradient(circle, rgba(79,70,229,0.15) 0%, transparent 70%);"></div>
+                  <div class="card-image-placeholder">
+                    <span class="card-index">${proj.num}</span>
+                    <span class="card-project-tag">${proj.tag}</span>
+                  </div>
+                  ${overlayContent}
                 </div>
-              `
-              : `
+              `;
+            } else {
+              cardImageWrapper = `
                 <div class="card-image-wrapper">
                   <div class="card-bg-glow" style="background: radial-gradient(circle, rgba(79,70,229,0.1) 0%, transparent 70%);"></div>
                   <div class="card-image-placeholder">
@@ -893,6 +913,7 @@ function initSpaRouter() {
                   </div>
                 </div>
               `;
+            }
 
             card.innerHTML = `
               ${cardImageWrapper}
