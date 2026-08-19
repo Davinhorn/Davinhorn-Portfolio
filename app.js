@@ -1192,15 +1192,33 @@ function initMinimalistVideoPlayer() {
 
   if (!modal || !video) return;
 
+  let hideControlsTimeout = null;
+
+  function resetControlsTimeout() {
+    modal.classList.remove('controls-hidden');
+    clearTimeout(hideControlsTimeout);
+    
+    if (modal.classList.contains('is-fullscreen') && !video.paused) {
+      hideControlsTimeout = setTimeout(() => {
+        if (modal.classList.contains('is-fullscreen') && !video.paused) {
+          modal.classList.add('controls-hidden');
+        }
+      }, 2000);
+    }
+  }
+
   function updatePlayStateUI() {
     if (video.paused) {
       if (iconPlay) iconPlay.style.display = 'inline-block';
       if (iconPause) iconPause.style.display = 'none';
       if (playLabel) playLabel.textContent = 'PLAY';
+      modal.classList.remove('controls-hidden');
+      clearTimeout(hideControlsTimeout);
     } else {
       if (iconPlay) iconPlay.style.display = 'none';
       if (iconPause) iconPause.style.display = 'inline-block';
       if (playLabel) playLabel.textContent = 'PAUSE';
+      resetControlsTimeout();
     }
   }
 
@@ -1217,12 +1235,17 @@ function initMinimalistVideoPlayer() {
   }
 
   function updateFullscreenStateUI() {
-    const isFS = !!(document.fullscreenElement || document.webkitFullscreenElement);
+    const isFS = !!(document.fullscreenElement || document.webkitFullscreenElement || modal.classList.contains('is-fullscreen'));
+    
     if (isFS) {
+      modal.classList.add('is-fullscreen');
       if (iconFullscreen) iconFullscreen.style.display = 'none';
       if (iconExitFullscreen) iconExitFullscreen.style.display = 'inline-block';
       if (fullscreenLabel) fullscreenLabel.textContent = 'WINDOW';
+      resetControlsTimeout();
     } else {
+      modal.classList.remove('is-fullscreen', 'controls-hidden');
+      clearTimeout(hideControlsTimeout);
       if (iconFullscreen) iconFullscreen.style.display = 'inline-block';
       if (iconExitFullscreen) iconExitFullscreen.style.display = 'none';
       if (fullscreenLabel) fullscreenLabel.textContent = 'FULLSCREEN';
@@ -1252,9 +1275,10 @@ function initMinimalistVideoPlayer() {
     video.removeAttribute('src');
     video.load();
     
-    modal.classList.remove('active');
+    modal.classList.remove('active', 'is-fullscreen', 'controls-hidden');
     modal.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
+    clearTimeout(hideControlsTimeout);
     
     if (document.fullscreenElement || document.webkitFullscreenElement) {
       if (document.exitFullscreen) {
@@ -1306,22 +1330,54 @@ function initMinimalistVideoPlayer() {
   // Fullscreen / Window Toggle
   if (fullscreenBtn) {
     fullscreenBtn.addEventListener('click', () => {
-      const isFS = !!(document.fullscreenElement || document.webkitFullscreenElement);
+      const isFS = !!(document.fullscreenElement || document.webkitFullscreenElement || modal.classList.contains('is-fullscreen'));
+      
       if (!isFS) {
         if (playerContainer.requestFullscreen) {
-          playerContainer.requestFullscreen();
+          playerContainer.requestFullscreen().then(() => {
+            modal.classList.add('is-fullscreen');
+            updateFullscreenStateUI();
+          }).catch(() => {
+            modal.classList.add('is-fullscreen');
+            updateFullscreenStateUI();
+          });
         } else if (playerContainer.webkitRequestFullscreen) {
           playerContainer.webkitRequestFullscreen();
+          modal.classList.add('is-fullscreen');
+          updateFullscreenStateUI();
+        } else if (video.webkitEnterFullscreen) {
+          video.webkitEnterFullscreen();
+        } else {
+          modal.classList.add('is-fullscreen');
+          updateFullscreenStateUI();
         }
       } else {
         if (document.exitFullscreen) {
-          document.exitFullscreen();
+          document.exitFullscreen().then(() => {
+            modal.classList.remove('is-fullscreen');
+            updateFullscreenStateUI();
+          }).catch(() => {
+            modal.classList.remove('is-fullscreen');
+            updateFullscreenStateUI();
+          });
         } else if (document.webkitExitFullscreen) {
           document.webkitExitFullscreen();
+          modal.classList.remove('is-fullscreen');
+          updateFullscreenStateUI();
+        } else {
+          modal.classList.remove('is-fullscreen');
+          updateFullscreenStateUI();
         }
       }
     });
   }
+
+  // Activity events for auto-hiding controls in fullscreen
+  ['mousemove', 'touchstart', 'touchmove', 'pointermove', 'click'].forEach(evt => {
+    if (playerContainer) {
+      playerContainer.addEventListener(evt, resetControlsTimeout, { passive: true });
+    }
+  });
 
   document.addEventListener('fullscreenchange', updateFullscreenStateUI);
   document.addEventListener('webkitfullscreenchange', updateFullscreenStateUI);
