@@ -1762,4 +1762,314 @@ a.work-card:visited .card-tags span {
   letter-spacing: 0.05em;
 }
 
+/* ==========================================================================
+   VIDEO PRODUCTION THUMBNAILS & MINIMALIST MEDIA PLAYER
+   ========================================================================== */
+.card-video-thumb {
+  position: relative;
+  overflow: hidden;
+}
 
+.card-thumb-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 1;
+}
+
+.work-card:hover .card-thumb-image {
+  transform: scale(1.08);
+}
+
+.card-play-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(12, 12, 12, 0.35);
+  backdrop-filter: blur(2px);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.work-card:hover .card-play-overlay {
+  opacity: 1;
+}
+
+.play-icon-badge {
+  background: var(--text-color);
+  color: var(--bg-color);
+  border: 2px solid var(--bg-color);
+  padding: 8px 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.4);
+  transform: translateY(6px);
+  transition: transform 0.3s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.work-card:hover .play-icon-badge {
+  transform: translateY(0);
+}
+
+/* Minimalist Video Modal Overlay */
+.video-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 10000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.35s;
+}
+
+.video-modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.video-modal-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(12, 12, 12, 0.92);
+  backdrop-filter: blur(12px);
+  z-index: 1;
+}
+
+.video-player-container {
+  position: relative;
+  z-index: 2;
+  width: 90%;
+  max-width: 1100px;
+  background: var(--bg-color);
+  border: 3px solid var(--text-color);
+  box-shadow: 12px 12px 0px var(--text-color);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transform: scale(0.94);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.video-modal-overlay.active .video-player-container {
+  transform: scale(1);
+}
+
+/* Modal Header */
+.video-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 24px;
+  background: var(--bg-color);
+  border-bottom: 2.5px solid var(--text-color);
+}
+
+.video-title-group {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.video-modal-tag {
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  background-color: var(--text-color);
+  color: var(--bg-color);
+  padding: 3px 10px;
+  text-transform: uppercase;
+}
+
+.video-modal-title {
+  font-family: var(--font-title);
+  font-size: clamp(1.4rem, 2.8vw, 2.2rem);
+  letter-spacing: 0.02em;
+  color: var(--text-color);
+  margin: 0;
+  line-height: 1;
+}
+
+.video-close-btn {
+  background: var(--bg-color);
+  border: 2px solid var(--text-color);
+}
+
+/* Video Stage */
+.video-stage {
+  position: relative;
+  width: 100%;
+  background: #000000;
+  aspect-ratio: 16 / 9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+#custom-video-element {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.video-click-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  z-index: 5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.center-play-badge {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(12, 12, 12, 0.85);
+  border: 2px solid #ffffff;
+  color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transform: scale(0.7);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  pointer-events: none;
+}
+
+.video-click-overlay.show-badge .center-play-badge {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Minimalist Controls Bar */
+.video-controls-bar {
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-color);
+  border-top: 2.5px solid var(--text-color);
+  padding: 0;
+}
+
+.video-progress-container {
+  width: 100%;
+  height: 6px;
+  background: rgba(12, 12, 12, 0.12);
+  cursor: pointer;
+  position: relative;
+  transition: height 0.2s ease;
+}
+
+.video-progress-container:hover {
+  height: 10px;
+}
+
+.video-progress-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--accent-color);
+  transition: width 0.1s linear;
+}
+
+.controls-action-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+}
+
+.controls-left, .controls-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.video-control-btn {
+  background: var(--bg-color);
+  border: 2px solid var(--text-color);
+  color: var(--text-color);
+  padding: 8px 16px;
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  text-transform: uppercase;
+}
+
+.video-control-btn:hover {
+  background-color: var(--text-color);
+  color: var(--bg-color);
+  transform: translateY(-2px);
+  box-shadow: 3px 3px 0px var(--text-color);
+}
+
+.video-control-btn:active {
+  transform: translateY(0);
+  box-shadow: 1px 1px 0px var(--text-color);
+}
+
+/* Fullscreen mode adaptations */
+.video-player-container:fullscreen,
+.video-player-container:-webkit-full-screen {
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  background: #000000;
+}
+
+.video-player-container:fullscreen .video-stage,
+.video-player-container:-webkit-full-screen .video-stage {
+  flex-grow: 1;
+  aspect-ratio: auto;
+}
+
+@media (max-width: 767px) {
+  .controls-action-group {
+    padding: 10px 14px;
+  }
+  .video-control-btn {
+    padding: 6px 10px;
+    font-size: 0.75rem;
+  }
+  .btn-label {
+    display: none;
+  }
+}

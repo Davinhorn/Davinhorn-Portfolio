@@ -32,6 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initDraggableCollage();
   initProjectTilt();
   initDynamicScribbles();
+  initMinimalistVideoPlayer();
   
   // Set initial dynamic viewport height
   setMobileViewportHeight();
@@ -635,9 +636,10 @@ const categoryData = {
   videoproduction: {
     title: "Video Production",
     projects: [
-      { num: "01", tag: "CAMPAIGN", title: "iCAUR V23: Stop Oil, Start iCAUR", desc: "Video production and creative direction for the iCAUR V23 campaign.", tags: ["Directing", "Video Production", "Campaign"] },
-      { num: "02", tag: "PR VIDEO", title: "Chery Cambodia PR Video", desc: "PR video production and filming for Chery Cambodia.", tags: ["PR Video", "Commercial", "Cinematography"] },
-      { num: "03", tag: "PROMO", title: "Hyundai Venue 2026", desc: "Promotional video production for the Hyundai Venue 2026.", tags: ["Automotive", "Commercial", "Video Production"] }
+      { num: "01", tag: "CAMPAIGN", title: "ICAUR V23: Stop Oil, Start iCAUR", desc: "Video production and creative direction for the iCAUR V23 campaign.", video: "assets/videos/1.mp4", thumb: "assets/videos/thumb-1.jpg", tags: ["Directing", "Video Production", "Campaign"] },
+      { num: "02", tag: "PR VIDEO", title: "Chery Cambodia PR Video", desc: "PR video production and filming for Chery Cambodia.", video: "assets/videos/2.mp4", thumb: "assets/videos/thumb-2.jpg", tags: ["PR Video", "Commercial", "Cinematography"] },
+      { num: "03", tag: "PROMO", title: "Hyundai Venue 2026", desc: "Promotional video production for the Hyundai Venue 2026.", video: "assets/videos/3.mp4", thumb: "assets/videos/thumb-3.jpg", tags: ["Automotive", "Commercial", "Video Production"] },
+      { num: "04", tag: "PROMO", title: "Tiggo 2 Pro Max KNY", desc: "Commercial and promotional video for Tiggo 2 Pro Max KNY.", video: "assets/videos/4.mp4", thumb: "assets/videos/thumb-4.jpg", tags: ["Automotive", "PR Video", "Commercial"] }
     ]
   },
   sounddesign: {
@@ -842,6 +844,7 @@ function initSpaRouter() {
           cat.projects.forEach(proj => {
             const isExternal = !!proj.url;
             const isInternalRoute = !!proj.route;
+            const isVideo = !!proj.video;
             
             const card = document.createElement(isExternal ? 'a' : 'div');
             card.className = 'work-card';
@@ -852,16 +855,47 @@ function initSpaRouter() {
               card.rel = 'noopener noreferrer';
             } else if (isInternalRoute) {
               card.setAttribute('data-route', proj.route);
+            } else if (isVideo) {
+              card.setAttribute('data-video', proj.video);
+              card.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (typeof openMinimalistVideoPlayer === 'function') {
+                  openMinimalistVideoPlayer(proj.video, proj.title);
+                }
+              });
             }
 
-            card.innerHTML = `
-              <div class="card-image-wrapper">
-                <div class="card-bg-glow" style="background: radial-gradient(circle, rgba(79,70,229,0.1) 0%, transparent 70%);"></div>
-                <div class="card-image-placeholder">
-                  <span class="card-index">${proj.num}</span>
-                  <span class="card-project-tag">${proj.tag}</span>
+            const cardImageWrapper = isVideo && proj.thumb
+              ? `
+                <div class="card-image-wrapper card-video-thumb">
+                  <img src="${proj.thumb}" alt="${proj.title}" class="card-thumb-image" />
+                  <div class="card-bg-glow" style="background: radial-gradient(circle, rgba(79,70,229,0.15) 0%, transparent 70%);"></div>
+                  <div class="card-image-placeholder">
+                    <span class="card-index">${proj.num}</span>
+                    <span class="card-project-tag">${proj.tag}</span>
+                  </div>
+                  <div class="card-play-overlay">
+                    <div class="play-icon-badge">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                      </svg>
+                      <span>PLAY VIDEO</span>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              `
+              : `
+                <div class="card-image-wrapper">
+                  <div class="card-bg-glow" style="background: radial-gradient(circle, rgba(79,70,229,0.1) 0%, transparent 70%);"></div>
+                  <div class="card-image-placeholder">
+                    <span class="card-index">${proj.num}</span>
+                    <span class="card-project-tag">${proj.tag}</span>
+                  </div>
+                </div>
+              `;
+
+            card.innerHTML = `
+              ${cardImageWrapper}
               <div class="card-info">
                 <h3 class="card-title">${proj.title}</h3>
                 <p class="card-desc">${proj.desc}</p>
@@ -1124,6 +1158,220 @@ function initFooterGlitch() {
     }, 1000);
     
   }, 10000); // Trigger every 10 seconds
+}
+
+/* ==========================================================================
+   MINIMALIST VIDEO PLAYER MODAL CONTROLLER
+   ========================================================================== */
+function initMinimalistVideoPlayer() {
+  const modal = document.getElementById('video-modal');
+  const video = document.getElementById('custom-video-element');
+  const modalTitle = document.getElementById('video-modal-title');
+  const closeBtn = document.getElementById('video-close-btn');
+  const backdrop = document.getElementById('video-modal-backdrop');
+  
+  const playBtn = document.getElementById('video-play-btn');
+  const playLabel = document.getElementById('play-btn-label');
+  const iconPlay = playBtn ? playBtn.querySelector('.icon-play') : null;
+  const iconPause = playBtn ? playBtn.querySelector('.icon-pause') : null;
+  
+  const muteBtn = document.getElementById('video-mute-btn');
+  const muteLabel = document.getElementById('mute-btn-label');
+  const iconUnmuted = muteBtn ? muteBtn.querySelector('.icon-unmuted') : null;
+  const iconMuted = muteBtn ? muteBtn.querySelector('.icon-muted') : null;
+  
+  const fullscreenBtn = document.getElementById('video-fullscreen-btn');
+  const fullscreenLabel = document.getElementById('fullscreen-btn-label');
+  const iconFullscreen = fullscreenBtn ? fullscreenBtn.querySelector('.icon-fullscreen') : null;
+  const iconExitFullscreen = fullscreenBtn ? fullscreenBtn.querySelector('.icon-exit-fullscreen') : null;
+  
+  const progressContainer = document.getElementById('video-progress-container');
+  const progressFill = document.getElementById('video-progress-fill');
+  const clickOverlay = document.getElementById('video-click-overlay');
+  const playerContainer = document.getElementById('video-player-container');
+
+  if (!modal || !video) return;
+
+  function updatePlayStateUI() {
+    if (video.paused) {
+      if (iconPlay) iconPlay.style.display = 'inline-block';
+      if (iconPause) iconPause.style.display = 'none';
+      if (playLabel) playLabel.textContent = 'PLAY';
+    } else {
+      if (iconPlay) iconPlay.style.display = 'none';
+      if (iconPause) iconPause.style.display = 'inline-block';
+      if (playLabel) playLabel.textContent = 'PAUSE';
+    }
+  }
+
+  function updateMuteStateUI() {
+    if (video.muted) {
+      if (iconUnmuted) iconUnmuted.style.display = 'none';
+      if (iconMuted) iconMuted.style.display = 'inline-block';
+      if (muteLabel) muteLabel.textContent = 'UNMUTE';
+    } else {
+      if (iconUnmuted) iconUnmuted.style.display = 'inline-block';
+      if (iconMuted) iconMuted.style.display = 'none';
+      if (muteLabel) muteLabel.textContent = 'MUTE';
+    }
+  }
+
+  function updateFullscreenStateUI() {
+    const isFS = !!(document.fullscreenElement || document.webkitFullscreenElement);
+    if (isFS) {
+      if (iconFullscreen) iconFullscreen.style.display = 'none';
+      if (iconExitFullscreen) iconExitFullscreen.style.display = 'inline-block';
+      if (fullscreenLabel) fullscreenLabel.textContent = 'WINDOW';
+    } else {
+      if (iconFullscreen) iconFullscreen.style.display = 'inline-block';
+      if (iconExitFullscreen) iconExitFullscreen.style.display = 'none';
+      if (fullscreenLabel) fullscreenLabel.textContent = 'FULLSCREEN';
+    }
+  }
+
+  window.openMinimalistVideoPlayer = function(videoSrc, title) {
+    if (modalTitle) modalTitle.textContent = title;
+    video.src = videoSrc;
+    video.currentTime = 0;
+    
+    modal.classList.add('active');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    
+    video.play().then(() => {
+      updatePlayStateUI();
+    }).catch(err => {
+      console.log('Autoplay deferred:', err);
+      updatePlayStateUI();
+    });
+  };
+
+  window.closeMinimalistVideoPlayer = function() {
+    video.pause();
+    video.currentTime = 0;
+    video.removeAttribute('src');
+    video.load();
+    
+    modal.classList.remove('active');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    
+    if (document.fullscreenElement || document.webkitFullscreenElement) {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+      }
+    }
+  };
+
+  // Play / Pause Toggle
+  if (playBtn) {
+    playBtn.addEventListener('click', () => {
+      if (video.paused) {
+        video.play();
+      } else {
+        video.pause();
+      }
+      updatePlayStateUI();
+    });
+  }
+
+  // Click stage toggles play / pause
+  if (clickOverlay) {
+    clickOverlay.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (video.paused) {
+        video.play();
+      } else {
+        video.pause();
+      }
+      updatePlayStateUI();
+      
+      clickOverlay.classList.add('show-badge');
+      setTimeout(() => {
+        clickOverlay.classList.remove('show-badge');
+      }, 400);
+    });
+  }
+
+  // Mute / Unmute Toggle
+  if (muteBtn) {
+    muteBtn.addEventListener('click', () => {
+      video.muted = !video.muted;
+      updateMuteStateUI();
+    });
+  }
+
+  // Fullscreen / Window Toggle
+  if (fullscreenBtn) {
+    fullscreenBtn.addEventListener('click', () => {
+      const isFS = !!(document.fullscreenElement || document.webkitFullscreenElement);
+      if (!isFS) {
+        if (playerContainer.requestFullscreen) {
+          playerContainer.requestFullscreen();
+        } else if (playerContainer.webkitRequestFullscreen) {
+          playerContainer.webkitRequestFullscreen();
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        }
+      }
+    });
+  }
+
+  document.addEventListener('fullscreenchange', updateFullscreenStateUI);
+  document.addEventListener('webkitfullscreenchange', updateFullscreenStateUI);
+
+  // Close Button & Backdrop
+  if (closeBtn) closeBtn.addEventListener('click', closeMinimalistVideoPlayer);
+  if (backdrop) backdrop.addEventListener('click', closeMinimalistVideoPlayer);
+
+  // Progress Bar update & Scrubber
+  video.addEventListener('timeupdate', () => {
+    if (video.duration) {
+      const pct = (video.currentTime / video.duration) * 100;
+      if (progressFill) progressFill.style.width = `${pct}%`;
+    }
+  });
+
+  if (progressContainer) {
+    progressContainer.addEventListener('click', (e) => {
+      const rect = progressContainer.getBoundingClientRect();
+      const pos = (e.clientX - rect.left) / rect.width;
+      if (video.duration) {
+        video.currentTime = pos * video.duration;
+      }
+    });
+  }
+
+  video.addEventListener('play', updatePlayStateUI);
+  video.addEventListener('pause', updatePlayStateUI);
+  video.addEventListener('ended', () => {
+    updatePlayStateUI();
+    if (progressFill) progressFill.style.width = '100%';
+  });
+
+  // Keyboard controls
+  document.addEventListener('keydown', (e) => {
+    if (!modal.classList.contains('active')) return;
+    
+    if (e.key === 'Escape') {
+      closeMinimalistVideoPlayer();
+    } else if (e.key === ' ') {
+      e.preventDefault();
+      if (video.paused) video.play(); else video.pause();
+      updatePlayStateUI();
+    } else if (e.key.toLowerCase() === 'm') {
+      video.muted = !video.muted;
+      updateMuteStateUI();
+    } else if (e.key.toLowerCase() === 'f') {
+      if (fullscreenBtn) fullscreenBtn.click();
+    }
+  });
 }
 
 
