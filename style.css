@@ -2168,21 +2168,14 @@ a.work-card:visited .card-tags span {
    BENTO GRID GALLERY (GRAPHIC DESIGN) & ADMIN PAGE STYLES
    ========================================================================== */
 .bento-grid {
-  columns: 3 300px;
-  column-gap: 24px;
+  columns: 2 450px;
+  column-gap: 36px;
   width: 100%;
   max-width: 1400px;
   margin: 0 auto;
 }
 
-@media (max-width: 1100px) {
-  .bento-grid {
-    columns: 2 260px;
-    column-gap: 20px;
-  }
-}
-
-@media (max-width: 600px) {
+@media (max-width: 900px) {
   .bento-grid {
     columns: 1;
     column-gap: 0;
@@ -2192,23 +2185,24 @@ a.work-card:visited .card-tags span {
 .bento-item {
   display: inline-block;
   width: 100%;
-  margin-bottom: 24px;
+  margin-bottom: 36px;
   break-inside: avoid;
   -webkit-column-break-inside: avoid;
   page-break-inside: avoid;
   position: relative;
-  background: var(--bg-color);
-  border: 2.5px solid var(--text-color);
-  box-shadow: 6px 6px 0px var(--text-color);
+  background: transparent;
+  border: none;
+  box-shadow: none;
   overflow: hidden;
   cursor: pointer;
   transform: translate(0, 0);
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), filter 0.3s ease;
 }
 
 .bento-item:hover {
-  transform: translate(-4px, -4px);
-  box-shadow: 10px 10px 0px var(--text-color);
+  transform: translateY(-4px);
+  box-shadow: none;
+  filter: drop-shadow(0 12px 24px rgba(12, 12, 12, 0.15));
 }
 
 .bento-img {
@@ -2216,11 +2210,13 @@ a.work-card:visited .card-tags span {
   height: auto;
   object-fit: contain;
   display: block;
+  border: none;
+  box-shadow: none;
   transition: transform 0.5s ease;
 }
 
 .bento-item:hover .bento-img {
-  transform: scale(1.06);
+  transform: scale(1.03);
 }
 
 .bento-overlay {
