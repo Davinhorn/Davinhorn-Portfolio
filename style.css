@@ -1002,7 +1002,7 @@ html, body {
   flex-grow: 1;
   padding: 40px 60px;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   overflow-y: auto; /* Fallback for small viewports */
 }
@@ -1015,6 +1015,15 @@ html, body {
   max-width: 1400px;
   justify-content: center;
   align-items: stretch;
+}
+
+#category-project-grid.bento-grid {
+  display: block !important;
+  columns: 2 480px;
+  column-gap: 48px;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
 #category-project-grid .work-card {
@@ -2167,16 +2176,19 @@ a.work-card:visited .card-tags span {
 /* ==========================================================================
    BENTO GRID GALLERY (GRAPHIC DESIGN) & ADMIN PAGE STYLES
    ========================================================================== */
-.bento-grid {
-  columns: 2 450px;
-  column-gap: 36px;
+.bento-grid,
+#category-project-grid.bento-grid {
+  display: block !important;
+  columns: 2 480px;
+  column-gap: 48px;
   width: 100%;
   max-width: 1400px;
   margin: 0 auto;
 }
 
 @media (max-width: 900px) {
-  .bento-grid {
+  .bento-grid,
+  #category-project-grid.bento-grid {
     columns: 1;
     column-gap: 0;
   }
