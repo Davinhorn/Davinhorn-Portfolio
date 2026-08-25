@@ -1002,9 +1002,13 @@ html, body {
   flex-grow: 1;
   padding: 40px 60px;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
   overflow-y: auto; /* Fallback for small viewports */
+}
+
+.category-content-container:has(.bento-grid) {
+  align-items: flex-start;
 }
 
 #category-project-grid {

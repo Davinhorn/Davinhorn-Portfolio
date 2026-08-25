@@ -860,6 +860,7 @@ function initSpaRouter() {
       
       const grid = document.getElementById('category-project-grid');
       if (grid) {
+        grid.className = 'work-grid';
         grid.innerHTML = '';
         
           cat.projects.forEach(proj => {
