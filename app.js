@@ -1483,7 +1483,12 @@ const DEFAULT_GRAPHIC_DESIGN_ITEMS = [
   { id: "gd_4", title: "BAC Friday Fun Poster", url: "assets/graphicdesign/BAC_FRIDAYFUN-POSTERv2.png", span: "normal" },
   { id: "gd_5", title: "Chery Ladies Notice", url: "assets/graphicdesign/CHR_LADIES-NOTICEv2.png", span: "tall" },
   { id: "gd_6", title: "Chery Ladies Red Poster", url: "assets/graphicdesign/CHR_LADIES-RED38x53cm-v2.png", span: "wide" },
-  { id: "gd_7", title: "ORS Internship Poster", url: "assets/graphicdesign/ORS_INTERNSHIP-POSTER.png", span: "normal" }
+  { id: "gd_7", title: "ORS Internship Poster", url: "assets/graphicdesign/ORS_INTERNSHIP-POSTER.png", span: "normal" },
+  { id: "gd_8", title: "Chery iCar V23 Shirt Mockup", url: "assets/graphicdesign/SHIRT-DESIGN-COMPILATION (4)-1.png", span: "tall" },
+  { id: "gd_9", title: "Chery Starry Night Shirt Mockup", url: "assets/graphicdesign/SHIRT-DESIGN-COMPILATION (4)-2.png", span: "tall" },
+  { id: "gd_10", title: "Origins Crew Shirt Mockup", url: "assets/graphicdesign/SHIRT-DESIGN-COMPILATION (4)-3.png", span: "tall" },
+  { id: "gd_11", title: "YNext Creative Shirt Mockup", url: "assets/graphicdesign/SHIRT-DESIGN-COMPILATION (4)-5.png", span: "tall" },
+  { id: "gd_12", title: "Hyundai Staria Shirt Mockup", url: "assets/graphicdesign/SHIRT-DESIGN-COMPILATION (4)-8.png", span: "tall" }
 ];
 
 function getGraphicDesignItems() {
@@ -1491,7 +1496,17 @@ function getGraphicDesignItems() {
     const saved = localStorage.getItem('davinhorn_graphicdesign_items');
     if (saved) {
       const parsed = JSON.parse(saved);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        // Automatically sync any newly added default items that aren't yet in saved items
+        const existingUrls = new Set(parsed.map(i => i.url));
+        const missingDefaults = DEFAULT_GRAPHIC_DESIGN_ITEMS.filter(d => !existingUrls.has(d.url));
+        if (missingDefaults.length > 0) {
+          const merged = [...parsed, ...missingDefaults];
+          saveGraphicDesignItems(merged);
+          return merged;
+        }
+        return parsed;
+      }
     }
   } catch (e) {
     console.error('Error reading localStorage:', e);
