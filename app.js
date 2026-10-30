@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const startLoadingReveal = () => {
       scaleTitleToFit();
       document.body.classList.add('fonts-loaded');
-      
+
       // Start the original 2.5s countdown
       setTimeout(() => {
         document.body.classList.remove('app-loading');
@@ -35,13 +35,13 @@ document.addEventListener('DOMContentLoaded', () => {
   initMinimalistVideoPlayer();
   initImageLightbox();
   initAdminPanel();
-  
+
   // Set initial dynamic viewport height
   setMobileViewportHeight();
-  
+
   // Dynamic typography scale
   scaleTitleToFit();
-  
+
   // Resize and layout change listeners
   let prevWidth = window.innerWidth;
   window.addEventListener('resize', () => {
@@ -64,11 +64,11 @@ document.addEventListener('DOMContentLoaded', () => {
     scaleTitleToFit();
     setMobileViewportHeight();
   });
-  
+
   if (document.fonts) {
     document.fonts.ready.then(scaleTitleToFit);
   }
-  
+
   // Delayed safety checks for slower mobile font loading or rendering lags
   setTimeout(scaleTitleToFit, 400);
   setTimeout(scaleTitleToFit, 1000);
@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initialize SPA Router and interactive navigation elements
   initNavigationInteractions();
   initSpaRouter();
-  
+
   // Start glitch interval for footer static signature
   initFooterGlitch();
 });
@@ -129,7 +129,7 @@ function applyParallax(xOffset, yOffset) {
   const titleLayer = document.getElementById('title-layer');
   const portraitLayer = document.getElementById('portrait-layer');
   const footerLayer = document.querySelector('.hero-footer');
-  
+
   // Layer 1: Background Scribbles (moderate motion)
   if (scribblesLayer) {
     scribblesLayer.style.transform = `translate(${xOffset * 30}px, ${yOffset * 30}px)`;
@@ -168,7 +168,7 @@ function initHeroParallax() {
     // Only track if on homepage (body does not have homepage-inactive) and not on mobile viewports
     if (document.body.classList.contains('homepage-inactive')) return;
     if (window.innerWidth <= 767) return;
-    
+
     const xOffset = (e.clientX - window.innerWidth / 2) / (window.innerWidth / 2);
     const yOffset = (e.clientY - window.innerHeight / 2) / (window.innerHeight / 2);
     applyParallax(xOffset, yOffset);
@@ -200,29 +200,29 @@ function initHeroParallax() {
     function handleOrientation(e) {
       const beta = e.beta; // Tilt front-to-back: -180 to 180
       const gamma = e.gamma; // Tilt left-to-right: -90 to 90
-      
+
       if (beta === null || gamma === null) return;
-      
+
       const now = Date.now();
-      
+
       // Capture initial hold orientation as baseline
       if (baselineBeta === null) {
         baselineBeta = beta;
         baselineGamma = gamma;
       }
-      
+
       // Add current reading to history
       recentReadings.push({ beta, gamma, timestamp: now });
-      
+
       // Remove readings older than the window duration
       while (recentReadings.length > 0 && now - recentReadings[0].timestamp > WINDOW_DURATION) {
         recentReadings.shift();
       }
-      
+
       // Calculate range of movement (max - min) over the window
       let minBeta = beta, maxBeta = beta;
       let minGamma = gamma, maxGamma = gamma;
-      
+
       for (let i = 0; i < recentReadings.length; i++) {
         const r = recentReadings[i];
         if (r.beta < minBeta) minBeta = r.beta;
@@ -230,18 +230,18 @@ function initHeroParallax() {
         if (r.gamma < minGamma) minGamma = r.gamma;
         if (r.gamma > maxGamma) maxGamma = r.gamma;
       }
-      
+
       const rangeBeta = maxBeta - minBeta;
       const rangeGamma = maxGamma - minGamma;
-      
+
       // If the device is held steady (movement range < threshold over the last 1s),
       // reset the baseline orientation to the current orientation.
       const portraitOverlay = document.querySelector('.portrait-overlay');
-      
+
       if (rangeBeta < STATIONARY_THRESHOLD && rangeGamma < STATIONARY_THRESHOLD) {
         baselineBeta = beta;
         baselineGamma = gamma;
-        
+
         // Cancel any pending reveal timer if device stopped tilting
         if (window.aboutMeRevealTimeout) {
           clearTimeout(window.aboutMeRevealTimeout);
@@ -262,7 +262,7 @@ function initHeroParallax() {
           clearTimeout(window.aboutMeFadeTimeout);
           window.aboutMeFadeTimeout = null;
         }
-        
+
         // Appear after a 1.5-second delay when tilting is detected
         if (portraitOverlay && !portraitOverlay.classList.contains('mobile-visible') && !window.aboutMeRevealTimeout) {
           window.aboutMeRevealTimeout = setTimeout(() => {
@@ -272,19 +272,19 @@ function initHeroParallax() {
           }, 1500);
         }
       }
-      
+
       // Calculate shifts relative to baseline
       let deltaBeta = beta - baselineBeta;
       let deltaGamma = gamma - baselineGamma;
-      
+
       // Clamp to ±15 degrees limit
       deltaBeta = Math.max(-15, Math.min(15, deltaBeta));
       deltaGamma = Math.max(-15, Math.min(15, deltaGamma));
-      
+
       // Map to scale (-1 to 1)
       const xOffset = deltaGamma / 15;
       const yOffset = deltaBeta / 15;
-      
+
       applyParallax(xOffset, yOffset);
     }
 
@@ -328,7 +328,7 @@ function initDraggableCollage() {
     draggable.addEventListener('pointerdown', (e) => {
       isDragging = true;
       draggable.style.cursor = 'grabbing';
-      
+
       // Lift the dragged item to front
       activeZIndex += 1;
       draggable.style.zIndex = activeZIndex;
@@ -336,13 +336,13 @@ function initDraggableCollage() {
       // Get starting positions
       startX = e.clientX - currentX;
       startY = e.clientY - currentY;
-      
+
       draggable.setPointerCapture(e.pointerId);
     });
 
     draggable.addEventListener('pointermove', (e) => {
       if (!isDragging) return;
-      
+
       currentX = e.clientX - startX;
       currentY = e.clientY - startY;
 
@@ -375,7 +375,7 @@ function initProjectTilt() {
       const rect = card.getBoundingClientRect();
       const x = e.clientX - rect.left; // x coordinate inside the card
       const y = e.clientY - rect.top;  // y coordinate inside the card
-      
+
       const width = rect.width;
       const height = rect.height;
 
@@ -400,10 +400,10 @@ function initProjectTilt() {
 function initDynamicScribbles() {
   const container = document.getElementById('scribbles-layer');
   if (!container) return;
-  
+
   // Clear any existing elements
   container.innerHTML = '';
-  
+
   const phrases = [
     "What is reality?",
     "I love her",
@@ -424,22 +424,22 @@ function initDynamicScribbles() {
     "Are we dreaming?",
     "Enjoy the time"
   ];
-  
+
   const fonts = ['Reenie Beanie', 'Caveat', 'Nothing You Could Do'];
   const activePhrases = new Set();
-  
+
   // Responsive grid layout settings to ensure even distribution and prevent overlaps
   const isMobile = window.innerWidth < 768;
   const gridCols = isMobile ? 2 : 5;
   const gridRows = isMobile ? 4 : 4;
   const activeScribblesPerCol = 3;
-  
+
   // Track occupied rows for each column: Map<colIndex, Set<rowIndex>>
   const occupiedByColumn = new Map();
   for (let c = 0; c < gridCols; c++) {
     occupiedByColumn.set(c, new Set());
   }
-  
+
   function spawnScribble(col, row) {
     // Pick unique phrase
     let availablePhrases = phrases.filter(p => !activePhrases.has(p));
@@ -449,35 +449,35 @@ function initDynamicScribbles() {
     }
     const phrase = availablePhrases[Math.floor(Math.random() * availablePhrases.length)];
     activePhrases.add(phrase);
-    
+
     // Mark as occupied
     occupiedByColumn.get(col).add(row);
-    
+
     const scribble = document.createElement('div');
     scribble.className = 'scribble';
-    
+
     // Calculate cell layout positions
     const cellWidth = 84 / gridCols;
     const cellHeight = 74 / gridRows;
-    
+
     const colLeft = 6 + (col * cellWidth);
     const rowTop = 8 + (row * cellHeight);
-    
+
     // Add organic wiggling within the cell bounds to keep it casual
     const wiggleX = (Math.random() * 0.4 - 0.2) * cellWidth;
     const wiggleY = (Math.random() * 0.4 - 0.2) * cellHeight;
-    
+
     const leftPercent = colLeft + (cellWidth / 2) + wiggleX;
     const topPercent = rowTop + (cellHeight / 2) + wiggleY;
-    
+
     const rotation = -15 + Math.random() * 30; // -15deg to 15deg
     const font = fonts[Math.floor(Math.random() * fonts.length)];
-    
+
     let baseFontSize = isMobile ? 'clamp(2.5rem, 7.0vw, 5.0rem)' : 'clamp(1.6rem, 2.5vw, 2.8rem)';
     if (font === 'Reenie Beanie') {
       baseFontSize = isMobile ? 'clamp(4.2rem, 10vw, 9.0rem)' : 'clamp(2.2rem, 4.0vw, 4.5rem)';
     }
-    
+
     scribble.style.position = 'absolute';
     scribble.style.top = `${topPercent}%`;
     scribble.style.left = `${leftPercent}%`;
@@ -488,7 +488,7 @@ function initDynamicScribbles() {
     scribble.style.pointerEvents = isMobile ? 'none' : 'auto';
     scribble.style.cursor = 'default';
     scribble.style.transition = 'opacity 0.5s, transform 0.5s';
-    
+
     // Build character spans for letter-by-letter writing animation
     const chars = phrase.split('');
     chars.forEach((char) => {
@@ -500,10 +500,10 @@ function initDynamicScribbles() {
       span.style.transition = 'opacity 0.25s ease-out, transform 0.25s ease-out, color 0.4s ease-in-out';
       scribble.appendChild(span);
     });
-    
+
     container.appendChild(scribble);
     initSingleScribbleInteractivity(scribble);
-    
+
     // Character typing reveal
     const charInterval = 40 + Math.random() * 20; // 40ms to 60ms per character
     const spans = scribble.querySelectorAll('span');
@@ -513,14 +513,14 @@ function initDynamicScribbles() {
         span.style.transform = 'scale(1) translateY(0)';
       }, index * charInterval);
     });
-    
+
     const typingDuration = spans.length * charInterval;
     const visibleDuration = 6000 + Math.random() * 7000; // Visible for 6-13s
-    
+
     // Schedule character-by-character un-writing (erasing) and replacement spawn
     setTimeout(() => {
       const eraseInterval = 30; // 30ms per character for erasing
-      
+
       // Erase spans one by one in reverse (right to left)
       for (let i = spans.length - 1; i >= 0; i--) {
         const revIndex = spans.length - 1 - i;
@@ -529,13 +529,13 @@ function initDynamicScribbles() {
           spans[i].style.transform = 'scale(0.85) translateY(4px)';
         }, revIndex * eraseInterval);
       }
-      
+
       const eraseDuration = spans.length * eraseInterval;
       setTimeout(() => {
         scribble.remove();
         occupiedByColumn.get(col).delete(row);
         activePhrases.delete(phrase);
-        
+
         // Find empty rows in this column to spawn replacement
         const emptyRows = [];
         for (let r = 0; r < gridRows; r++) {
@@ -543,18 +543,18 @@ function initDynamicScribbles() {
             emptyRows.push(r);
           }
         }
-        
-        const nextRow = emptyRows.length > 0 
+
+        const nextRow = emptyRows.length > 0
           ? emptyRows[Math.floor(Math.random() * emptyRows.length)]
           : row; // fallback
-          
+
         // Spawn replacement in the same column
         spawnScribble(col, nextRow);
       }, eraseDuration + 100);
-      
+
     }, typingDuration + visibleDuration);
   }
-  
+
   // Build initial cell list: exactly 3 rows per column
   const initialCells = [];
   for (let c = 0; c < gridCols; c++) {
@@ -566,10 +566,10 @@ function initDynamicScribbles() {
       initialCells.push({ col: c, row: r });
     });
   }
-  
+
   // Shuffle initial cells so the spawn stagger is randomly distributed across the screen
   initialCells.sort(() => Math.random() - 0.5);
-  
+
   initialCells.forEach((cell, index) => {
     setTimeout(() => {
       spawnScribble(cell.col, cell.row);
@@ -590,31 +590,31 @@ function scaleTitleToFit() {
   const stamp = document.querySelector('.portfolio-stamp');
   const rnLetters = document.querySelector('.rn-letters');
   const ornLetters = document.querySelector('.orn-letters');
-  
+
   if (titles.length === 0 || !container) return;
-  
+
   // 1. Scale main title copy to container width
   const primaryTitle = titles[0];
   primaryTitle.style.fontSize = '100px';
   const textWidth = primaryTitle.offsetWidth;
   const containerWidth = container.offsetWidth;
   if (textWidth === 0 || containerWidth === 0) return;
-  
+
   const targetFontSize = (containerWidth / textWidth) * 100;
   titles.forEach(t => {
     t.style.fontSize = `${targetFontSize}px`;
   });
-  
+
   // 2. Scale PORTFOLIO stamp to match the exact layout width of "RN" (desktop) or "ORN" (mobile)
   if (stamp) {
     const isMobile = window.innerWidth <= 767;
     const targetSpan = (isMobile && ornLetters) ? ornLetters : rnLetters;
-    
+
     if (targetSpan) {
       const targetSpanWidth = targetSpan.offsetWidth;
       stamp.style.fontSize = '100px';
       const stampWidth = stamp.offsetWidth;
-      
+
       if (stampWidth > 0 && targetSpanWidth > 0) {
         const targetStampFontSize = (targetSpanWidth / stampWidth) * 100;
         stamp.style.fontSize = `${targetStampFontSize}px`;
@@ -641,7 +641,8 @@ const categoryData = {
       { num: "01", tag: "CAMPAIGN", title: "ICAUR V23: Stop Oil, Start iCAUR", desc: "Video production and creative direction for the iCAUR V23 campaign.", video: "assets/videos/1.mp4", thumb: "assets/videos/thumb-1.jpg", tags: ["Directing", "Video Production", "Campaign"] },
       { num: "02", tag: "PR VIDEO", title: "Chery Cambodia PR Video", desc: "PR video production and filming for Chery Cambodia.", video: "assets/videos/2.mp4", thumb: "assets/videos/thumb-2.jpg", tags: ["PR Video", "Commercial", "Cinematography"] },
       { num: "03", tag: "PROMO", title: "Hyundai Venue 2026", desc: "Promotional video production for the Hyundai Venue 2026.", video: "assets/videos/3.mp4", thumb: "assets/videos/thumb-3.jpg", tags: ["Automotive", "Commercial", "Video Production"] },
-      { num: "04", tag: "PROMO", title: "Tiggo 2 Pro Max KNY", desc: "Commercial and promotional video for Tiggo 2 Pro Max KNY.", video: "assets/videos/4.mp4", thumb: "assets/videos/thumb-4.jpg", tags: ["Automotive", "PR Video", "Commercial"] }
+      { num: "04", tag: "PROMO", title: "Tiggo 2 Pro Max KNY", desc: "Commercial and promotional video for Tiggo 2 Pro Max KNY.", video: "assets/videos/4.mp4", thumb: "assets/videos/thumb-4.jpg", tags: ["Automotive", "PR Video", "Commercial"] },
+      { num: "05", tag: "SHORT VIDEO", title: "Basement Club Short Video", desc: "A short video showcasing new Korean bagel set for Basement Club.", video: "assets/videos/5.mp4", thumb: "assets/videos/thumb-5.jpg", tags: ["Basement Club", "Commercial", "Short Video"] }
     ]
   },
   sounddesign: {
@@ -727,18 +728,18 @@ function initSpaRouter() {
   function handleRouting() {
     const rawPath = window.location.pathname;
     const path = rawPath.replace(/^\/|\/$/g, '');
-    
+
     // Deactivate all secondary views
     document.querySelectorAll('.page-secondary').forEach(page => {
       page.classList.remove('active');
     });
-    
+
     // Reset About Me layouts
     document.body.classList.remove('about-active');
     const aboutPanel = document.getElementById('about-content-panel');
     if (aboutPanel) aboutPanel.classList.remove('active');
     if (typeof resetAboutPagination === 'function') resetAboutPagination();
-    
+
     // Reset gyroscope tilt timeouts
     if (window.aboutMeRevealTimeout) {
       clearTimeout(window.aboutMeRevealTimeout);
@@ -751,13 +752,13 @@ function initSpaRouter() {
     const portraitOverlay = document.querySelector('.portrait-overlay');
     if (portraitOverlay) portraitOverlay.classList.remove('mobile-visible');
     window.isAboutMeTappable = false;
-    
+
     // Reset Home layout
     document.body.classList.remove('homepage-inactive');
-    
+
     // Close any open dropdowns
     if (typeof closeAllDropdowns === 'function') closeAllDropdowns();
-    
+
     if (path === '' || path === 'index.html') {
       // Home page is active, no additional action needed
     } else if (path === 'adminnn') {
@@ -779,12 +780,12 @@ function initSpaRouter() {
       // Populate Graphic Design Bento Grid Gallery
       const catTitle = document.getElementById('category-title');
       if (catTitle) catTitle.textContent = "GRAPHIC DESIGN";
-      
+
       const grid = document.getElementById('category-project-grid');
       if (grid) {
         renderGraphicDesignBentoGrid(grid);
       }
-      
+
       const categoryPage = document.getElementById('page-category');
       if (categoryPage) categoryPage.classList.add('active');
       document.body.classList.add('homepage-inactive');
@@ -793,7 +794,7 @@ function initSpaRouter() {
       const sub = brandingSubData[path];
       const detailTitle = document.getElementById('detail-title');
       if (detailTitle) detailTitle.textContent = sub.title;
-      
+
       const detailBody = document.getElementById('detail-content-body');
       if (detailBody) {
         detailBody.innerHTML = `
@@ -848,7 +849,7 @@ function initSpaRouter() {
           </div>
         `;
       }
-      
+
       const detailPage = document.getElementById('page-detail');
       if (detailPage) detailPage.classList.add('active');
       document.body.classList.add('homepage-inactive');
@@ -857,40 +858,40 @@ function initSpaRouter() {
       const cat = categoryData[path];
       const catTitle = document.getElementById('category-title');
       if (catTitle) catTitle.textContent = cat.title;
-      
+
       const grid = document.getElementById('category-project-grid');
       if (grid) {
         grid.className = 'work-grid';
         grid.innerHTML = '';
-        
-          cat.projects.forEach(proj => {
-            const isExternal = !!proj.url;
-            const isInternalRoute = !!proj.route;
-            const isVideo = !!proj.video;
-            
-            const card = document.createElement(isExternal ? 'a' : 'div');
-            card.className = 'work-card';
-            
-            if (isExternal) {
-              card.href = proj.url;
-              card.target = '_blank';
-              card.rel = 'noopener noreferrer';
-            } else if (isInternalRoute) {
-              card.setAttribute('data-route', proj.route);
-            } else if (isVideo) {
-              card.setAttribute('data-video', proj.video);
-              card.addEventListener('click', (e) => {
-                e.preventDefault();
-                if (typeof openMinimalistVideoPlayer === 'function') {
-                  openMinimalistVideoPlayer(proj.video, proj.title);
-                }
-              });
-            }
 
-            let cardImageWrapper = '';
-            if (proj.thumb) {
-              const overlayContent = isVideo
-                ? `
+        cat.projects.forEach(proj => {
+          const isExternal = !!proj.url;
+          const isInternalRoute = !!proj.route;
+          const isVideo = !!proj.video;
+
+          const card = document.createElement(isExternal ? 'a' : 'div');
+          card.className = 'work-card';
+
+          if (isExternal) {
+            card.href = proj.url;
+            card.target = '_blank';
+            card.rel = 'noopener noreferrer';
+          } else if (isInternalRoute) {
+            card.setAttribute('data-route', proj.route);
+          } else if (isVideo) {
+            card.setAttribute('data-video', proj.video);
+            card.addEventListener('click', (e) => {
+              e.preventDefault();
+              if (typeof openMinimalistVideoPlayer === 'function') {
+                openMinimalistVideoPlayer(proj.video, proj.title);
+              }
+            });
+          }
+
+          let cardImageWrapper = '';
+          if (proj.thumb) {
+            const overlayContent = isVideo
+              ? `
                   <div class="card-play-overlay">
                     <div class="play-icon-badge">
                       <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -900,7 +901,7 @@ function initSpaRouter() {
                     </div>
                   </div>
                 `
-                : isExternal
+              : isExternal
                 ? `
                   <div class="card-play-overlay">
                     <div class="play-icon-badge">
@@ -914,7 +915,7 @@ function initSpaRouter() {
                 `
                 : '';
 
-              cardImageWrapper = `
+            cardImageWrapper = `
                 <div class="card-image-wrapper card-video-thumb">
                   <img src="${proj.thumb}" alt="${proj.title}" class="card-thumb-image" />
                   <div class="card-bg-glow" style="background: radial-gradient(circle, rgba(79,70,229,0.15) 0%, transparent 70%);"></div>
@@ -925,8 +926,8 @@ function initSpaRouter() {
                   ${overlayContent}
                 </div>
               `;
-            } else {
-              cardImageWrapper = `
+          } else {
+            cardImageWrapper = `
                 <div class="card-image-wrapper">
                   <div class="card-bg-glow" style="background: radial-gradient(circle, rgba(79,70,229,0.1) 0%, transparent 70%);"></div>
                   <div class="card-image-placeholder">
@@ -935,9 +936,9 @@ function initSpaRouter() {
                   </div>
                 </div>
               `;
-            }
+          }
 
-            card.innerHTML = `
+          card.innerHTML = `
               ${cardImageWrapper}
               <div class="card-info">
                 <h3 class="card-title">${proj.title}</h3>
@@ -948,15 +949,15 @@ function initSpaRouter() {
               </div>
             `;
 
-            grid.appendChild(card);
-          });
+          grid.appendChild(card);
+        });
       }
-      
+
       // Slide in category page
       const categoryPage = document.getElementById('page-category');
       if (categoryPage) categoryPage.classList.add('active');
       document.body.classList.add('homepage-inactive');
-      
+
       // Reinitialize 3D tilts for newly added cards
       initProjectTilt();
     } else {
@@ -964,14 +965,14 @@ function initSpaRouter() {
       history.replaceState({}, '', '/');
     }
   }
-  
+
   // Re-define standard navigation function
-  window.navigateToRoute = function(route) {
+  window.navigateToRoute = function (route) {
     const formattedRoute = route === '/' ? '/' : `/${route}`;
     history.pushState({}, '', formattedRoute);
     handleRouting();
   };
-  
+
   // Intercept click events for routes
   document.addEventListener('click', (e) => {
     const link = e.target.closest('[data-route]');
@@ -981,10 +982,10 @@ function initSpaRouter() {
       window.navigateToRoute(route);
     }
   });
-  
+
   // Popstate history listener
   window.addEventListener('popstate', handleRouting);
-  
+
   // Handle initial page load routing
   handleRouting();
 }
@@ -1009,7 +1010,7 @@ function initNavigationInteractions() {
   }
 
   // Close helper
-  window.closeAllDropdowns = function() {
+  window.closeAllDropdowns = function () {
     if (desktopTrigger) desktopTrigger.setAttribute('aria-expanded', 'false');
     if (desktopMenu) desktopMenu.classList.remove('active');
     if (titleLayer) titleLayer.classList.remove('nav-open');
@@ -1024,10 +1025,10 @@ function initNavigationInteractions() {
   // Portrait Hover overlay / click interactions (About Me trigger)
   const portraitImg = document.getElementById('hero-portrait');
   const portraitOverlay = document.querySelector('.portrait-overlay');
-  
+
   let offscreenCanvas = null;
   let offscreenCtx = null;
-  
+
   function initPortraitCanvas() {
     if (!portraitImg || portraitImg.naturalWidth === 0) return;
     offscreenCanvas = document.createElement('canvas');
@@ -1036,12 +1037,12 @@ function initNavigationInteractions() {
     offscreenCtx = offscreenCanvas.getContext('2d', { willReadFrequently: true });
     offscreenCtx.drawImage(portraitImg, 0, 0);
   }
-  
+
   function checkPortraitAlpha(e) {
     if (!offscreenCtx || !portraitImg) return false;
     const img = portraitImg; // always map against portrait image
     const rect = img.getBoundingClientRect();
-    
+
     // Retrieve touch or mouse client coordinates
     let clientX = e.clientX;
     let clientY = e.clientY;
@@ -1052,18 +1053,18 @@ function initNavigationInteractions() {
       clientX = e.changedTouches[0].clientX;
       clientY = e.changedTouches[0].clientY;
     }
-    
+
     const x = clientX - rect.left;
     const y = clientY - rect.top;
-    
+
     const naturalX = Math.floor((x / rect.width) * img.naturalWidth);
     const naturalY = Math.floor((y / rect.height) * img.naturalHeight);
-    
+
     // Bounds guard
     if (naturalX < 0 || naturalX >= img.naturalWidth || naturalY < 0 || naturalY >= img.naturalHeight) {
       return false;
     }
-    
+
     try {
       const pixel = offscreenCtx.getImageData(naturalX, naturalY, 1, 1).data;
       const alpha = pixel[3]; // alpha channel
@@ -1072,17 +1073,17 @@ function initNavigationInteractions() {
       return true; // fallback
     }
   }
-  
+
   if (portraitImg && portraitOverlay) {
     if (portraitImg.complete) {
       initPortraitCanvas();
     } else {
       portraitImg.addEventListener('load', initPortraitCanvas);
     }
-    
+
     const portraitLayer = document.getElementById('portrait-layer');
     const trackingTarget = portraitLayer || portraitImg;
-    
+
     trackingTarget.addEventListener('mousemove', (e) => {
       const isMobile = window.innerWidth <= 767;
       if (isMobile) return;
@@ -1095,11 +1096,11 @@ function initNavigationInteractions() {
         trackingTarget.style.cursor = 'default';
       }
     });
-    
+
     trackingTarget.addEventListener('mouseleave', () => {
       portraitOverlay.classList.remove('hovered');
     });
-    
+
     const handlePortraitTrigger = (e) => {
       if (checkPortraitAlpha(e)) {
         e.stopPropagation();
@@ -1114,7 +1115,7 @@ function initNavigationInteractions() {
         }
       }
     };
-    
+
     trackingTarget.addEventListener('click', handlePortraitTrigger);
     trackingTarget.addEventListener('touchend', handlePortraitTrigger);
   }
@@ -1127,11 +1128,11 @@ function initAboutPagination() {
   const indicator = document.getElementById('about-page-indicator');
   const slide1 = document.getElementById('about-slide-1');
   const slide2 = document.getElementById('about-slide-2');
-  
+
   if (!btnPrev || !btnNext || !indicator || !slide1 || !slide2) return;
-  
+
   let currentPage = 1;
-  
+
   function updatePagination() {
     if (currentPage === 1) {
       slide1.classList.add('active');
@@ -1147,18 +1148,18 @@ function initAboutPagination() {
       indicator.textContent = 'PAGE 2/2';
     }
   }
-  
+
   btnPrev.addEventListener('click', () => {
     currentPage = 1;
     updatePagination();
   });
-  
+
   btnNext.addEventListener('click', () => {
     currentPage = 2;
     updatePagination();
   });
-  
-  window.resetAboutPagination = function() {
+
+  window.resetAboutPagination = function () {
     currentPage = 1;
     updatePagination();
   };
@@ -1174,32 +1175,32 @@ document.addEventListener('contextmenu', (e) => {
 function initFooterGlitch() {
   const staticText = document.querySelector('.footer-static-text');
   if (!staticText) return;
-  
+
   setInterval(() => {
     // Glitch transition to "Sometimes it's not."
     staticText.classList.add('glitch-active');
-    
+
     setTimeout(() => {
       staticText.textContent = "Sometimes it's not.";
     }, 150);
-    
+
     setTimeout(() => {
       staticText.classList.remove('glitch-active');
     }, 350);
-    
+
     // Glitch transition back to "Life is nice." after 1 second
     setTimeout(() => {
       staticText.classList.add('glitch-active');
-      
+
       setTimeout(() => {
         staticText.textContent = "Life is nice.";
       }, 150);
-      
+
       setTimeout(() => {
         staticText.classList.remove('glitch-active');
       }, 350);
     }, 1000);
-    
+
   }, 10000); // Trigger every 10 seconds
 }
 
@@ -1212,22 +1213,22 @@ function initMinimalistVideoPlayer() {
   const modalTitle = document.getElementById('video-modal-title');
   const closeBtn = document.getElementById('video-close-btn');
   const backdrop = document.getElementById('video-modal-backdrop');
-  
+
   const playBtn = document.getElementById('video-play-btn');
   const playLabel = document.getElementById('play-btn-label');
   const iconPlay = playBtn ? playBtn.querySelector('.icon-play') : null;
   const iconPause = playBtn ? playBtn.querySelector('.icon-pause') : null;
-  
+
   const muteBtn = document.getElementById('video-mute-btn');
   const muteLabel = document.getElementById('mute-btn-label');
   const iconUnmuted = muteBtn ? muteBtn.querySelector('.icon-unmuted') : null;
   const iconMuted = muteBtn ? muteBtn.querySelector('.icon-muted') : null;
-  
+
   const fullscreenBtn = document.getElementById('video-fullscreen-btn');
   const fullscreenLabel = document.getElementById('fullscreen-btn-label');
   const iconFullscreen = fullscreenBtn ? fullscreenBtn.querySelector('.icon-fullscreen') : null;
   const iconExitFullscreen = fullscreenBtn ? fullscreenBtn.querySelector('.icon-exit-fullscreen') : null;
-  
+
   const progressContainer = document.getElementById('video-progress-container');
   const progressFill = document.getElementById('video-progress-fill');
   const clickOverlay = document.getElementById('video-click-overlay');
@@ -1240,7 +1241,7 @@ function initMinimalistVideoPlayer() {
   function resetControlsTimeout() {
     modal.classList.remove('controls-hidden');
     clearTimeout(hideControlsTimeout);
-    
+
     if (modal.classList.contains('is-fullscreen') && !video.paused) {
       hideControlsTimeout = setTimeout(() => {
         if (modal.classList.contains('is-fullscreen') && !video.paused) {
@@ -1279,7 +1280,7 @@ function initMinimalistVideoPlayer() {
 
   function updateFullscreenStateUI() {
     const isFS = !!(document.fullscreenElement || document.webkitFullscreenElement || modal.classList.contains('is-fullscreen'));
-    
+
     if (isFS) {
       modal.classList.add('is-fullscreen');
       if (iconFullscreen) iconFullscreen.style.display = 'none';
@@ -1295,15 +1296,15 @@ function initMinimalistVideoPlayer() {
     }
   }
 
-  window.openMinimalistVideoPlayer = function(videoSrc, title) {
+  window.openMinimalistVideoPlayer = function (videoSrc, title) {
     if (modalTitle) modalTitle.textContent = title;
     video.src = videoSrc;
     video.currentTime = 0;
-    
+
     modal.classList.add('active');
     modal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
-    
+
     video.play().then(() => {
       updatePlayStateUI();
     }).catch(err => {
@@ -1312,17 +1313,17 @@ function initMinimalistVideoPlayer() {
     });
   };
 
-  window.closeMinimalistVideoPlayer = function() {
+  window.closeMinimalistVideoPlayer = function () {
     video.pause();
     video.currentTime = 0;
     video.removeAttribute('src');
     video.load();
-    
+
     modal.classList.remove('active', 'is-fullscreen', 'controls-hidden');
     modal.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
     clearTimeout(hideControlsTimeout);
-    
+
     if (document.fullscreenElement || document.webkitFullscreenElement) {
       if (document.exitFullscreen) {
         document.exitFullscreen();
@@ -1354,7 +1355,7 @@ function initMinimalistVideoPlayer() {
         video.pause();
       }
       updatePlayStateUI();
-      
+
       clickOverlay.classList.add('show-badge');
       setTimeout(() => {
         clickOverlay.classList.remove('show-badge');
@@ -1374,7 +1375,7 @@ function initMinimalistVideoPlayer() {
   if (fullscreenBtn) {
     fullscreenBtn.addEventListener('click', () => {
       const isFS = !!(document.fullscreenElement || document.webkitFullscreenElement || modal.classList.contains('is-fullscreen'));
-      
+
       if (!isFS) {
         if (playerContainer.requestFullscreen) {
           playerContainer.requestFullscreen().then(() => {
@@ -1457,7 +1458,7 @@ function initMinimalistVideoPlayer() {
   // Keyboard controls
   document.addEventListener('keydown', (e) => {
     if (!modal.classList.contains('active')) return;
-    
+
     if (e.key === 'Escape') {
       closeMinimalistVideoPlayer();
     } else if (e.key === ' ') {
@@ -1488,7 +1489,17 @@ const DEFAULT_GRAPHIC_DESIGN_ITEMS = [
   { id: "gd_9", title: "Chery Starry Night Shirt Mockup", url: "assets/graphicdesign/SHIRT-DESIGN-COMPILATION (4)-2.png", span: "tall" },
   { id: "gd_10", title: "Origins Crew Shirt Mockup", url: "assets/graphicdesign/SHIRT-DESIGN-COMPILATION (4)-3.png", span: "tall" },
   { id: "gd_11", title: "YNext Creative Shirt Mockup", url: "assets/graphicdesign/SHIRT-DESIGN-COMPILATION (4)-5.png", span: "tall" },
-  { id: "gd_12", title: "Hyundai Staria Shirt Mockup", url: "assets/graphicdesign/SHIRT-DESIGN-COMPILATION (4)-8.png", span: "tall" }
+  { id: "gd_12", title: "Hyundai Staria Shirt Mockup", url: "assets/graphicdesign/SHIRT-DESIGN-COMPILATION (4)-8.png", span: "tall" },
+  { id: "gd_13", title: "iCAR Born To Play Graphic", url: "assets/graphicdesign/Asset 1@4x.png", span: "normal" },
+  { id: "gd_14", title: "Basement Club Permission Notice", url: "assets/graphicdesign/BAC_ASKPERMISSIONv2-A5 (2).png", span: "tall" },
+  { id: "gd_15", title: "Basement Club Paper Bag Mockup", url: "assets/graphicdesign/BAC_SMALLPAPERBAG-MOCKUP.png", span: "wide" },
+  { id: "gd_16", title: "Basement Club Sticker Pack", url: "assets/graphicdesign/BAC_STICKER-PACK.png", span: "wide" },
+  { id: "gd_17", title: "Basement Club Table Stickers", url: "assets/graphicdesign/BAC_TABLESTICKER-A4SIZE.png", span: "tall" },
+  { id: "gd_18", title: "Chery iCAUR V23 Sold Out Poster", url: "assets/graphicdesign/CHR_V23-SOLDOUT-1v2 (2).png", span: "normal" },
+  { id: "gd_19", title: "MR. JJAJANG Behind Counter Mockup", url: "assets/graphicdesign/MJJ_LOGO_BEHIND-COUNTER (16).png", span: "wide" },
+  { id: "gd_20", title: "MR. JJAJANG Exterior Signage Mockup", url: "assets/graphicdesign/MJJ_LOGO_EXTERIOR (17).png", span: "wide" },
+  { id: "gd_21", title: "MR. JJAJANG Brand Logo", url: "assets/graphicdesign/mr.jjajang logo1.png", span: "wide" },
+  { id: "gd_22", title: "MR. JJAJANG Mascot Badge", url: "assets/graphicdesign/mr.jjajang logo2.png", span: "tall" }
 ];
 
 function getGraphicDesignItems() {
@@ -1526,14 +1537,14 @@ function renderGraphicDesignBentoGrid(gridContainer) {
   if (!gridContainer) return;
   gridContainer.innerHTML = '';
   gridContainer.className = 'bento-grid';
-  
+
   const items = getGraphicDesignItems();
-  
+
   items.forEach((item) => {
     const bentoCard = document.createElement('div');
     const spanClass = item.span ? `span-${item.span}` : 'span-normal';
     bentoCard.className = `bento-item ${spanClass}`;
-    
+
     bentoCard.innerHTML = `
       <img src="${item.url}" alt="${item.title}" class="bento-img" loading="lazy" />
       <div class="bento-overlay">
@@ -1541,13 +1552,13 @@ function renderGraphicDesignBentoGrid(gridContainer) {
         <span class="bento-zoom-badge">VIEW IMAGE</span>
       </div>
     `;
-    
+
     bentoCard.addEventListener('click', () => {
       if (typeof openImageLightbox === 'function') {
         openImageLightbox(item.url, item.title);
       }
     });
-    
+
     gridContainer.appendChild(bentoCard);
   });
 }
@@ -1562,7 +1573,7 @@ function initAdminPanel() {
 
   if (!addForm) return;
 
-  window.renderAdminItemList = function() {
+  window.renderAdminItemList = function () {
     const listContainer = document.getElementById('admin-items-list');
     const countSpan = document.getElementById('admin-item-count');
     if (!listContainer) return;
@@ -1611,7 +1622,7 @@ function initAdminPanel() {
 
     if (file) {
       const reader = new FileReader();
-      reader.onload = function(evt) {
+      reader.onload = function (evt) {
         const newItem = {
           id: 'gd_' + Date.now(),
           title: title,
@@ -1663,7 +1674,7 @@ function initImageLightbox() {
 
   if (!modal || !modalImg) return;
 
-  window.openImageLightbox = function(src, title) {
+  window.openImageLightbox = function (src, title) {
     if (modalTitle) modalTitle.textContent = title || 'GRAPHIC DESIGN';
     modalImg.src = src;
     modal.classList.add('active');
@@ -1671,7 +1682,7 @@ function initImageLightbox() {
     document.body.style.overflow = 'hidden';
   };
 
-  window.closeImageLightbox = function() {
+  window.closeImageLightbox = function () {
     modal.classList.remove('active');
     modal.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
